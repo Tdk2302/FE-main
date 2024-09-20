@@ -7,13 +7,10 @@ import { toast } from "react-toastify";
 import { useNavigate, NavLink } from "react-router-dom";
 
 const Login = () => {
-  // const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isShowPassword, setIsShowPassword] = useState(false);
   const navigate = useNavigate();
-  // const handleLogin = () => {
-  //   if (!email || !password) {
 
   const handleLogin = async (event) => {
     // event.preventDefault(); // Ngăn form reload trang
@@ -22,23 +19,22 @@ const Login = () => {
       return;
     }
   };
-  // useEffect(() => {
-  //   let token = localStorage.getItem("token");
-  //   if (token) {
-  //     navigate("/");
-  //   }
-  // }, []);
+  useEffect(() => {
+    let token = localStorage.getItem("token");
+    if (token) {
+      navigate("/");
+    }
+  }, []);
 
-  //   let res = await loginApi(email, password);
-  //   if (res && res.token) {
-  //     localStorage.setItem("token", res.token);
-  //   }
-  //   console.log("check login: ", res);
-  // };
-
-  const handleGoBack = () =>{
-    navigate("/")
+  let res = loginApi(email, password);
+  if (res && res.token) {
+    localStorage.setItem("token", res.token);
   }
+  console.log("check login: ", res);
+
+  const handleGoBack = () => {
+    navigate("/");
+  };
   return (
     <>
       <div className="login-container col-12 col-sm-4 ">
@@ -83,7 +79,6 @@ const Login = () => {
             </NavLink>
           </div>
         </form>
-
       </div>
     </>
   );

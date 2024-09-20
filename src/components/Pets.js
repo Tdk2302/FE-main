@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import ShibaImage from '../assets/images/Shiba.jpg';  // Path to your image
-
+import "../styles/pet.scss";
 const Pets = () => {
   const [name, setName] = useState('');
   const [breed, setBreed] = useState('');
@@ -22,7 +22,7 @@ const Pets = () => {
   };
 
   return (
-    <div className="container users-container">
+    <div className="container pets-container">
       <div className="row">
         {/* Left Side with Image */}
         <div className="col-lg-6 col-md-6 col-sm-12 text-center">

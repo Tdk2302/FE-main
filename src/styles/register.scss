@@ -1,0 +1,84 @@
+.register-container {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    margin-top: 40px;
+    width: 100%;
+    max-width: 500px;
+    margin-bottom: 30px;
+  }
+  
+  .title {
+    text-align: center;
+    font-size: 25px;
+    font-weight: 600;
+    padding-top: 30px;
+  }
+  
+  .text {
+    font-weight: 600;
+    padding-bottom: 5px;
+  }
+  
+  .register-container input,
+  .register-container select {
+    margin-bottom: 15px;
+    padding: 5px;
+    outline: none;
+    width: 100%;
+    border-radius: 5px;
+    border-width: 0.2px;
+    border-color: #ccc;
+  
+    &:hover {
+      background-color: #e0e0e0;
+    }
+  }
+  
+  .back {
+    text-align: left;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .back i {
+    cursor: pointer;
+    margin-top: 5px;
+  }
+  
+  .back p {
+    margin-left: 20px;
+  }
+  
+  .button {
+    width: 100%;
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 3px;
+    outline: none;
+    border: none;
+    background-color: #007bff;
+    color: white;
+  
+    &.active {
+      background-color: rgb(13, 12, 12);
+      color: white;
+    }
+  }
+  
+  button[disabled="disabled"],
+  button:disabled {
+    cursor: not-allowed;
+  }
+  
+  .input-password {
+    position: relative;
+  
+    i {
+      position: absolute;
+      right: 10px;
+      cursor: pointer;
+    }
+  }
+  

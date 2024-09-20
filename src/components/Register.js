@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import "../styles/register.scss";
 const Register = () => {
   const [fullName, setFullName] = useState("");
   const [birthday, setBirthday] = useState("");
@@ -114,7 +114,9 @@ const Register = () => {
             className="form-control"
           />
           <i
-            className={isShowPassword ? "fa-solid fa-eye" : "fa-solid fa-eye-slash"}
+            className={
+              isShowPassword ? "fa-solid fa-eye" : "fa-solid fa-eye-slash"
+            }
             onClick={() => setIsShowPassword(!isShowPassword)}
           ></i>
         </div>
@@ -128,7 +130,11 @@ const Register = () => {
             className="form-control"
           />
           <i
-            className={isShowConfirmPassword ? "fa-solid fa-eye" : "fa-solid fa-eye-slash"}
+            className={
+              isShowConfirmPassword
+                ? "fa-solid fa-eye"
+                : "fa-solid fa-eye-slash"
+            }
             onClick={() => setIsShowConfirmPassword(!isShowConfirmPassword)}
           ></i>
         </div>
@@ -144,14 +150,14 @@ const Register = () => {
           <option value="Member">Member</option>
         </select>
         <button
-          className={`button btn btn-primary w-100 ${isFormValid ? "active" : ""}`}
+          className={`button btn btn-primary w-100 ${
+            isFormValid ? "active" : ""
+          }`}
           disabled={!isFormValid}
           onClick={handleRegister}
         >
           Register
         </button>
-
-        
 
         <div className="back mt-3" onClick={handleGoBack}>
           <i className="fa-solid fa-angles-left"></i> Go back

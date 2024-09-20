@@ -2,7 +2,6 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import logoApp from "../assets/images/logo.webp";
 import { useLocation, NavLink } from "react-router-dom";
-import Container from "react-bootstrap/Container";
 import "../styles/header.scss";
 
 const Header = (props) => {
@@ -13,12 +12,12 @@ const Header = (props) => {
       <Navbar.Brand className="logo" href="/">
         <img
           src={logoApp}
-          width="40"
-          height="40"
+          width="60"
+          height="60"
           className="d-inline-block align-top"
           alt="React Bootstrap logo"
         />
-        FurryFriendsFund
+        <p>FurryFriendsFund</p>
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
@@ -38,6 +37,9 @@ const Header = (props) => {
           <NavLink to="/donate" className="nav-link">
             Donate
           </NavLink>
+          <NavLink to="/contact" className="nav-link">
+            Contact
+          </NavLink>
         </Nav>
         <Nav className="login-regist">
           <NavLink to="/login" className="nav-link">
@@ -49,7 +51,6 @@ const Header = (props) => {
         </Nav>
       </Navbar.Collapse>
     </Navbar>
-
   );
 };
 

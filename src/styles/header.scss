@@ -4,10 +4,24 @@
   padding: 0 15px;
   margin-left: calc(-50vw + 50%);
   margin-right: calc(-50vw + 50%);
+
+  p {
+    margin-top: 5px;
+    font-size: 30px;
+  }
 }
 .logo {
   margin-left: 100px;
   font-size: 1000;
   display: flex;
   justify-items: center;
+}
+
+.me-auto {
+  margin: 0 auto;
+  font-size: 20px;
+}
+
+.login-regist {
+  font-size: 17px;
 }

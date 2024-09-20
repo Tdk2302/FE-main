@@ -71,11 +71,15 @@ button:disabled {
 
 .input-password {
   position: relative;
-
+  input {
+    padding-right: 40px;
+  }
   i {
     position: absolute;
-    margin-top: 11px;
     right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
     cursor: pointer;
+    padding-bottom: 15px;
   }
 }

@@ -1,0 +1,22 @@
+.header {
+    background-color: #694c2d;
+    width: 100vw;
+    padding: 0 15px;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+  
+    .logo {
+      margin-left: 100px;
+      font-size: 1000;
+    }
+  }
+  
+  .app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  .main-content {
+    flex: 1;
+  }

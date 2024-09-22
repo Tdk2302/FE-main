@@ -28,8 +28,8 @@ const Login = () => {
         console.log("Token stored:", response.data.token);
         toast.success("Login successful!");
         setTimeout(() => {
-          navigate("/")
-          console.log("Navigating after setting window.location.href");
+          navigate("/");
+          console.log("Navigating after calling navigate");
         }, 1000);
       } else {
         toast.error("Invalid username or password");
@@ -44,11 +44,11 @@ const Login = () => {
     const token = localStorage.getItem("token");
     if (token) {
       console.log("token found, navigating to homepage");
-      navigate("/");  // Redirect to homepage if already logged in
+      navigate("/");
     } else {
       console.log("No token found, staying on login page");
     }
-  }, []);
+  }, [navigate]);
 
   const handleGoBack = () => {
     navigate("/");

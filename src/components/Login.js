@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate, NavLink } from "react-router-dom";
 import api from "../services/axios";
+
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -20,75 +21,82 @@ const Login = () => {
     }
 
     try {
-      const response = await api.post("account/login", { username, password });
+      const response = await api.post("accounts/login", { accountID: username, password });
+      console.log(response);
       if (response && response.data && response.data.token) {
         localStorage.setItem("token", response.data.token);
+        console.log("Token stored:", response.data.token);
         toast.success("Login successful!");
-        navigate("/");
+        setTimeout(() => {
+          navigate("/")
+          console.log("Navigating after setting window.location.href");
+        }, 1000);
       } else {
         toast.error("Invalid username or password");
       }
     } catch (error) {
-      toast.error("Invalid username or password");
+      console.error("Login error:", error);
+      toast.error("An error occurred during login");
     }
   };
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      navigate("/");
+      console.log("token found, navigating to homepage");
+      navigate("/");  // Redirect to homepage if already logged in
+    } else {
+      console.log("No token found, staying on login page");
     }
-  }, [navigate]);
+  }, []);
 
   const handleGoBack = () => {
     navigate("/");
   };
 
   return (
-    <>
-      <div className="login-container col-12 col-sm-4 ">
-        <form onSubmit={handleLogin}>
-          <div className="title">Login</div>
+    <div className="login-container col-12 col-sm-4">
+      <form onSubmit={handleLogin}>
+        <div className="title">Login</div>
+        <input
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={(event) => setUsername(event.target.value)}
+        />
+        <div className="input-password">
           <input
-            type="text"
-            placeholder="Username"
-            value={username}
-            onChange={(event) => setUsername(event.target.value)}
+            type={isShowPassword ? "text" : "password"}
+            placeholder="Password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
           />
-          <div className="input-password">
-            <input
-              type={isShowPassword ? "text" : "password"}
-              placeholder="Password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-            />
-            <i
-              className={
-                isShowPassword ? "fa-solid fa-eye" : "fa-solid fa-eye-slash"
-              }
-              onClick={() => setIsShowPassword(!isShowPassword)}
-            ></i>
-          </div>
+          <i
+            className={
+              isShowPassword ? "fa-solid fa-eye" : "fa-solid fa-eye-slash"
+            }
+            onClick={() => setIsShowPassword(!isShowPassword)}
+          ></i>
+        </div>
 
-          <button
-            className={`button ${username && password ? "active" : ""}`}
-            disabled={!username || !password}
-          >
-            Login
-          </button>
+        <button
+          className={`button ${username && password ? "active" : ""}`}
+          disabled={!username || !password}
+        >
+          Login
+        </button>
 
-          <div className="action-links">
-            <div className="back" onClick={handleGoBack}>
-              <i className="fa-solid fa-angles-left"></i>
-              <span>Go back</span>
-            </div>
-            <NavLink to="/register" className="register-link">
-              Don't have an account? Register
-            </NavLink>
+        <div className="action-links">
+          <div className="back" onClick={handleGoBack}>
+            <i className="fa-solid fa-angles-left"></i>
+            <span>Go back</span>
           </div>
-        </form>
-      </div>
-    </>
+          <NavLink to="/register" className="register-link">
+            Don't have an account? Register
+          </NavLink>
+        </div>
+      </form>
+    </div>
   );
 };
 

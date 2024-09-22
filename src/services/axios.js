@@ -1,20 +1,18 @@
 import axios from "axios";
+
+// Create an axios instance with your custom configuration
 const instance = axios.create({
-  baseURL: "http://localhost8080",
+  baseURL: 'https://furryfriendfund-gbhdbqchbfaqe7fm.canadacentral-01.azurewebsites.net/',
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
-// Add a response interceptor
-instance.interceptors.response.use(
-  function (response) {
-    // Any status code that lie within the range of 2xx cause this function to trigger
-    // Do something with response datas
-    return response.data ? response.data : { statusCode: response.status };
-  },
-  function (error) {
-    // Any status codes that falls outside the range of 2xx cause this function to trigger
-    // Do something with response error
-    return Promise.reject(error);
-  }
-);
+// Create an API object to handle HTTP methods
+const api = {
+  get: (url, config = {}) => instance.get(url, config),
+  post: (url, data, config = {}) => instance.post(url, data, config),
+  put: (url, data, config = {}) => instance.put(url, data, config)
+};
 
-export default instance;
+export default api;

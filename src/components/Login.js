@@ -37,7 +37,7 @@ const Login = () => {
       }
     } catch (error) {
       //console.error("Login error:", error);
-      toast.error("An error occurred during login");
+      toast.error("Invalid username or passwor");
     }
   };
 

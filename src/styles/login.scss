@@ -5,13 +5,13 @@
   margin-top: 80px;
 }
 
-.login-regist {
-  margin-right: 80px;
-}
+// .login-regist {
+//   margin-right: 80px;
+// }
 
 .title {
   text-align: center;
-  font-size: 25px;
+  font-size: 50px;
   font-weight: 600;
   padding-top: 30px;
   margin-bottom: 20px;
@@ -54,15 +54,18 @@
 .button {
   width: 100%;
   margin-top: 15px;
-  padding: 10px;
+  padding: 5px 10px;
   border-radius: 3px;
   outline: none;
   border: none;
+  font-size: 16px;
+  align-self: center;
+  background-color: #ccc;
 
   &.active {
-    background-color: rgb(5, 1, 216);
+    background-color: rgb(237, 212, 178);
     color: white;
-  } 
+  }
 }
 
 button[disabled="disabled"],
@@ -88,7 +91,18 @@ button:disabled {
 .action-links {
   display: flex;
   justify-content: space-between;
-  align-items: center;  
+  align-items: center;
+  .register {
+    display: flex;
+    justify-content: space-between;
+  }
+  p {
+    margin: 0;
+    margin-top: 21px;
+  }
+  .register-link {
+    margin-left: 3px;
+  }
 }
 
 .back {
@@ -107,6 +121,6 @@ button:disabled {
   margin-top: 20px;
   &:hover {
     text-decoration: underline;
-
+    color: #000000;
   }
 }

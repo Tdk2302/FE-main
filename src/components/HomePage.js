@@ -9,7 +9,7 @@ import dog1 from "../assets/images/dog-1.jpg";
 import dog2 from "../assets/images/dog-2.jpg";
 import dog3 from "../assets/images/dog-3.jpg";
 import dog4 from "../assets/images/dog-4.jpg";
-import aboutUsImage from "../assets/images/logo.webp"; // Đảm bảo bạn có hình ảnh này
+import aboutUsImage from "../assets/images/logo.png"; // Đảm bảo bạn có hình ảnh này
 
 const HomePage = () => {
   const responsive = {
@@ -33,28 +33,29 @@ const HomePage = () => {
     {
       id: 1,
       image: dog2,
-      title: "Chú Chó Shiba Inu Nổi Tiếng Khắp Thế Giới...",
-      description: "Trong hội bạn thân nào cũng có ai đó chuyên gia",
+      title: "The Famous Shiba Inu Dog Around the World...",
+      description:
+        "In every group of friends, there's always someone who is an expert",
     },
     {
       id: 2,
       image: dog1,
-      title: '"Chú Mèo Buồn Bã Nhất Thế Giới" Ngày Ấy...',
-      description: "Cái kết hạnh phúc cho chú mèo chỉ sau 1 năm",
+      title: '"The Saddest Dog in the World" Back Then...',
+      description: "A happy ending for the cat after just one year",
     },
     {
       id: 3,
       image: dog3,
-      title: "Gặp Gỡ Chú Mèo Gây Bão Cộng Đồng Mạng...",
+      title: "Meet the Dog Taking the Internet by Storm...",
       description:
-        "Gặp Gỡ Chú Mèo Gây Bão Cộng Đồng Mạng Với Cánh Tay Nghịch Ngợm Của Mình",
+        "Meet the Dog Taking the Internet by Storm with Its Mischievous Paw",
     },
     {
       id: 4,
       image: dog4,
-      title: "Gặp Gỡ Chú Mèo Gây Bão Cộng Đồng Mạng...",
+      title: "Meet the Dog Taking the Internet by Storm...",
       description:
-        "Gặp Gỡ Chú Mèo Gây Bão Cộng Đồng Mạng Với Cánh Tay Nghịch Ngợm Của Mình",
+        "Meet the Dog Taking the Internet by Storm with Its Mischievous Paw",
     },
   ];
 
@@ -71,30 +72,30 @@ const HomePage = () => {
     {
       name: "Win",
       image: dog1,
-      gender: "Đực",
-      age: "Trưởng thành",
-      vaccinated: "Có",
+      gender: "Male",
+      age: "Adult",
+      vaccinated: "Yes",
     },
     {
       name: "Elvis",
       image: dog2,
-      gender: "Đực",
-      age: "Trưởng thành",
-      vaccinated: "Chưa rõ",
+      gender: "Male",
+      age: "Adult",
+      vaccinated: "Unknown",
     },
     {
       name: "Nicky",
       image: dog3,
-      gender: "Đực",
-      age: "Trưởng thành",
-      vaccinated: "Có",
+      gender: "Male",
+      age: "Adult",
+      vaccinated: "Yes",
     },
     {
       name: "Orion",
       image: dog4,
-      gender: "Cái",
-      age: "Trưởng thành",
-      vaccinated: "Có",
+      gender: "Female",
+      age: "Adult",
+      vaccinated: "Yes",
     },
   ];
 
@@ -103,26 +104,25 @@ const HomePage = () => {
     <div className="homepage">
       <section className="hero-section">
         <h2>FurryFriendsFund</h2>
-        <p>Nhận nuôi thú cưng - Mang yêu thương về nhà</p>
+        <p>"Open your heart, adopt a furry friend in need!"</p>
       </section>
 
       <section className="about-us">
         <div className="container">
           <div className="row align-items-center">
             <div className="col-md-8">
-              <h2>Nhận Nuôi Thú Cưng - Hanoi Pet Adoption</h2>
+              <h2>Adopt Pets - FurryFriendsFund</h2>
               <p>
-                Chúng tôi là một nhóm trẻ gồm tình nguyện viên Việt Nam và một
-                số bạn nước ngoài, cùng hoạt động vì tình yêu chó mèo. Tôn chỉ
-                hoạt động của chúng tôi là không từ bỏ nỗ lực với bất kỳ con vật
-                nào, dù bé có ốm yếu hay tàn tật tới đâu, bởi mọi thú cưng đều
-                cần có cơ hội hi vọng vào một tương lai tốt đẹp. Chúng tôi cố
-                gắng chăm sóc tốt nhất có thể, phần nào bù đắp lại những tổn
-                thương cho các bé được cứu hộ về dù là hoang, lạc, bị bỏ rơi hay
-                bạo hành. Ngoài ra, chúng tôi cũng luôn nỗ lực tìm mái ấm yêu
-                thương các bé trọn đời. Và cuối cùng, chúng tôi giúp nâng cao
-                nhận thức về trách nhiệm của chủ nuôi thông qua mạng xã hội và
-                các hoạt động thiện nguyện.
+                We are a group of passionate young students from FPT University,
+                working together on a meaningful project focused on the adoption
+                and fundraising support for stray dogs and cats. With the goal
+                of giving these pets a new home, our group not only connects
+                abandoned dogs and cats with loving owners but also organizes
+                fundraising events to help cover the costs of their care and
+                medical treatment. Through this project, we hope to spread the
+                message of love and responsibility towards these less fortunate
+                pets, while also fostering a connected community that stands
+                together for animal welfare.
               </p>
 
               <NavLink to="/contact" className="nav-link">

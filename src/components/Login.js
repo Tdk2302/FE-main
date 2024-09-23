@@ -1,6 +1,5 @@
 import "../styles/login.scss";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate, NavLink } from "react-router-dom";
@@ -21,9 +20,13 @@ const Login = () => {
     }
 
     try {
-      const response = await api.post("accounts/login", { accountID: username, password });
+      const response = await api.post("accounts/login", {
+        accountID: username,
+        password,
+      });
       console.log(response);
-      if (response && response.data) {//&& response.data.token
+      if (response && response.data) {
+        //&& response.data.token
         //localStorage.setItem("token", response.data.token);
         //console.log("Token stored:", response.data.token);
         toast.success("Login successful!");
@@ -51,7 +54,6 @@ const Login = () => {
   //     console.log("No token found, staying on login page");
   //   }
   // }, [navigate]);
-
 
   const handleGoBack = () => {
     navigate("/");
@@ -94,9 +96,12 @@ const Login = () => {
             <i className="fa-solid fa-angles-left"></i>
             <span>Go back</span>
           </div>
-          <NavLink to="/register" className="register-link">
-            Don't have an account? Register
-          </NavLink>
+          <div className="register">
+            <p> Don't have an account?</p>
+            <NavLink to="/register" className="register-link">
+              Register
+            </NavLink>
+          </div>
         </div>
       </form>
     </div>

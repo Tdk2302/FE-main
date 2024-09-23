@@ -1,3 +1,4 @@
+/*Header*/
 .header {
   background-color: rgb(246, 239, 230) !important;
   width: 100vw;
@@ -10,18 +11,43 @@
     font-size: 30px;
   }
 }
+
+/*Logo*/
 .logo {
-  margin-left: 100px;
+  margin-left: 70px;
   font-size: 1000;
   display: flex;
   justify-items: center;
+  img {
+    margin-top: 10px;
+    margin-right: 5px;
+  }
 }
 
+/*Menu*/
 .me-auto {
   margin: 0 auto;
-  font-size: 20px;
+  margin-top: 8px;
+  margin-left: 200px;
+  h3 {
+    font-size: 18px;
+    font-weight: 2px;
+  }
+  .nav-link {
+    &:active {
+      background-color: rgb(149, 144, 141);
+    }
+  }
 }
 
+/*Login/Register*/
 .login-regist {
-  font-size: 17px;
+  margin-right: 80px;
+  h3 {
+    font-size: 18px;
+    &:active {
+      background-color: rgb(149, 144, 141);
+    }
+    font-weight: 2px;
+  }
 }

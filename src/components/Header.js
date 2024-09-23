@@ -1,19 +1,28 @@
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import logoApp from "../assets/images/logo.webp";
+import NavDropdown from "react-bootstrap/NavDropdown";
+import logoApp from "../assets/images/logo.png";
 import { useLocation, NavLink } from "react-router-dom";
 import "../styles/header.scss";
+import { useState } from "react";
 
 const Header = (props) => {
-  const location = useLocation;
+  const location = useLocation();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const handleLogout = () => {
+    // Handle logout logic here
+    setIsLoggedIn(false);
+  };
 
   return (
     <Navbar expand="lg" className="header">
+      {/* Logo */}
       <Navbar.Brand className="logo" href="/">
         <img
           src={logoApp}
-          width="60"
-          height="60"
+          width="45"
+          height="45"
           className="d-inline-block align-top"
           alt="React Bootstrap logo"
         />
@@ -21,33 +30,46 @@ const Header = (props) => {
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
+        {/* Thanh menu */}
         <Nav className="me-auto" activeKey={location.pathname}>
           <NavLink to="/" className="nav-link">
-            Home
+            <h3>Home</h3>
           </NavLink>
           <NavLink to="/adopt" className="nav-link">
-            Adopt
+            <h3>Adopt</h3>
           </NavLink>
           <NavLink to="/events" className="nav-link">
-            Events
+            <h3>Events</h3>
           </NavLink>
           <NavLink to="/pets" className="nav-link">
-            Pets
+            <h3>Pets</h3>
           </NavLink>
           <NavLink to="/donate" className="nav-link">
-            Donate
+            <h3>Donate</h3>
           </NavLink>
           <NavLink to="/contact" className="nav-link">
-            Contact
+            <h3>Contact</h3>
           </NavLink>
         </Nav>
+        {/* Đổi đăng nhập và đăng ký thành profile */}
         <Nav className="login-regist">
-          <NavLink to="/login" className="nav-link">
-            Login
-          </NavLink>
-          <NavLink to="/register" className="nav-link">
-            Register
-          </NavLink>
+          {isLoggedIn ? (
+            <NavDropdown title="Settings" id="basic-nav-dropdown">
+              <NavDropdown.Item as={NavLink} to="/profile">
+                Profile
+              </NavDropdown.Item>
+              <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
+            </NavDropdown>
+          ) : (
+            <>
+              <NavLink to="/login" className="nav-link">
+                <h3>Login</h3>
+              </NavLink>
+              <NavLink to="/register" className="nav-link">
+                <h3>Register</h3>
+              </NavLink>
+            </>
+          )}
         </Nav>
       </Navbar.Collapse>
     </Navbar>

@@ -22,16 +22,15 @@ const Footer = () => {
         </div>
 
         <div className="footer-about">
-          <h4>Về chúng tôi</h4>
+          <h4>About us</h4>
           <hr className="small-divider left"></hr>
           <p>
-            Nhóm trẻ tình nguyện viên Việt Nam và quốc tế, hoạt động vì tình yêu
-            chó mèo.
+            FurryFriendsFund is a small pet shelter where we strive to provide the best living environment for our pets.
           </p>
         </div>
 
         <div className="footer-bottom">
-          <h4>Thông tin liên hệ</h4>
+          <h4>Contact us</h4>
           <hr className="small-divider"></hr>
           <p>
             <i className="fa fa-phone"></i> (+84)000000000

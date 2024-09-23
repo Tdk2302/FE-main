@@ -11,6 +11,9 @@ import Pets from "./components/Pets";
 import HomePage from "./components/HomePage";
 import Contact from "./components/Contact";
 import Donate from "./components/Donate";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 function App() {
   return (
     <>
@@ -31,6 +34,7 @@ function App() {
         </div>
         <Footer />
       </div>
+      <ToastContainer />        
     </>
   );
 }

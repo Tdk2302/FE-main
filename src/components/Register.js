@@ -52,25 +52,25 @@ const Register = () => {
       return;
     }
     const userData = {
-      fullName,
-      birthday,
+      name: fullName,
+      birthdate: birthday,
       sex,
       address,
-      phoneNumber,
-      username,
+      phone:phoneNumber,
+      accountID:username,
       password,
-      role: role === "Staff" ? 2 : 3,
-      status: role === "Staff" ? "pending" : "active",
+      roleID: role === "Staff" ? 2 : 3,
+      
     };
     
     try {
-      const checkUsername = await api.get(`/check-username?username=${username}`);
-      if (checkUsername.data.exists) {
+      const checkUsername = await api.get(`accounts/search/${username}`);
+      if (checkUsername.data&&checkUsername) {
         toast.error("Username already exists!");
         return;
       }
 
-      await api.post("/register", userData);
+      await api.post("/accounts/register", userData);
       if (role === "Staff") {
         toast.success("Registration successful! Please wait for admin approval.");
       } else {
@@ -78,7 +78,7 @@ const Register = () => {
       }
       navigate("/login");
     } catch (error) {
-      console.error("Registration error:", error);
+      //console.error("Registration error:", error);
       toast.error("Registration failed. Please try again.");
     } 
   };
@@ -86,7 +86,6 @@ const Register = () => {
   return (
     <div className="register-container col-12 col-sm-6 mx-auto">
       <div className="title">Register</div>
-      <div className="title-text">Enter Your Information:</div>
 
       <div className="form-group">
         {errors.fullName && <div className="invalid-feedback">{errors.fullName}</div>}
@@ -210,17 +209,16 @@ const Register = () => {
           <option value="Customer">Customer</option>
         </select>
       </div>
-      <div>
-         <button onClick={handleRegister} className="btn btn-black w-100">
-         Register
-         </button>
 
 
-        
-        <div className="back" onClick={handleGoBack}>
+      <div className="button-containerR">
+      <div className="backRegister" onClick={handleGoBack}>
               <i className="fa-solid fa-angles-left"></i>
               <span>Go back</span>
-            </div>
+            </div>     
+         <button onClick={handleRegister} className="btn btn-black  ">
+         Register
+         </button>
       </div>
     </div>
   );

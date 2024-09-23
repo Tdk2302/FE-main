@@ -1,7 +1,7 @@
 import "../styles/login.scss";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate, NavLink } from "react-router-dom";
 import api from "../services/axios";
@@ -23,10 +23,12 @@ const Login = () => {
     try {
       const response = await api.post("accounts/login", { accountID: username, password });
       console.log(response);
-      if (response && response.data && response.data.token) {
-        localStorage.setItem("token", response.data.token);
-        console.log("Token stored:", response.data.token);
+      if (response && response.data) {//&& response.data.token
+        //localStorage.setItem("token", response.data.token);
+        //console.log("Token stored:", response.data.token);
         toast.success("Login successful!");
+        navigate("/");
+
         setTimeout(() => {
           navigate("/");
           console.log("Navigating after calling navigate");
@@ -35,20 +37,21 @@ const Login = () => {
         toast.error("Invalid username or password");
       }
     } catch (error) {
-      console.error("Login error:", error);
-      toast.error("An error occurred during login");
+      //console.error("Login error:", error);
+      toast.error("Invalid username or passwor");
     }
   };
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      console.log("token found, navigating to homepage");
-      navigate("/");
-    } else {
-      console.log("No token found, staying on login page");
-    }
-  }, [navigate]);
+  // useEffect(() => {
+  //   const token = localStorage.getItem("token");
+  //   if (token) {
+  //     console.log("token found, navigating to homepage");
+  //     navigate("/");
+  //   } else {
+  //     console.log("No token found, staying on login page");
+  //   }
+  // }, [navigate]);
+
 
   const handleGoBack = () => {
     navigate("/");

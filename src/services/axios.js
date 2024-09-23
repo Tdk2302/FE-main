@@ -2,7 +2,8 @@ import axios from "axios";
 
 // Create an axios instance with your custom configuration
 const instance = axios.create({
-  baseURL: 'https://furryfriendfund-gbhdbqchbfaqe7fm.canadacentral-01.azurewebsites.net/',
+  baseURL: "http://localhost:8081/",//'https://furryfriendfund-gbhdbqchbfaqe7fm.canadacentral-01.azurewebsites.net/',
+
   headers: {
     'Content-Type': 'application/json',
   },

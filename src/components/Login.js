@@ -28,6 +28,7 @@ const Login = () => {
         //console.log("Token stored:", response.data.token);
         toast.success("Login successful!");
         navigate("/");
+
         setTimeout(() => {
           navigate("/");
           console.log("Navigating after calling navigate");
@@ -50,6 +51,7 @@ const Login = () => {
   //     console.log("No token found, staying on login page");
   //   }
   // }, [navigate]);
+
 
   const handleGoBack = () => {
     navigate("/");

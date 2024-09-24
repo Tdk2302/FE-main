@@ -1,6 +1,6 @@
 import "../styles/login.scss";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useNavigate, NavLink } from "react-router-dom";
 import api from "../services/axios";
@@ -24,26 +24,33 @@ const Login = () => {
         accountID: username,
         password,
       });
-      console.log(response);
-      if (response && response.data) {
-        //&& response.data.token
-        //localStorage.setItem("token", response.data.token);
-        //console.log("Token stored:", response.data.token);
-        toast.success("Login successful!");
-        navigate("/");
 
+      if (response && response.data) {
+        localStorage.setItem("user", response.data);
+        localStorage.setItem("isLoggedIn", "true");
+        const currentLoginChange =
+          localStorage.getItem("loginChange") === "true";
+        localStorage.setItem("loginChange", (!currentLoginChange).toString());
+        toast.success("Login successful!");
+        window.location.reload();
+        navigate("/");
         setTimeout(() => {
           navigate("/");
-          console.log("Navigating after calling navigate");
         }, 1000);
       } else {
         toast.error("Invalid username or password");
       }
     } catch (error) {
-      //console.error("Login error:", error);
-      toast.error("Invalid username or passwor");
+      toast.error("Invalid username or password");
     }
   };
+  useEffect(() => {
+    const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+    if (isLoggedIn) {
+      navigate("/");
+    }
+  }, [navigate]);
+  // Gọi hàm login
 
   // useEffect(() => {
   //   const token = localStorage.getItem("token");

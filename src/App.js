@@ -11,8 +11,9 @@ import Pets from "./components/Pets";
 import HomePage from "./components/HomePage";
 import Contact from "./components/Contact";
 import Donate from "./components/Donate";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import ProtectedRoute from "./components/ProtectRoute";
 
 function App() {
   return (
@@ -22,6 +23,14 @@ function App() {
         <div>
           <Container>
             <Routes>
+              <Route
+                path="/login"
+                element={
+                  <ProtectedRoute>
+                    <Login />
+                  </ProtectedRoute>
+                }
+              />
               <Route path="/" element={<HomePage />} />
               <Route path="/login" element={<Login />} />
               <Route path="/events" element={<Events />} />
@@ -34,7 +43,7 @@ function App() {
         </div>
         <Footer />
       </div>
-      <ToastContainer />        
+      <ToastContainer />
     </>
   );
 }

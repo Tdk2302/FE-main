@@ -41,10 +41,11 @@
 }
 
 /*Login/Register*/
-.login-regist {
+.settings {
   margin-right: 80px;
+  font-size: 18px;
+  font-weight: 10px;
   h3 {
-    font-size: 18px;
     &:active {
       background-color: rgb(149, 144, 141);
     }

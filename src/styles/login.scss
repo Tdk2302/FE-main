@@ -5,10 +5,7 @@
   margin-top: 80px;
 }
 
-// .login-regist {
-//   margin-right: 80px;
-// }
-
+/*Title*/
 .title {
   text-align: center;
   font-size: 50px;
@@ -22,6 +19,7 @@
   padding-bottom: 5px;
 }
 
+/*Input*/
 .login-container input {
   margin-bottom: 15px;
   padding: 5px;
@@ -35,6 +33,7 @@
   }
 }
 
+/*Back button*/
 .back {
   text-align: left;
   margin-top: 20px;
@@ -51,6 +50,7 @@
   margin-left: 20px;
 }
 
+/*Login Button*/
 .button {
   width: 100%;
   margin-top: 15px;
@@ -73,6 +73,7 @@ button:disabled {
   cursor: not-allowed;
 }
 
+/*Password*/
 .input-password {
   position: relative;
   input {
@@ -88,6 +89,7 @@ button:disabled {
   }
 }
 
+/*Register link*/
 .action-links {
   display: flex;
   justify-content: space-between;

@@ -255,9 +255,11 @@
   background-image: url("../assets/images/banner.webp");
   background-size: cover;
   background-position: center;
-  padding: 20px 0;
+  border-radius: 5px;
+  // padding: 20px 0;
   h2 {
     font-size: 30px;
+    margin-top: 20px;
     color: white;
   }
 }

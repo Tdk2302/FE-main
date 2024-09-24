@@ -4,14 +4,24 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import logoApp from "../assets/images/logo.png";
 import { useLocation, NavLink } from "react-router-dom";
 import "../styles/header.scss";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Header = (props) => {
   const location = useLocation();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  useEffect(() => {
+    const checkLoginStatus = () => {
+      const loggedIn = localStorage.getItem("isLoggedIn") === "true";
+      setIsLoggedIn(loggedIn);
+      console.log("loginChange: ", loggedIn);
+    };
+    checkLoginStatus();
+  }, []);
+
   const handleLogout = () => {
-    // Handle logout logic here
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("user");
     setIsLoggedIn(false);
   };
 
@@ -52,7 +62,7 @@ const Header = (props) => {
           </NavLink>
         </Nav>
         {/* Đổi đăng nhập và đăng ký thành profile */}
-        <Nav className="login-regist">
+        <Nav className="settings">
           {isLoggedIn ? (
             <NavDropdown title="Settings" id="basic-nav-dropdown">
               <NavDropdown.Item as={NavLink} to="/profile">

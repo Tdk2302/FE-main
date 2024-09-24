@@ -63,6 +63,8 @@ const Header = (props) => {
         </Nav>
         {/* Đổi đăng nhập và đăng ký thành profile */}
         <Nav className="settings">
+          <i class="fa-solid fa-gear"></i>
+
           {isLoggedIn ? (
             <NavDropdown title="Settings" id="basic-nav-dropdown">
               <NavDropdown.Item as={NavLink} to="/profile">

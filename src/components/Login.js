@@ -23,22 +23,27 @@ const Login = () => {
     try {
       const response = await api.post("accounts/login", { accountID: username, password });
       console.log(response);
-      if (response && response.data) {//&& response.data.token
-        //localStorage.setItem("token", response.data.token);
-        //console.log("Token stored:", response.data.token);
+      if (response && response.data) {
+        // Store user data as a JSON string
+        localStorage.setItem("user", JSON.stringify(response.data));
+        localStorage.setItem("isLoggedIn", JSON.stringify(true));
+
+        console.log(
+          "User data stored in localStorage:",
+          localStorage.getItem("user")
+        );
+        console.log(
+          "isLoggedIn stored in localStorage:",
+          localStorage.getItem("isLoggedIn")
+        );
         toast.success("Login successful!");
         navigate("/");
-
-        setTimeout(() => {
-          navigate("/");
-          console.log("Navigating after calling navigate");
-        }, 1000);
       } else {
         toast.error("Invalid username or password");
       }
     } catch (error) {
-      //console.error("Login error:", error);
-      toast.error("Invalid username or passwor");
+      console.error("Login error:", error);
+      toast.error("Invalid username or password");
     }
   };
 

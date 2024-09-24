@@ -9,11 +9,13 @@ import { useState, useEffect } from "react";
 const Header = (props) => {
   const location = useLocation();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+  const [roleID, setRoleID] = useState(null);
   useEffect(() => {
     const checkLoginStatus = () => {
       const loggedIn = localStorage.getItem("isLoggedIn") === "true";
+      const role = Number(localStorage.getItem("roleID"));
       setIsLoggedIn(loggedIn);
+      setRoleID(role);
       console.log("loginChange: ", loggedIn);
     };
     checkLoginStatus();
@@ -22,7 +24,9 @@ const Header = (props) => {
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("user");
+    localStorage.removeItem("roleID");
     setIsLoggedIn(false);
+    setRoleID(null);
   };
 
   return (
@@ -60,17 +64,37 @@ const Header = (props) => {
           <NavLink to="/contact" className="nav-link">
             <h3>Contact</h3>
           </NavLink>
+
+          {isLoggedIn && roleID === 1 && (
+            <NavLink to="/admin" className="nav-link">
+              <h3>Admin</h3>
+            </NavLink>
+          )}
+
+          {isLoggedIn && roleID === 2 && (
+            <NavLink to="/staff" className="nav-link">
+              <h3>Staff</h3>
+            </NavLink>
+          )}
         </Nav>
         {/* Đổi đăng nhập và đăng ký thành profile */}
         <Nav className="settings">
-          <i class="fa-solid fa-gear"></i>
-
           {isLoggedIn ? (
-            <NavDropdown title="Settings" id="basic-nav-dropdown">
+            <NavDropdown
+              title={
+                <>
+                  <i className="fa-solid fa-gear"></i>
+                  Settings
+                </>
+              }
+              id="basic-nav-dropdown"
+            >
               <NavDropdown.Item as={NavLink} to="/profile">
-                Profile
+                <>Profile</>
               </NavDropdown.Item>
-              <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
+              <NavDropdown.Item onClick={handleLogout}>
+                <>Logout</>
+              </NavDropdown.Item>
             </NavDropdown>
           ) : (
             <>

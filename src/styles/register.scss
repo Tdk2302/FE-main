@@ -3,6 +3,8 @@
   flex-direction: column;
   align-items: center;
   margin-top: 40px;
+  max-width: 400px; /* Set a maximum width for the container */
+  margin: 0 auto; /* Center the container */
 }
 
 .title {
@@ -62,6 +64,16 @@
   border: 1px solid #ccc;
 }
 
+.button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 15px;
+  border-radius: 3px;
+  background-color: #0a0808;
+  color: white;
+  border: none;
+}
+
 .invalid-feedback {
   display: block;
   width: 100%;
@@ -69,6 +81,7 @@
   font-size: 14px;
   color: #dc3545;
 }
+
 .form-control.is-invalid {
   border-color: #dc3545;
   background-image: none;
@@ -95,7 +108,7 @@
 }
 
 .btn {
-  padding: 10px 100px;
+  padding: 10px 60px;
   background-color: #f1cf7e;
   color: white;
   border: none;

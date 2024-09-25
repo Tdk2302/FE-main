@@ -97,12 +97,22 @@
   margin-right: 5px; /* Adds some space between the icon and text */
 }
 
-.btn {
+/* Đổi từ .btn thành .register-btn để tránh xung đột */
+.register-btn {
   padding: 10px 60px;
-  background-color: #f1cf7e;
+  background-color: #f1cf7e; /* Màu nền ban đầu */
   color: white;
   border: none;
   border-radius: 25px;
   cursor: pointer;
-  margin: 0 auto; /* Centers the "Register" button */
+  margin: 0 auto; /* Căn giữa */
 }
+
+/* Khi nút bị nhấn */
+.register-btn:active {
+  background-color: #eec157 !important;
+  color: white !important;
+  border-color: transparent !important;
+  transform: translateY(-5px);
+}
+

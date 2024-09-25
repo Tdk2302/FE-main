@@ -27,7 +27,7 @@ const Pets = () => {
         {/* Left Side with Image */}
         <div className="col-lg-6 col-md-6 col-sm-12 text-center">
           <img src={ShibaImage} alt="Shiba" className="img-fluid mb-3 photo" />
-          <button className="btn w-100 mb-3 upload">Upload</button>
+          <button className="pet-btn w-100 mb-3 upload">Upload</button>
         </div>
 
         {/* Right Side with Form */}
@@ -111,7 +111,7 @@ const Pets = () => {
           </div>
 
           {/* Update Button */}
-          <button className="btn w-50" onClick={handleUpdate}>Update</button>
+          <button className="pet-btn w-50" onClick={handleUpdate}>Update</button>
         </div>
       </div>
     </div>

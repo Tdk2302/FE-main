@@ -53,3 +53,27 @@
   .photo{
     margin-left: 30px;
   }
+
+.upload {
+    position: relative;
+    left: 30px;
+  }
+
+  /* CSS của nút Upload và Update trong pet.scss */
+.pet-btn {
+  padding: 10px 60px;
+  background-color: #f1cf7e; /* Màu nền giống nút Register */
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  margin: 0 auto; /* Căn giữa nút */
+  transition: all 0.3s ease; /* Thêm hiệu ứng */
+}
+
+.pet-btn:active {
+  background-color: #eec157 !important;
+  transform: translateY(-5px); /* Hiệu ứng khi nhấn */
+  border-color: transparent !important;
+  color: white !important;
+}

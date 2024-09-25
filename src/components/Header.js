@@ -2,7 +2,7 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import logoApp from "../assets/images/logo.png";
-import { useLocation, NavLink } from "react-router-dom";
+import { useLocation, NavLink, useNavigate } from "react-router-dom";
 import "../styles/header.scss";
 import { useState, useEffect } from "react";
 
@@ -10,6 +10,7 @@ const Header = (props) => {
   const location = useLocation();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [roleID, setRoleID] = useState(null);
+  const navigate = useNavigate();
   useEffect(() => {
     const checkLoginStatus = () => {
       const loggedIn = localStorage.getItem("isLoggedIn") === "true";
@@ -27,6 +28,7 @@ const Header = (props) => {
     localStorage.removeItem("roleID");
     setIsLoggedIn(false);
     setRoleID(null);
+    navigate("/");
   };
 
   return (

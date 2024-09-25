@@ -53,17 +53,16 @@
 /*Login Button*/
 .button {
   width: 100%;
-  margin-top: 15px;
   padding: 5px 10px;
   border-radius: 5px;
   outline: none;
   border: none;
   font-size: 16px;
   align-self: center;
-  background-color: #ccc;
-
+  background-color: #b6916b;
+  color: white;
   &.active {
-    background-color: rgb(237, 212, 178);
+    background-color: rgb(244, 213, 169);
     color: white;
   }
 }

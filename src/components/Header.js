@@ -78,6 +78,12 @@ const Header = (props) => {
               <h3>Staff</h3>
             </NavLink>
           )}
+
+          {isLoggedIn && roleID === 2 && (
+            <NavLink to="/appoinment" className="nav-link">
+              <h3>Appoiment</h3>
+            </NavLink>
+          )}
         </Nav>
         {/* Đổi đăng nhập và đăng ký thành profile */}
         <Nav className="settings">

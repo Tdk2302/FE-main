@@ -47,8 +47,13 @@ const Login = () => {
   };
   useEffect(() => {
     const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+    const roleID = localStorage.getItem("roleID");
     if (isLoggedIn) {
-      navigate("/");
+      if (roleID === "2") {
+        navigate("/appoinment");
+      } else {
+        navigate("/");
+      }
     }
   }, [navigate]);
   // Gọi hàm login

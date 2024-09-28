@@ -29,19 +29,20 @@
         li {
             padding: 15px 20px;
             cursor: pointer;
-            background-color: #3a3b3c; /* Màu nền cho các mục */
-            color: #e4e6eb; /* Màu chữ */
+            background-color: #f1cf7e; /* Màu nền cho các mục */
+            color: #000000; /* Màu chữ */
             border-radius: 8px; /* Bo góc */
             margin-bottom: 10px; /* Khoảng cách giữa các mục */
             text-align: center;
             transition: background-color 0.3s ease;
-
+            font-size: 16px;
+            border-radius: 25px;
             &:hover {
-                background-color: #1abc9c; /* Màu nền khi hover */
+                background-color: #ebb945; /* Màu nền khi hover */
             }
 
             &.active {
-                background-color: #16a085; /* Màu nền khi được chọn */
+                background-color: #ebb945; /* Màu nền khi được chọn */
                 font-weight: bold;
             }
         }
@@ -71,12 +72,12 @@
     }
 
     th {
-        background-color: #3a3b3c; /* Màu nền cho phần tiêu đề */
-        color: #e4e6eb;
+        background-color: #f6efe6; /* Màu nền cho phần tiêu đề */
+        color: #000000;
     }
 
     td {
-        background-color: #e4e6eb; /* Màu nền cho từng ô trong bảng */
+        background-color: #f5f5f5; /* Màu nền cho từng ô trong bảng */
         color: #18191a; /* Màu chữ */
     }
 }

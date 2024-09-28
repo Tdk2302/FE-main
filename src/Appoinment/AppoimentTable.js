@@ -7,13 +7,15 @@ import { toast } from 'react-toastify';
 const AppointmentPage = () => {
     // Các state để lưu trữ và quản lý dữ liệu
     const [unprocessedAppointments, setUnprocessedAppointments] = useState([]);
-    const [processedAppointments, setProcessedAppointments] = useState([]);
     const [currentUser, setCurrentUser] = useState(null);
     const [processingAppointments, setProcessingAppointments] = useState([]);
     const [activeTab, setActiveTab] = useState('unprocessed');
     const [showModal, setShowModal] = useState(false);
     const [refusalReason, setRefusalReason] = useState('');
     const [appointmentToRefuse, setAppointmentToRefuse] = useState(null);
+    const [notHappenAppointments, setNotHappenAppointments] = useState([]);
+    const [endedAppointments, setEndedAppointments] = useState([]);
+
 
     // Lấy thông tin người dùng hiện tại từ localStorage
     useEffect(() => {
@@ -34,15 +36,24 @@ const AppointmentPage = () => {
             setUnprocessedAppointments([]);
         }
     }, []);
-
-    // Lấy danh sách cuộc hẹn đã xử lý
-    const apiProcessedAppointments = useCallback(async () => {
+    // Lấy danh sách cuộc hẹn đang chờ gặp mặt
+    const apiNotHappenAppointments = useCallback(async () => {
         try {
-            const response = await axios.get('appointment/showProcessed');
-            setProcessedAppointments(response.data);
+            const response = await axios.get('appointment/showNotHappenedYet');
+            setNotHappenAppointments(response.data);
         } catch (error) {
-            console.error('Error fetching processed appointments:', error);
-            setProcessedAppointments([]);
+            console.error('Error fetching not happen appointments:', error);
+            setNotHappenAppointments([]);
+        }
+    }, []);
+    // Lấy danh sách cuộc hẹn kết thúc
+    const apiEndedAppointments = useCallback(async () => {
+        try {
+            const response = await axios.get('appointment/showEnded');
+            setEndedAppointments(response.data);
+        } catch (error) {
+            console.error('Error fetching ended appointments:', error);
+            setEndedAppointments([]);
         }
     }, []);
 
@@ -50,17 +61,19 @@ const AppointmentPage = () => {
     const refreshAppointments = useCallback(async () => {
         if (activeTab === 'unprocessed') {
             await apiUnprocessedAppointments();
-        } else {
-            await apiProcessedAppointments();
+        } else if (activeTab === 'notHappenYet') {
+            await apiNotHappenAppointments();
+        } else if (activeTab === 'ended') {
+            await apiEndedAppointments();
         }
-    }, [activeTab, apiUnprocessedAppointments, apiProcessedAppointments]);
+    }, [activeTab, apiUnprocessedAppointments, apiNotHappenAppointments, apiEndedAppointments]);
 
     // Gọi làm mới khi tab thay đổi
     useEffect(() => {
         refreshAppointments();
     }, [refreshAppointments]);
 
-    // Xử lý chấp nhận cuộc hẹn
+    // Xử lý chấp nhận cuộc hẹn ở bảng unprocessed
     const acceptAppointment = async (appointmentId) => {
         if (processingAppointments.includes(appointmentId)) {
             toast.error('This appointment is already being processed.');
@@ -69,11 +82,9 @@ const AppointmentPage = () => {
         setProcessingAppointments(prev => [...prev, appointmentId]);
         try {
             const staffId = currentUser.accountID;
-            const response = await axios.put(`/appointment/accept/${staffId}`, { appointID: appointmentId });
-            const updatedAppointment = response.data;
+            await axios.put(`/appointment/accept/${staffId}`, { appointID: appointmentId });
 
             setUnprocessedAppointments(prev => prev.filter(app => app.appointID !== appointmentId));
-            setProcessedAppointments(prev => [...prev, updatedAppointment]);
             toast.success('Appointment accepted successfully.');
             refreshAppointments();
         } catch (error) {
@@ -84,7 +95,7 @@ const AppointmentPage = () => {
         }
     };
 
-    // Xử lý từ chối cuộc hẹn
+    // Xử lý từ chối cuộc hẹn ở bảng unprocessed
     const refuseAppointment = (appointmentId) => {
         if (processingAppointments.includes(appointmentId)) {
             toast.error('This appointment is already being processed.');
@@ -116,10 +127,42 @@ const AppointmentPage = () => {
             setAppointmentToRefuse(null);
         }
     };
+    // Xử lý chấp nhận cuộc hẹn ở bảng notHappenyet
+    const handleFinalAccept = async (appointmentId) => {
+        setProcessingAppointments(prev => [...prev, appointmentId]);
+        try {
+            await axios.put(`/appointment/acceptAdopt`, { appointID: appointmentId });
+            toast.success('Appointment final accepted successfully.');
+            refreshAppointments();
+        } catch (error) {
+            console.error('Error final accepting appointment:', error);
+            toast.error('Failed to final accept appointment. Please try again.');
+        }
 
+    }
+    // Xử lý từ chối cuộc hẹn ở bảng notHappenyet
+    const handleFinalRefuse = async (appointmentId) => {
+        setProcessingAppointments(prev => [...prev, appointmentId]);
+        try {
+            await axios.delete(`/appointment/refuseAdopt`, { data: { appointID: appointmentId } });
+            toast.success('Appointment final refused successfully.');
+            refreshAppointments();
+        } catch (error) {
+            console.error('Error final refusing appointment:', error);
+            toast.error('Failed to final refuse appointment. Please try again.');
+        }
+    }
     // Format ngày giờ
     const formatDateTime = (dateTimeString) => {
         return moment(dateTimeString).format('YYYY-MM-DD HH:mm:ss');
+    };
+
+    
+    const renderStatus = (status) => status === true ? 'Processed' : "Unprocessed";
+    
+    const renderAdoptStatus = (adoptStatus) => {
+        if (adoptStatus === undefined) return "Not set";
+        return adoptStatus === true ? 'Adopted' : "Not yet";
     };
 
     return (
@@ -134,16 +177,25 @@ const AppointmentPage = () => {
                             apiUnprocessedAppointments();
                         }}
                     >
-                        Unprocessed Appointments
+                        Unprocessed
                     </li>
                     <li
-                        className={activeTab === 'processed' ? 'active' : ''}
+                        className={activeTab === 'notHappenYet' ? 'active' : ''}
                         onClick={() => {
-                            setActiveTab('processed');
-                            apiProcessedAppointments();
+                            setActiveTab('notHappenYet');
+                            apiNotHappenAppointments();
                         }}
                     >
-                        Processed Appointments
+                        Not Happened Yet
+                    </li>
+                    <li
+                        className={activeTab === 'ended' ? 'active' : ''}
+                        onClick={() => {
+                            setActiveTab('ended');
+                            apiEndedAppointments();
+                        }}
+                    >
+                        Ended
                     </li>
                 </ul>
             </div>
@@ -151,7 +203,7 @@ const AppointmentPage = () => {
             <div className="main-content">
                 {activeTab === 'unprocessed' && (
                     <>
-                        <h2>Unprocessed Appointments</h2>
+                    
                         {unprocessedAppointments.length > 0 ? (
                             <table className="appointments-table">
                                 <thead>
@@ -160,6 +212,8 @@ const AppointmentPage = () => {
                                         <th>Account ID</th>
                                         <th>Pet ID</th>
                                         <th>Staff ID</th>
+                                        <th>Status</th>
+                                        <th>Adopt Status</th>
                                         <th>Button</th>
                                     </tr>
                                 </thead>
@@ -170,6 +224,8 @@ const AppointmentPage = () => {
                                             <td>{appointment.accountID}</td>
                                             <td>{appointment.petID}</td>
                                             <td>{appointment.staffID}</td>
+                                            <td>{renderStatus(appointment.status)}</td>
+                                            <td>{renderAdoptStatus(appointment.adopt_status)}</td>
                                             <td>
                                                 <button onClick={() => acceptAppointment(appointment.appointID)} disabled={processingAppointments.includes(appointment.appointID)}>Accept</button>
                                                 <button onClick={() => refuseAppointment(appointment.appointID)} disabled={processingAppointments.includes(appointment.appointID)}>Refuse</button>
@@ -184,10 +240,10 @@ const AppointmentPage = () => {
                     </>
                 )}
 
-                {activeTab === 'processed' && (
+                {activeTab === 'notHappenYet' && (
                     <>
-                        <h2>Processed Appointments</h2>
-                        {processedAppointments.length > 0 ? (
+                        
+                        {notHappenAppointments.length > 0 ? (
                             <table className="appointments-table">
                                 <thead>
                                     <tr>
@@ -195,21 +251,63 @@ const AppointmentPage = () => {
                                         <th>Account ID</th>
                                         <th>Pet ID</th>
                                         <th>Staff ID</th>
+                                        <th>Status</th>
+                                        <th>Adopt Status</th>
+                                        <th>Button</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {processedAppointments.map(appointment => (
+                                    {notHappenAppointments.map(appointment => (
                                         <tr key={appointment.appointID}>
                                             <td>{formatDateTime(appointment.date_time)}</td>
                                             <td>{appointment.accountID}</td>
                                             <td>{appointment.petID}</td>
                                             <td>{appointment.staffID}</td>
+                                            <td>{renderStatus(appointment.status)}</td>
+                                            <td>{renderAdoptStatus(appointment.adopt_status)}</td>
+                                            <td>
+                                                <button onClick={() => handleFinalAccept(appointment.appointID)} disabled={processingAppointments.includes(appointment.appointID)}>Accept</button>
+                                                <button onClick={() => handleFinalRefuse(appointment.appointID)} disabled={processingAppointments.includes(appointment.appointID)}>Refuse</button>
+                                            </td>
                                         </tr>
                                     ))}
                                 </tbody>
                             </table>
                         ) : (
-                            <p className="no-appointments">No processed appointments found.</p>
+                            <p className="no-appointments">No not happened yet appointments found.</p>
+                        )}
+                    </>
+                )}
+                {activeTab === 'ended' && (
+                    <>
+                       
+                        {endedAppointments.length > 0 ? (
+                            <table className="appointments-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date Time</th>
+                                        <th>Account ID</th>
+                                        <th>Pet ID</th>
+                                        <th>Staff ID</th>
+                                        <th>Status</th>
+                                        <th>Adopt Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {endedAppointments.map(appointment => (
+                                        <tr key={appointment.appointID}>
+                                            <td>{formatDateTime(appointment.date_time)}</td>
+                                            <td>{appointment.accountID}</td>
+                                            <td>{appointment.petID}</td>
+                                            <td>{appointment.staffID}</td>
+                                            <td>{renderStatus(appointment.status)}</td>
+                                            <td>{renderAdoptStatus(appointment.adopt_status)}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        ) : (
+                            <p className="no-appointments">No ended appointments found.</p>
                         )}
                     </>
                 )}

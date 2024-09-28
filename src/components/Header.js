@@ -48,9 +48,12 @@ const Header = (props) => {
       <Navbar.Collapse id="basic-navbar-nav">
         {/* Thanh menu */}
         <Nav className="me-auto" activeKey={location.pathname}>
-          <NavLink to="/" className="nav-link">
-            <h3>Home</h3>
-          </NavLink>
+          
+        {(!isLoggedIn || roleID === 3) && (
+            <NavLink to="/" className="nav-link">
+              <h3>Home</h3>
+            </NavLink>
+          )}
           <NavLink to="/adopt" className="nav-link">
             <h3>Adopt</h3>
           </NavLink>
@@ -66,6 +69,8 @@ const Header = (props) => {
           <NavLink to="/contact" className="nav-link">
             <h3>Contact</h3>
           </NavLink>
+
+          
 
           {isLoggedIn && roleID === 1 && (
             <NavLink to="/admin" className="nav-link">

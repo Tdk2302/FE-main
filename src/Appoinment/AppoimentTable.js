@@ -211,7 +211,6 @@ const AppointmentPage = () => {
                                         <th>Date Time</th>
                                         <th>Account ID</th>
                                         <th>Pet ID</th>
-                                        <th>Staff ID</th>
                                         <th>Status</th>
                                         <th>Adopt Status</th>
                                         <th>Button</th>
@@ -223,12 +222,11 @@ const AppointmentPage = () => {
                                             <td>{formatDateTime(appointment.date_time)}</td>
                                             <td>{appointment.accountID}</td>
                                             <td>{appointment.petID}</td>
-                                            <td>{appointment.staffID}</td>
                                             <td>{renderStatus(appointment.status)}</td>
                                             <td>{renderAdoptStatus(appointment.adopt_status)}</td>
                                             <td>
-                                                <button onClick={() => acceptAppointment(appointment.appointID)} disabled={processingAppointments.includes(appointment.appointID)}>Accept</button>
-                                                <button onClick={() => refuseAppointment(appointment.appointID)} disabled={processingAppointments.includes(appointment.appointID)}>Refuse</button>
+                                                <button className='btn btn-success' onClick={() => acceptAppointment(appointment.appointID)} disabled={processingAppointments.includes(appointment.appointID)}>Accept</button>
+                                                <button className='btn btn-danger' onClick={() => refuseAppointment(appointment.appointID)} disabled={processingAppointments.includes(appointment.appointID)}>Refuse</button>
                                             </td>
                                         </tr>
                                     ))}
@@ -266,8 +264,8 @@ const AppointmentPage = () => {
                                             <td>{renderStatus(appointment.status)}</td>
                                             <td>{renderAdoptStatus(appointment.adopt_status)}</td>
                                             <td>
-                                                <button onClick={() => handleFinalAccept(appointment.appointID)} disabled={processingAppointments.includes(appointment.appointID)}>Accept</button>
-                                                <button onClick={() => handleFinalRefuse(appointment.appointID)} disabled={processingAppointments.includes(appointment.appointID)}>Refuse</button>
+                                                <button className='btn btn-success' onClick={() => handleFinalAccept(appointment.appointID)} disabled={processingAppointments.includes(appointment.appointID)}>Accept</button>
+                                                <button className='btn btn-danger' onClick={() => handleFinalRefuse(appointment.appointID)} disabled={processingAppointments.includes(appointment.appointID)}>Refuse</button>
                                             </td>
                                         </tr>
                                     ))}

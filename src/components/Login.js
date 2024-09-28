@@ -51,8 +51,10 @@ const Login = () => {
     if (isLoggedIn) {
       if (roleID === "2") {
         navigate("/appoinment");
-      } else {
+      } else if (roleID === "3") {
         navigate("/");
+      } else if (roleID === "1") {
+        navigate("/admin");
       }
     }
   }, [navigate]);

@@ -199,7 +199,7 @@ const HomePage = () => {
         <div className="container">
           <div className="row align-items-center">
             <div className="col">
-              <h2 className="support-text">Bạn Đã Sẵn Sàng Giúp Đỡ?</h2>
+              <h2 className="support-text">Have you already supported us?</h2>
             </div>
             <div className="col-auto">
               <NavLink to="/donate" className="nav-link">

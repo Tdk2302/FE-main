@@ -11,11 +11,12 @@ import Pets from "./components/Pets";
 import HomePage from "./components/HomePage";
 import Contact from "./components/Contact";
 import Donate from "./components/Donate";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ProtectedRoute from "./components/ProtectRoute";
 import Admin from "./components/Admin";
 import Staff from "./components/Staff";
+import AppoimentTable from "./Appoinment/AppoimentTable";
 
 function App() {
   const roleID = localStorage.getItem("roleID") ? Number(localStorage.getItem("roleID")) : null;
@@ -50,8 +51,17 @@ function App() {
                     <Staff />
                   </ProtectedRoute>
                 }
-
               />
+
+              <Route
+                path="/appoinment"
+                element={
+                  <ProtectedRoute role={2}>
+                    <AppoimentTable />
+                  </ProtectedRoute>
+                }
+              />
+
             </Routes>
           </Container>
         </div>

@@ -30,7 +30,7 @@ const Login = () => {
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("roleID", response.data.roleID);
         const currentLoginChange =
-          localStorage.getItem("loginChange") === "true";
+        localStorage.getItem("loginChange") === "true";
         localStorage.setItem("loginChange", (!currentLoginChange).toString());
         toast.success("Login successful!");
         window.location.reload();

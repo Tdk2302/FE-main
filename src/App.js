@@ -3,21 +3,22 @@ import Header from "./components/Header";
 import Container from "react-bootstrap/Container";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Routes, Route } from "react-router-dom";
-import Login from "./components/Login";
-import Register from "./components/Register";
+import Login from "./Account/Login";
+import Register from "./Account/Register";
 import Footer from "./components/Footer";
-import Events from "./components/Events";
+import Events from "./Event/Events";
 import Pets from "./Pet_Page/Pets";
 import HomePage from "./components/HomePage";
-import Contact from "./components/Contact";
-import Donate from "./components/Donate";
+import Contact from "./Contact/Contact";
+import Donate from "./Donation/Donate";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import ProtectedRoute from "./components/ProtectRoute";
-import Admin from "./components/Admin";
-import Staff from "./components/Staff";
+import ProtectedRoute from "./Routes/ProtectRoute";
+import Admin from "./Account/Admin";
+import Staff from "./Account/Staff";
 import AppoimentTable from "./Appoinment/AppoimentTable";
-import PetsList from "./Pet_Page/PetsList";
+import PetsList from "./Pet_Page/PetUpdate";
+import PetListAdmin from "./Pet_Page/PetListAdmin";
 function App() {
   const roleID = localStorage.getItem("roleID") ? Number(localStorage.getItem("roleID")) : null;
   return (
@@ -67,6 +68,15 @@ function App() {
                 element={
                   <ProtectedRoute role={3}>
                     <PetsList />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/petlistadmin"
+                element={
+                  <ProtectedRoute role={1}>
+                    <PetListAdmin />
                   </ProtectedRoute>
                 }
               />

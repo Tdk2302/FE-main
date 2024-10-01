@@ -61,7 +61,7 @@
     border-radius: 10px;
     transition: box-shadow 0.3s, transform 0.3s;
     cursor: pointer;
-
+    background-color: #f6f6f6;
     &:hover {
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       transform: scale(1.03);
@@ -84,7 +84,7 @@
 
     p {
       font-size: 0.9em;
-      color: #666;
+      color: #000000;
       margin: 5px 0;
     }
 

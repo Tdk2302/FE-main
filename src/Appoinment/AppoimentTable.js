@@ -32,7 +32,7 @@ const AppointmentPage = () => {
             const response = await axios.get('appointment/showUnprocessed');
             setUnprocessedAppointments(response.data);
         } catch (error) {
-            console.error('Error fetching unprocessed appointments:', error);
+            
             setUnprocessedAppointments([]);
         }
     }, []);

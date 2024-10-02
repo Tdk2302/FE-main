@@ -48,18 +48,23 @@ const Header = (props) => {
       <Navbar.Collapse id="basic-navbar-nav">
         {/* Thanh menu */}
         <Nav className="me-auto" activeKey={location.pathname}>
-          <NavLink to="/" className="nav-link">
-            <h3>Home</h3>
-          </NavLink>
-          <NavLink to="/adopt" className="nav-link">
+          {(!isLoggedIn || roleID === 3) && (
+            <NavLink to="/" className="nav-link">
+              <h3>Home</h3>
+            </NavLink>
+          )}
+          <NavLink to="/petlist" className="nav-link">
             <h3>Adopt</h3>
           </NavLink>
+
+          {/* {!isLoggedIn && roleID === 3 && (
+           
+          )} */}
+
           <NavLink to="/events" className="nav-link">
             <h3>Events</h3>
           </NavLink>
-          <NavLink to="/pets" className="nav-link">
-            <h3>Pets</h3>
-          </NavLink>
+
           <NavLink to="/donate" className="nav-link">
             <h3>Donate</h3>
           </NavLink>
@@ -76,6 +81,12 @@ const Header = (props) => {
           {isLoggedIn && roleID === 2 && (
             <NavLink to="/staff" className="nav-link">
               <h3>Staff</h3>
+            </NavLink>
+          )}
+
+          {isLoggedIn && roleID === 2 && (
+            <NavLink to="/appoinment" className="nav-link">
+              <h3>Appoiment</h3>
             </NavLink>
           )}
         </Nav>

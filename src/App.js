@@ -3,22 +3,28 @@ import Header from "./components/Header";
 import Container from "react-bootstrap/Container";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Routes, Route } from "react-router-dom";
-import Login from "./components/Login";
-import Register from "./components/Register";
+import Login from "./Account/Login";
+import Register from "./Account/Register";
 import Footer from "./components/Footer";
-import Events from "./components/Events";
-import Pets from "./components/Pets";
+import Events from "./Event/Events";
+import PetUpdate from "./Pet_Page/PetUpdate";
 import HomePage from "./components/HomePage";
-import Contact from "./components/Contact";
-import Donate from "./components/Donate";
-import { ToastContainer, toast } from "react-toastify";
+import Contact from "./Contact/Contact";
+import Donate from "./Donation/Donate";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import ProtectedRoute from "./components/ProtectRoute";
-import Admin from "./components/Admin";
-import Staff from "./components/Staff";
+import ProtectedRoute from "./Routes/ProtectRoute";
+import Admin from "./Account/Admin";
+import Staff from "./Account/Staff";
+import AppoimentTable from "./Appoinment/AppoimentTable";
+import PetsList from "./Pet_Page/PetsList";
+import PetDetail from "./Pet_Page/PetDetail";
+import AdoptProcess from "./Adoption/AdoptProcess";
 
 function App() {
-  const roleID = localStorage.getItem("roleID") ? Number(localStorage.getItem("roleID")) : null;
+  const roleID = localStorage.getItem("roleID")
+    ? Number(localStorage.getItem("roleID"))
+    : null;
   return (
     <>
       <div className="app-container">
@@ -26,13 +32,15 @@ function App() {
         <div>
           <Container>
             <Routes>
-            <Route path="/login" element={<Login />} />
+              <Route path="/login" element={<Login />} />
               <Route path="/" element={<HomePage />} />
               <Route path="/events" element={<Events />} />
               <Route path="/register" element={<Register />} />
               <Route path="/donate" element={<Donate />} />
-              <Route path="/Pets" element={<Pets />} />
+              <Route path="/PetUpdate" element={<PetUpdate />} />
               <Route path="/Contact" element={<Contact />} />
+              <Route path="/petdetail/:petID" element={<PetDetail />} />
+              <Route path="/adoptprocess/:petID" element={<AdoptProcess />} />
 
               <Route
                 path="/admin"
@@ -50,7 +58,24 @@ function App() {
                     <Staff />
                   </ProtectedRoute>
                 }
+              />
 
+              <Route
+                path="/appoinment"
+                element={
+                  <ProtectedRoute role={2}>
+                    <AppoimentTable />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/petlist"
+                element={
+                  <ProtectedRoute role={3}>
+                    <PetsList />
+                  </ProtectedRoute>
+                }
               />
             </Routes>
           </Container>

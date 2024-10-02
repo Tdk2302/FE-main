@@ -153,7 +153,7 @@ const HomePage = () => {
               <NavLink to="/adopt" className="nav-link">
                 <img src={pet.image} alt={pet.name} />
                 <h3>{pet.name}</h3>
-                <p>Gender: {pet.gender}</p>
+                <p>Sex: {pet.gender}</p>
                 <p>Age: {pet.age}</p>
                 <p>Vaccinated: {pet.vaccinated}</p>
               </NavLink>
@@ -199,7 +199,7 @@ const HomePage = () => {
         <div className="container">
           <div className="row align-items-center">
             <div className="col">
-              <h2 className="support-text">Bạn Đã Sẵn Sàng Giúp Đỡ?</h2>
+              <h2 className="support-text">Have you already supported us?</h2>
             </div>
             <div className="col-auto">
               <NavLink to="/donate" className="nav-link">

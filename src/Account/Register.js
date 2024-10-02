@@ -216,7 +216,7 @@ const Register = () => {
               <i className="fa-solid fa-angles-left"></i>
               <span>Go back</span>
             </div>     
-         <button onClick={handleRegister} className="btn btn-black  ">
+            <button onClick={handleRegister} className="register-btn">
          Register
          </button>
       </div>

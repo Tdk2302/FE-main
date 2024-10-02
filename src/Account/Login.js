@@ -30,7 +30,7 @@ const Login = () => {
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("roleID", response.data.roleID);
         const currentLoginChange =
-          localStorage.getItem("loginChange") === "true";
+        localStorage.getItem("loginChange") === "true";
         localStorage.setItem("loginChange", (!currentLoginChange).toString());
         toast.success("Login successful!");
         window.location.reload();
@@ -47,8 +47,15 @@ const Login = () => {
   };
   useEffect(() => {
     const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+    const roleID = localStorage.getItem("roleID");
     if (isLoggedIn) {
-      navigate("/");
+      if (roleID === "2") {
+        navigate("/appoinment");
+      } else if (roleID === "3") {
+        navigate("/");
+      } else if (roleID === "1") {
+        navigate("/admin");
+      }
     }
   }, [navigate]);
   // Gọi hàm login

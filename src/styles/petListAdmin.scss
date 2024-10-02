@@ -1,0 +1,6 @@
+@import './petslist.scss';
+
+.pets-list-admin-container {
+  @extend .pets-list-container;
+
+}

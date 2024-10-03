@@ -113,8 +113,8 @@ const PetsList = () => {
   const indexOfLastPet = currentPage * petsPerPage;
   const indexOfFirstPet = indexOfLastPet - petsPerPage;
   const currentPets = pets.slice(indexOfFirstPet, indexOfLastPet);
-
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   return (
     <div className="pets-list-container">
       <div className="filter-and-search">
@@ -176,6 +176,7 @@ const PetsList = () => {
           </div>
         </form>
       </div>
+
       <div className="pets-grid">
         {currentPets.length > 0 ? (
           currentPets.map((pet) => (

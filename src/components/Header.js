@@ -11,25 +11,18 @@ const Header = (props) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [roleID, setRoleID] = useState(null);
   const [username, setUserName] = useState(null);
+  const name = localStorage.getItem("name");
   const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem("user"));
   useEffect(() => {
     const checkLoginStatus = () => {
-      const user = JSON.parse(localStorage.getItem("user"));
-
       const loggedIn = localStorage.getItem("isLoggedIn") === "true";
       const role = Number(localStorage.getItem("roleID"));
-      const username = localStorage.getItem("name");
-      setUserName(username);
+      setUserName(name);
       setIsLoggedIn(loggedIn);
       setRoleID(role);
-      console.log("username", username);
       console.log("roleID", roleID);
       console.log("loginChange: ", loggedIn);
-      if (user && user.name) {
-        console.log(user.name); // Hiển thị "Tang Dinh Koi" ra console
-      } else {
-        console.log("Name not found in localStorage");
-      }
     };
     checkLoginStatus();
   }, []);
@@ -38,7 +31,6 @@ const Header = (props) => {
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("user");
     localStorage.removeItem("roleID");
-    setUserName(null);
     setIsLoggedIn(false);
     setRoleID(null);
     navigate("/");
@@ -107,7 +99,7 @@ const Header = (props) => {
             </NavLink>
           )}
         </Nav>
-        <span>{user.name}</span>
+        <h4 className="username">{username}</h4>
         {/* Đổi đăng nhập và đăng ký thành profile */}
         <Nav className="settings">
           {isLoggedIn ? (
@@ -115,7 +107,6 @@ const Header = (props) => {
               title={
                 <>
                   <i className="fa-solid fa-gear"></i>
-                  Settings
                 </>
               }
               id="basic-nav-dropdown"

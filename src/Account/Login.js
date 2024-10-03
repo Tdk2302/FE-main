@@ -29,8 +29,9 @@ const Login = () => {
         localStorage.setItem("user", JSON.stringify(response.data));
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("roleID", response.data.roleID);
+        localStorage.setItem("name", String(response.data.name));
         const currentLoginChange =
-        localStorage.getItem("loginChange") === "true";
+          localStorage.getItem("loginChange") === "true";
         localStorage.setItem("loginChange", (!currentLoginChange).toString());
         toast.success("Login successful!");
         window.location.reload();
@@ -58,17 +59,6 @@ const Login = () => {
       }
     }
   }, [navigate]);
-  // Gọi hàm login
-
-  // useEffect(() => {
-  //   const token = localStorage.getItem("token");
-  //   if (token) {
-  //     console.log("token found, navigating to homepage");
-  //     navigate("/");
-  //   } else {
-  //     console.log("No token found, staying on login page");
-  //   }
-  // }, [navigate]);
 
   const handleGoBack = () => {
     navigate("/");

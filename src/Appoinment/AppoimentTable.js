@@ -374,7 +374,7 @@ const AppointmentPage = () => {
       </div>
 
       {showModal && (
-        <div className="modal">
+        <div className="modal-first">
           <div className="modal-content">
             <h2>Refuse Appointment</h2>
             <textarea

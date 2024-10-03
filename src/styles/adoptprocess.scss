@@ -151,9 +151,11 @@
     border: none;
     padding: 6px 20px;
     font-size: 16px;
+    font-weight: 500;
     border-radius: 25px; // Tăng giá trị này để bo tròn các góc nhiều hơn
     cursor: pointer;
     transition: all 0.3s ease;
+
     :hover {
       background-color: #f1ba3a;
       transform: translateY(-2px);
@@ -174,7 +176,7 @@
     color: #f1cf7e;
   }
 
-  .modal-footer {
+  .footer {
     border-top: none;
 
     .close-button {
@@ -194,6 +196,7 @@
     }
   }
 }
+
 .modal {
   z-index: 1050; // Đảm bảo modal nằm trên các thành phần khác
 }

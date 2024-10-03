@@ -7,8 +7,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import axios from "../services/axios";
 
 const AdoptionProcess = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false); // Theo dõi trạng thái gửi
-
   const navigate = useNavigate();
   const location = useLocation(); // Lấy location
   const pet = location.state?.pet;
@@ -99,8 +97,7 @@ const AdoptionProcess = () => {
           Before deciding to adopt a dog or cat, please ask yourself if you are
           ready to take full responsibility for them, including financial,
           accommodation, and emotional commitment. Adoption requires a strong
-          agreement from yourself, your family, and those involved. Please
-          consider carefully before contacting HPA for adoption.
+          agreement from yourself, your family, and those involved
         </p>
         <h3>Ready to go? Follow these steps:</h3>
         <ul className="adoption-steps-list">
@@ -108,7 +105,7 @@ const AdoptionProcess = () => {
             <span role="img" aria-label="step1">
               1️⃣
             </span>
-            Learn about the pet you want to adopt on HPA's website.
+            Learn about the pet you want to adopt on FurryFriendFund's website.
           </li>
           <li>
             <span role="img" aria-label="step2">
@@ -203,7 +200,7 @@ const AdoptionProcess = () => {
           soon as possible to complete the adoption procedure. If you have any
           questions, please feel free to contact us via email or hotline.
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer className="footer-thankyou">
           <Button className="close-button" onClick={handleClose}>
             Close
           </Button>

@@ -58,10 +58,17 @@ const Header = (props) => {
               <h3>Home</h3>
             </NavLink>
           )}
+          {isLoggedIn && (roleID === 1 || roleID === 2) && (
+            <NavLink to="/petlistadmin" className="nav-link">
+              <h3>Pet List Admin</h3>
+            </NavLink>
+          )}
 
-          <NavLink to="/petlist" className="nav-link">
-            <h3>Adopt</h3>
-          </NavLink>
+          {(!isLoggedIn || roleID === 3) && (
+            <NavLink to="/adopt" className="nav-link">
+              <h3>Adopt</h3>
+            </NavLink>
+          )}
 
           <NavLink to="/events" className="nav-link">
             <h3>Events</h3>
@@ -89,12 +96,6 @@ const Header = (props) => {
           {isLoggedIn && roleID === 2 && (
             <NavLink to="/appoinment" className="nav-link">
               <h3>Appoiment</h3>
-            </NavLink>
-          )}
-
-          {isLoggedIn && roleID === 1 && (
-            <NavLink to="/petlistadmin" className="nav-link">
-              <h3>Pet List Admin</h3>
             </NavLink>
           )}
         </Nav>

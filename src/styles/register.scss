@@ -93,7 +93,7 @@
 }
 
 /* Đổi từ .btn thành .register-btn để tránh xung đột */
-.register-btn {
+.register-button {
   padding: 10px 60px;
   background-color: #f1cf7e; /* Màu nền ban đầu */
   color: white;
@@ -104,10 +104,9 @@
 }
 
 /* Khi nút bị nhấn */
-.register-btn:active {
+.register-button:active {
   background-color: #eec157 !important;
   color: white !important;
   border-color: transparent !important;
   transform: translateY(-5px);
 }
-

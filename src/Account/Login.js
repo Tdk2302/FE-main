@@ -30,6 +30,8 @@ const Login = () => {
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("roleID", response.data.roleID);
         localStorage.setItem("name", String(response.data.name));
+        localStorage.setItem("accountID", String(response.data.accountID));
+
         const currentLoginChange =
           localStorage.getItem("loginChange") === "true";
         localStorage.setItem("loginChange", (!currentLoginChange).toString());

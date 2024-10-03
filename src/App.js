@@ -21,6 +21,8 @@ import PetDetail from "./Pet_Page/PetDetail";
 import AdoptProcess from "./Adoption/AdoptProcess";
 import PetsLists from "./Pet_Page/PetLists";
 import PetListAdmin from "./Pet_Page/PetListAdmin";
+import AddPet from "./Pet_Page/AddPet";
+
 function App() {
   const roleID = localStorage.getItem("roleID")
     ? Number(localStorage.getItem("roleID"))
@@ -45,7 +47,7 @@ function App() {
               <Route
                 path="/admin"
                 element={
-                  <ProtectedRoute role={1}>
+                  <ProtectedRoute roleID={1}>
                     <Admin />
                   </ProtectedRoute>
                 }
@@ -54,7 +56,7 @@ function App() {
               <Route
                 path="/staff"
                 element={
-                  <ProtectedRoute role={2}>
+                  <ProtectedRoute roleID={2}>
                     <Staff />
                   </ProtectedRoute>
                 }
@@ -63,16 +65,23 @@ function App() {
               <Route
                 path="/appoinment"
                 element={
-                  <ProtectedRoute role={2}>
+                  <ProtectedRoute roleID={2}>
                     <AppoimentTable />
                   </ProtectedRoute>
                 }
               />
-
+              <Route
+                path="/addpet"
+                element={
+                  <ProtectedRoute roleID={2}>
+                    <AddPet />
+                  </ProtectedRoute>
+                }
+              />
               <Route
                 path="/petlist"
                 element={
-                  <ProtectedRoute role={3}>
+                  <ProtectedRoute roleID={3}>
                     <PetsLists />
                   </ProtectedRoute>
                 }
@@ -81,7 +90,7 @@ function App() {
               <Route
                 path="/petlistadmin"
                 element={
-                  <ProtectedRoute role={1}>
+                  <ProtectedRoute roleID={[1, 2]}>
                     <PetListAdmin />
                   </ProtectedRoute>
                 }

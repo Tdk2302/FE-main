@@ -36,11 +36,14 @@ const Register = () => {
     if (!sex) newErrors.sex = "Sex is required";
     if (!address.trim()) newErrors.address = "Address is required";
     if (!phoneNumber) newErrors.phoneNumber = "Phone number is required";
-    else if (!isPhoneNumberValid(phoneNumber)) newErrors.phoneNumber = "Invalid phone number! Must be 9-10 digits.";
+    else if (!isPhoneNumberValid(phoneNumber))
+      newErrors.phoneNumber = "Invalid phone number! Must be 9-10 digits.";
     if (!username.trim()) newErrors.username = "Username is required";
     if (!password) newErrors.password = "Password is required";
-    if (!confirmPassword) newErrors.confirmPassword = "Confirm password is required";
-    else if (password !== confirmPassword) newErrors.confirmPassword = "Passwords do not match";
+    if (!confirmPassword)
+      newErrors.confirmPassword = "Confirm password is required";
+    else if (password !== confirmPassword)
+      newErrors.confirmPassword = "Passwords do not match";
     if (!role) newErrors.role = "Role is required";
 
     setErrors(newErrors);
@@ -56,23 +59,24 @@ const Register = () => {
       birthdate: birthday,
       sex,
       address,
-      phone:phoneNumber,
-      accountID:username,
+      phone: phoneNumber,
+      accountID: username,
       password,
       roleID: role === "Staff" ? 2 : 3,
-      
     };
-    
+
     try {
       const checkUsername = await api.get(`accounts/search/${username}`);
-      if (checkUsername.data&&checkUsername) {
+      if (checkUsername.data && checkUsername) {
         toast.error("Username already exists!");
         return;
       }
 
       await api.post("/accounts/register", userData);
       if (role === "Staff") {
-        toast.success("Registration successful! Please wait for admin approval.");
+        toast.success(
+          "Registration successful! Please wait for admin approval."
+        );
       } else {
         toast.success("Registered successfully!");
       }
@@ -80,7 +84,7 @@ const Register = () => {
     } catch (error) {
       //console.error("Registration error:", error);
       toast.error("Registration failed. Please try again.");
-    } 
+    }
   };
 
   return (
@@ -88,24 +92,28 @@ const Register = () => {
       <div className="title">Register</div>
 
       <div className="form-group">
-        {errors.fullName && <div className="invalid-feedback">{errors.fullName}</div>}
+        {errors.fullName && (
+          <div className="invalid-feedback">{errors.fullName}</div>
+        )}
         <input
           type="text"
           placeholder="Full Name"
           value={fullName}
           onChange={(event) => setFullName(event.target.value)}
-          className={`form-control ${errors.fullName ? 'is-invalid' : ''}`}
+          className={`form-control ${errors.fullName ? "is-invalid" : ""}`}
         />
       </div>
 
       <div className="form-group">
-        {errors.birthday && <div className="invalid-feedback">{errors.birthday}</div>}
+        {errors.birthday && (
+          <div className="invalid-feedback">{errors.birthday}</div>
+        )}
         <input
           type="date"
           placeholder="Birthday"
           value={birthday}
           onChange={(event) => setBirthday(event.target.value)}
-          className={`form-control ${errors.birthday ? 'is-invalid' : ''}`}
+          className={`form-control ${errors.birthday ? "is-invalid" : ""}`}
         />
       </div>
 
@@ -114,7 +122,7 @@ const Register = () => {
         <select
           value={sex}
           onChange={(event) => setSex(event.target.value)}
-          className={`form-control ${errors.sex ? 'is-invalid' : ''}`}
+          className={`form-control ${errors.sex ? "is-invalid" : ""}`}
         >
           <option value="">Select Sex</option>
           <option value="Male">Male</option>
@@ -123,47 +131,55 @@ const Register = () => {
       </div>
 
       <div className="form-group">
-        {errors.address && <div className="invalid-feedback">{errors.address}</div>}
+        {errors.address && (
+          <div className="invalid-feedback">{errors.address}</div>
+        )}
         <input
           type="text"
           placeholder="Address"
           value={address}
           onChange={(event) => setAddress(event.target.value)}
-          className={`form-control ${errors.address ? 'is-invalid' : ''}`}
+          className={`form-control ${errors.address ? "is-invalid" : ""}`}
         />
       </div>
 
       <div className="form-group">
-        {errors.phoneNumber && <div className="invalid-feedback">{errors.phoneNumber}</div>}
+        {errors.phoneNumber && (
+          <div className="invalid-feedback">{errors.phoneNumber}</div>
+        )}
         <input
           type="tel"
           placeholder="Phone Number"
           value={phoneNumber}
           onChange={(event) => setPhoneNumber(event.target.value)}
-          className={`form-control ${errors.phoneNumber ? 'is-invalid' : ''}`}
+          className={`form-control ${errors.phoneNumber ? "is-invalid" : ""}`}
         />
       </div>
 
       <div className="form-group">
-        {errors.username && <div className="invalid-feedback">{errors.username}</div>}
+        {errors.username && (
+          <div className="invalid-feedback">{errors.username}</div>
+        )}
         <input
           type="text"
           placeholder="Username"
           value={username}
           onChange={(event) => setUsername(event.target.value)}
-          className={`form-control ${errors.username ? 'is-invalid' : ''}`}
+          className={`form-control ${errors.username ? "is-invalid" : ""}`}
         />
       </div>
 
       <div className="form-group">
-        {errors.password && <div className="invalid-feedback">{errors.password}</div>}
+        {errors.password && (
+          <div className="invalid-feedback">{errors.password}</div>
+        )}
         <div className="input-password">
           <input
             type={isShowPassword ? "text" : "password"}
             placeholder="Password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
-            className={`form-control ${errors.password ? 'is-invalid' : ''}`}
+            className={`form-control ${errors.password ? "is-invalid" : ""}`}
           />
           <button
             type="button"
@@ -171,28 +187,44 @@ const Register = () => {
             onClick={() => setIsShowPassword(!isShowPassword)}
             aria-label={isShowPassword ? "Hide password" : "Show password"}
           >
-            <i className={isShowPassword ? "fa-solid fa-eye" : "fa-solid fa-eye-slash"}></i>
+            <i
+              className={
+                isShowPassword ? "fa-solid fa-eye" : "fa-solid fa-eye-slash"
+              }
+            ></i>
           </button>
         </div>
       </div>
 
       <div className="form-group">
-        {errors.confirmPassword && <div className="invalid-feedback">{errors.confirmPassword}</div>}
+        {errors.confirmPassword && (
+          <div className="invalid-feedback">{errors.confirmPassword}</div>
+        )}
         <div className="input-password">
           <input
             type={isShowConfirmPassword ? "text" : "password"}
             placeholder="Confirm Password"
             value={confirmPassword}
             onChange={(event) => setConfirmPassword(event.target.value)}
-            className={`form-control ${errors.confirmPassword ? 'is-invalid' : ''}`}
+            className={`form-control ${
+              errors.confirmPassword ? "is-invalid" : ""
+            }`}
           />
           <button
             type="button"
             className="password-toggle"
             onClick={() => setIsShowConfirmPassword(!isShowConfirmPassword)}
-            aria-label={isShowConfirmPassword ? "Hide password" : "Show password"}
+            aria-label={
+              isShowConfirmPassword ? "Hide password" : "Show password"
+            }
           >
-            <i className={isShowConfirmPassword ? "fa-solid fa-eye" : "fa-solid fa-eye-slash"}></i>
+            <i
+              className={
+                isShowConfirmPassword
+                  ? "fa-solid fa-eye"
+                  : "fa-solid fa-eye-slash"
+              }
+            ></i>
           </button>
         </div>
       </div>
@@ -202,7 +234,7 @@ const Register = () => {
         <select
           value={role}
           onChange={(event) => setRole(event.target.value)}
-          className={`form-control ${errors.role ? 'is-invalid' : ''}`}
+          className={`form-control ${errors.role ? "is-invalid" : ""}`}
         >
           <option value="">Select Role</option>
           <option value="Staff">Staff</option>
@@ -210,19 +242,17 @@ const Register = () => {
         </select>
       </div>
 
-
       <div className="button-containerR">
-      <div className="backRegister" onClick={handleGoBack}>
-              <i className="fa-solid fa-angles-left"></i>
-              <span>Go back</span>
-            </div>     
-            <button onClick={handleRegister} className="register-btn">
-         Register
-         </button>
+        <div className="backRegister" onClick={handleGoBack}>
+          <i className="fa-solid fa-angles-left"></i>
+          <span>Go back</span>
+        </div>
+        <button onClick={handleRegister} className="register-button">
+          Register
+        </button>
       </div>
     </div>
   );
 };
-
 
 export default Register;

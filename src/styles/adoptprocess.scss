@@ -136,6 +136,8 @@
   background-color: #fff;
   .cancel-button {
     background-color: #f1cf7e;
+    margin-left: 75px;
+    margin-right: 20;
     color: rgb(0, 0, 0);
     border: none;
     padding: 6px 20px;
@@ -147,7 +149,6 @@
     :hover {
       background-color: #f1ba3a;
       transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
   }
 
@@ -164,7 +165,6 @@
     :hover {
       background-color: #f1ba3a;
       transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
   }
 }
@@ -181,7 +181,7 @@
     color: #f1cf7e;
   }
 
-  .modal-footer {
+  .btn .thank-footer {
     border-top: none;
 
     .close-button {
@@ -193,10 +193,11 @@
       border-radius: 25px; // Tăng giá trị này để bo tròn các góc nhiều hơn
       cursor: pointer;
       transition: all 0.3s ease;
+
+      margin-left: 60px;
       :hover {
         background-color: #f1ba3a;
         transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       }
     }
   }

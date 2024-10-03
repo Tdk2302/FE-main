@@ -1,0 +1,50 @@
+/* src/styles/AddPet.css */
+
+/* Đặt màu nền cho trang thêm thú cưng */
+.add-pet {
+  background-color: #f9f9f9; /* Màu nền sáng */
+  padding: 20px; /* Khoảng cách bên trong */
+  border-radius: 8px; /* Bo góc */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Đổ bóng */
+}
+
+/* Định dạng tiêu đề */
+.add-pet__title {
+  color: #333; /* Màu chữ */
+  font-size: 28px; /* Kích thước chữ */
+  text-align: center; /* Căn giữa */
+  margin-bottom: 20px; /* Khoảng cách dưới tiêu đề */
+}
+
+/* Định dạng form */
+.add-pet__form {
+  display: flex; /* Sử dụng flexbox */
+  flex-direction: column; /* Căn theo cột */
+}
+
+/* Định dạng các ô nhập */
+.add-pet__input,
+.add-pet__textarea {
+  width: 100%; /* Chiều rộng 100% */
+  padding: 10px; /* Khoảng cách bên trong */
+  margin: 10px 0; /* Khoảng cách bên ngoài */
+  border: 1px solid #ccc; /* Viền xám */
+  border-radius: 4px; /* Bo góc */
+  font-size: 16px; /* Kích thước chữ */
+}
+
+/* Định dạng nút */
+.add-pet__button {
+  background-color: #4caf50; /* Màu nền nút */
+  color: white; /* Màu chữ */
+  padding: 10px 20px; /* Khoảng cách bên trong */
+  border: none; /* Không có viền */
+  border-radius: 5px; /* Bo góc */
+  cursor: pointer; /* Con trỏ chuột khi di chuột qua */
+  font-size: 16px; /* Kích thước chữ */
+}
+
+/* Hiệu ứng khi di chuột qua nút */
+.add-pet__button:hover {
+  background-color: #45a049; /* Màu nền khi di chuột qua */
+}

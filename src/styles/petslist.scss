@@ -3,7 +3,6 @@
   max-width: 1200px;
   margin: 0 auto;
 
-
   .search-form {
     display: flex;
     flex-direction: column;
@@ -12,7 +11,8 @@
     flex-wrap: wrap;
     margin-bottom: 30px;
 
-    input, select {
+    input,
+    select {
       margin: 10px;
       padding: 10px;
       border: 1px solid #ccc;
@@ -21,7 +21,7 @@
       font-size: 1em;
 
       &:focus {
-        border-color: #D9293E;
+        border-color: #d9293e;
         outline: none;
       }
     }
@@ -31,7 +31,7 @@
       background-color: #f1cf7e;
       color: white;
       border: none;
-      border-radius: 25px;
+      border-radius: 5px;
       cursor: pointer;
       transition: background-color 0.3s;
 
@@ -57,20 +57,24 @@
     border-radius: 10px;
     transition: all 0.3s ease;
     cursor: pointer;
-    background-color: #F8F8F8;
+    background-color: #f8f8f8;
     background-image: radial-gradient(#f1cf7e 10%, transparent 11%),
-                      radial-gradient(#f1cf7e 10%, transparent 11%);
+      radial-gradient(#f1cf7e 10%, transparent 11%);
     background-size: 10px 10px;
     background-position: 0 0, 5px 5px;
     background-repeat: repeat;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    
+
     &:hover {
       transform: translateY(-5px);
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
     }
 
-    img, h3, p, button, .pet-info-divider {
+    img,
+    h3,
+    p,
+    button,
+    .pet-info-divider {
       position: relative;
       z-index: 2;
     }
@@ -86,7 +90,6 @@
       &:hover {
         transform: scale(1.05);
       }
-
     }
 
     h3 {
@@ -136,7 +139,7 @@
       }
     }
   }
-  
+
   .pagination {
     display: flex;
     justify-content: center;
@@ -157,10 +160,7 @@
       }
 
       &.active {
-
-        
         color: white;
-        
       }
     }
   }
@@ -173,23 +173,23 @@
   width: 100%;
 
   .search-section {
-    display: flex; 
+    display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 65%; 
+    width: 65%;
     margin-bottom: 15px;
 
     .search-inputs {
-      width: 79%; 
+      width: 79%;
       input {
         width: 100%;
         padding: 12px;
         border: 1px solid #ccc;
-        border-radius: 10px; 
+        border-radius: 10px;
         font-size: 1em;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         transition: box-shadow 0.3s ease, border-color 0.3s ease;
-        
+
         &:focus {
           border-color: #e6be6a;
           box-shadow: 0 0 12px rgba(199, 174, 177, 0.3);
@@ -205,17 +205,17 @@
       border: none;
       border-radius: 25px;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s;
       width: 18%;
       &:hover {
-        background-color: #e6be6a; 
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2); 
-        transform: translateY(-2px); 
+        background-color: #e6be6a;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        transform: translateY(-2px);
       }
 
       &:active {
-        transform: translateY(0); 
+        transform: translateY(0);
       }
     }
   }
@@ -233,17 +233,19 @@
       width: 100%;
       flex-wrap: wrap;
 
-      input, select, button {
+      input,
+      select,
+      button {
         flex: 1;
         margin: 10px;
         padding: 12px;
         border: 1px solid #ccc;
-        border-radius: 10px; 
+        border-radius: 10px;
         transition: box-shadow 0.3s ease, border-color 0.3s ease;
 
         &:hover {
-          border-color: #e6be6a; 
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+          border-color: #e6be6a;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
       }
     }
@@ -253,7 +255,7 @@
       align-items: center;
       justify-content: center;
       margin-right: 10px;
-      
+
       h3 {
         display: flex;
         align-items: center;

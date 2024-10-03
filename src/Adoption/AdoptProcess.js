@@ -7,38 +7,34 @@ import { useNavigate, useLocation } from "react-router-dom";
 import axios from "../services/axios";
 
 const AdoptionProcess = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false); // Theo dõi trạng thái gửi
-
   const navigate = useNavigate();
   const location = useLocation(); // Lấy location
   const pet = location.state?.pet;
-  console.log(pet);
   const petID = pet.petID;
   const [agreed, setAgreed] = useState(false);
   const [showModal, setShowModal] = useState(false);
-
   const [appointment, setAppointment] = useState({
     date: "",
     time: "",
   }); // Lưu thông tin đặt lịch hẹn
 
   const date_time = `${appointment.date}T${appointment.time}`; // Định dạng ISO 8601
-
   const [minDate, setMinDate] = useState("");
   const [maxDate, setMaxDate] = useState("");
+  const [ErrorMessage, setErrorMessage] = useState("");
   const [showThankYou, setShowThankYou] = useState(false); // Trạng thái hiển thị bảng cảm ơn
-  const userData = localStorage.getItem("user");
-  const user = JSON.parse(userData);
-  const accountID = user.accountID; // Lấy accountID
 
+  const accountID = localStorage.getItem("accountID"); // Lấy accountID
   // Xử lý khi người dùng nhấn nút "Đặt lịch hẹn"
   const handleSubmit = async () => {
     try {
       const response = await axios.post(`appointment/adopt`, {
-        date_time, // time: appointment.time,
+        date_time,
         accountID,
         petID,
       });
+      setErrorMessage(response.data.message);
+
       // Kiểm tra nếu thành công thì hiển thị bảng cảm ơn
       if (response.status === 200) {
         setShowModal(false);
@@ -52,12 +48,14 @@ const AdoptionProcess = () => {
       alert("Có lỗi xảy ra khi đặt lịch hẹn. Vui lòng thử lại.");
     }
   };
+
+  console.log(ErrorMessage);
   useEffect(() => {
     const today = new Date();
-    const min = new Date(today.setDate(today.getDate() + 2)) // Lấy ngày hiện tại cộng thêm 2 ngày
+    const min = new Date(today.setDate(today.getDate() + 4)) // Lấy ngày hiện tại cộng thêm 4 ngày
       .toISOString()
       .split("T")[0]; // Định dạng thành YYYY-MM-DD
-    const max = new Date(today.setDate(today.getDate() + 8)) // Giới hạn tối đa thêm 8 ngày từ ngày hiện tại
+    const max = new Date(today.setDate(today.getDate() + 11)) // Giới hạn tối đa thêm 8 ngày từ ngày hiện tại
       .toISOString()
       .split("T")[0]; // Định dạng thành YYYY-MM-DD
     setMinDate(min);
@@ -79,8 +77,18 @@ const AdoptionProcess = () => {
   useEffect(() => {
     console.log("showModal has changed:", showModal);
   }, [showModal]); // Theo dõi sự thay đổi của showModal
+
   const handleAppointmentChange = (event) => {
     const { name, value } = event.target;
+    if (name === "time") {
+      const selectedTime = new Date(`1970-01-01T${value}:00`);
+      const startTime = new Date(`1970-01-01T08:00:00`);
+      const endTime = new Date(`1970-01-01T17:00:00`);
+      if (selectedTime < startTime || selectedTime > endTime) {
+        alert("Vui lòng chọn thời gian từ 8:00 đến 17:00.");
+        return; // Ngăn không cho cập nhật nếu thời gian không hợp lệ
+      }
+    }
     setAppointment((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -198,12 +206,12 @@ const AdoptionProcess = () => {
         <Modal.Header closeButton>
           <Modal.Title>Thank you!</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body className="thank-body">
           Thank you for your interest in adopting a pet. We will contact you as
           soon as possible to complete the adoption procedure. If you have any
           questions, please feel free to contact us via email or hotline.
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer className="thank-footer">
           <Button className="close-button" onClick={handleClose}>
             Close
           </Button>

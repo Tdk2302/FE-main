@@ -7,7 +7,7 @@ const Footer = () => {
     <div className="footer bottom">
       <div className="footer-container">
         <div className="footer-info">
-          <h2>FurryFriendsFund</h2>
+          <h3>FurryFriendsFund</h3>
           <div className="social-icons">
             <a href="...">
               <FaFacebookF />
@@ -22,15 +22,16 @@ const Footer = () => {
         </div>
 
         <div className="footer-about">
-          <h3>About us</h3>
+          <h4>About us</h4>
           <hr className="small-divider left"></hr>
           <p>
-            FurryFriendsFund is a small pet shelter where we strive to provide the best living environment for our pets.
+            FurryFriendsFund is a small pet shelter where we strive to provide
+            the best living environment for our pets.
           </p>
         </div>
 
         <div className="footer-bottom">
-          <h3>Contact us</h3>
+          <h4>Contact us</h4>
           <hr className="small-divider"></hr>
           <p>
             <i className="fa fa-phone"></i> (+84)000000000

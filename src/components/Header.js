@@ -10,14 +10,26 @@ const Header = (props) => {
   const location = useLocation();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [roleID, setRoleID] = useState(null);
+  const [username, setUserName] = useState(null);
   const navigate = useNavigate();
   useEffect(() => {
     const checkLoginStatus = () => {
+      const user = JSON.parse(localStorage.getItem("user"));
+
       const loggedIn = localStorage.getItem("isLoggedIn") === "true";
       const role = Number(localStorage.getItem("roleID"));
+      const username = localStorage.getItem("name");
+      setUserName(username);
       setIsLoggedIn(loggedIn);
       setRoleID(role);
+      console.log("username", username);
+      console.log("roleID", roleID);
       console.log("loginChange: ", loggedIn);
+      if (user && user.name) {
+        console.log(user.name); // Hiển thị "Tang Dinh Koi" ra console
+      } else {
+        console.log("Name not found in localStorage");
+      }
     };
     checkLoginStatus();
   }, []);
@@ -26,6 +38,7 @@ const Header = (props) => {
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("user");
     localStorage.removeItem("roleID");
+    setUserName(null);
     setIsLoggedIn(false);
     setRoleID(null);
     navigate("/");
@@ -53,14 +66,11 @@ const Header = (props) => {
               <h3>Home</h3>
             </NavLink>
           )}
-          <NavLink to="/petlist" className="nav-link">
-
-            <h3>Adopt</h3>
-          </NavLink>
-
-          {/* {!isLoggedIn && roleID === 3 && (
-           
-          )} */}
+          {isLoggedIn && roleID === 3 && (
+            <NavLink to="/petlist" className="nav-link">
+              <h3>Adopt</h3>
+            </NavLink>
+          )}
 
           <NavLink to="/events" className="nav-link">
             <h3>Events</h3>
@@ -72,8 +82,6 @@ const Header = (props) => {
           <NavLink to="/contact" className="nav-link">
             <h3>Contact</h3>
           </NavLink>
-
-          
 
           {isLoggedIn && roleID === 1 && (
             <NavLink to="/admin" className="nav-link">
@@ -93,18 +101,13 @@ const Header = (props) => {
             </NavLink>
           )}
 
-          {isLoggedIn && roleID === 3 && (
-            <NavLink to="/petlist" className="nav-link">
-              <h3>Pet List</h3>
-            </NavLink>
-          )}
-
           {isLoggedIn && roleID === 1 && (
             <NavLink to="/petlistadmin" className="nav-link">
               <h3>Pet List Admin</h3>
             </NavLink>
           )}
         </Nav>
+        <span>{user.name}</span>
         {/* Đổi đăng nhập và đăng ký thành profile */}
         <Nav className="settings">
           {isLoggedIn ? (

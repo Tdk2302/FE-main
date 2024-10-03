@@ -58,11 +58,10 @@ const Header = (props) => {
               <h3>Home</h3>
             </NavLink>
           )}
-          {isLoggedIn && roleID === 3 && (
-            <NavLink to="/petlist" className="nav-link">
-              <h3>Adopt</h3>
-            </NavLink>
-          )}
+
+          <NavLink to="/petlist" className="nav-link">
+            <h3>Adopt</h3>
+          </NavLink>
 
           <NavLink to="/events" className="nav-link">
             <h3>Events</h3>

@@ -7,7 +7,7 @@ import Login from "./Account/Login";
 import Register from "./Account/Register";
 import Footer from "./components/Footer";
 import Events from "./Event/Events";
-import Pets from "./Pet_Page/Pets";
+import PetUpdate from "./Pet_Page/PetUpdate";
 import HomePage from "./components/HomePage";
 import Contact from "./Contact/Contact";
 import Donate from "./Donation/Donate";
@@ -17,7 +17,7 @@ import ProtectedRoute from "./Routes/ProtectRoute";
 import Admin from "./Account/Admin";
 import Staff from "./Account/Staff";
 import AppoimentTable from "./Appoinment/AppoimentTable";
-import PetsList from "./Pet_Page/PetUpdate";
+import PetsList from "./Pet_Page/PetLists";
 import PetListAdmin from "./Pet_Page/PetListAdmin";
 function App() {
   const roleID = localStorage.getItem("roleID") ? Number(localStorage.getItem("roleID")) : null;
@@ -33,7 +33,7 @@ function App() {
               <Route path="/events" element={<Events />} />
               <Route path="/register" element={<Register />} />
               <Route path="/donate" element={<Donate />} />
-              <Route path="/Pets" element={<Pets />} />
+              <Route path="/petupdate" element={<PetUpdate />} />
               <Route path="/Contact" element={<Contact />} />
 
               <Route

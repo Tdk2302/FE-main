@@ -153,7 +153,7 @@ const HomePage = () => {
               <NavLink to="/adopt" className="nav-link">
                 <img src={pet.image} alt={pet.name} />
                 <h3>{pet.name}</h3>
-                <p>Gender: {pet.gender}</p>
+                <p>Sex: {pet.gender}</p>
                 <p>Age: {pet.age}</p>
                 <p>Vaccinated: {pet.vaccinated}</p>
               </NavLink>

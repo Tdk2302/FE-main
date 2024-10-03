@@ -1,10 +1,13 @@
 .appointment-container {
+
     display: flex; /* Sử dụng flex để bố trí sidebar và nội dung chính */
     height: calc(100vh - 10px);
+
 }
 
 // Sidebar
 .sidebar {
+
     width: 250px; /* Độ rộng của sidebar */
     background-color: #f1f1f1; /* Màu nền của sidebar */
     color: #060607; /* Màu chữ */
@@ -51,6 +54,7 @@
 
 // Nội dung chính sẽ căn chỉnh với sidebar, không bị chèn
 .main-content {
+
     flex: 1; // Cho phép main-content mở rộng để lấp đầy không gian còn lại
     padding: 20px;
     background-color: #f0f0f0;
@@ -61,6 +65,7 @@
 
 // Bảng hiển thị danh sách cuộc hẹn
 .appointments-table {
+
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
@@ -84,12 +89,17 @@
 
 // Tin nhắn khi không có cuộc hẹn
 .no-appointments {
+
     text-align: center;
     color: #7f8c8d; /* Màu chữ cho tin nhắn */
 }
 
 // Modal từ chối cuộc hẹn
 .modal {
+
+.btn {
+  margin-left: 10px;
+
     position: fixed;
     top: 0;
     left: 0;

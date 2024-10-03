@@ -17,10 +17,14 @@ import ProtectedRoute from "./Routes/ProtectRoute";
 import Admin from "./Account/Admin";
 import Staff from "./Account/Staff";
 import AppoimentTable from "./Appoinment/AppoimentTable";
+import PetDetail from "./Pet_Page/PetDetail";
+import AdoptProcess from "./Adoption/AdoptProcess";
 import PetsList from "./Pet_Page/PetLists";
 import PetListAdmin from "./Pet_Page/PetListAdmin";
 function App() {
-  const roleID = localStorage.getItem("roleID") ? Number(localStorage.getItem("roleID")) : null;
+  const roleID = localStorage.getItem("roleID")
+    ? Number(localStorage.getItem("roleID"))
+    : null;
   return (
     <>
       <div className="app-container">
@@ -28,13 +32,15 @@ function App() {
         <div>
           <Container>
             <Routes>
-            <Route path="/login" element={<Login />} />
+              <Route path="/login" element={<Login />} />
               <Route path="/" element={<HomePage />} />
               <Route path="/events" element={<Events />} />
               <Route path="/register" element={<Register />} />
               <Route path="/donate" element={<Donate />} />
-              <Route path="/petupdate" element={<PetUpdate />} />
+              <Route path="/PetUpdate" element={<PetUpdate />} />
               <Route path="/Contact" element={<Contact />} />
+              <Route path="/petdetail/:petID" element={<PetDetail />} />
+              <Route path="/adoptprocess/:petID" element={<AdoptProcess />} />
 
               <Route
                 path="/admin"
@@ -59,6 +65,7 @@ function App() {
                 element={
                   <ProtectedRoute role={2}>
                     <AppoimentTable />
+
                   </ProtectedRoute>
                 }
               />

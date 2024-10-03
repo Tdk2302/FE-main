@@ -48,21 +48,24 @@ const Header = (props) => {
       <Navbar.Collapse id="basic-navbar-nav">
         {/* Thanh menu */}
         <Nav className="me-auto" activeKey={location.pathname}>
-          
-        {(!isLoggedIn || roleID === 3) && (
+          {(!isLoggedIn || roleID === 3) && (
             <NavLink to="/" className="nav-link">
               <h3>Home</h3>
             </NavLink>
           )}
-          <NavLink to="/adopt" className="nav-link">
+          <NavLink to="/petlist" className="nav-link">
+
             <h3>Adopt</h3>
           </NavLink>
+
+          {/* {!isLoggedIn && roleID === 3 && (
+           
+          )} */}
+
           <NavLink to="/events" className="nav-link">
             <h3>Events</h3>
           </NavLink>
-          <NavLink to="/pets" className="nav-link">
-            <h3>Pets</h3>
-          </NavLink>
+
           <NavLink to="/donate" className="nav-link">
             <h3>Donate</h3>
           </NavLink>

@@ -17,10 +17,10 @@ import ProtectedRoute from "./Routes/ProtectRoute";
 import Admin from "./Account/Admin";
 import Staff from "./Account/Staff";
 import AppoimentTable from "./Appoinment/AppoimentTable";
-import PetsList from "./Pet_Page/PetsList";
 import PetDetail from "./Pet_Page/PetDetail";
 import AdoptProcess from "./Adoption/AdoptProcess";
-
+import PetsList from "./Pet_Page/PetLists";
+import PetListAdmin from "./Pet_Page/PetListAdmin";
 function App() {
   const roleID = localStorage.getItem("roleID")
     ? Number(localStorage.getItem("roleID"))
@@ -65,6 +65,7 @@ function App() {
                 element={
                   <ProtectedRoute role={2}>
                     <AppoimentTable />
+
                   </ProtectedRoute>
                 }
               />
@@ -77,6 +78,16 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+
+              <Route
+                path="/petlistadmin"
+                element={
+                  <ProtectedRoute role={1}>
+                    <PetListAdmin />
+                  </ProtectedRoute>
+                }
+              />
+
             </Routes>
           </Container>
         </div>

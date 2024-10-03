@@ -33,6 +33,7 @@ const AppointmentPage = () => {
             setUnprocessedAppointments(response.data);
         } catch (error) {
             console.error('Error fetching unprocessed appointments:', error);
+            
             setUnprocessedAppointments([]);
         }
     }, []);

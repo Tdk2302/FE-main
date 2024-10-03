@@ -54,6 +54,7 @@ const Header = (props) => {
             </NavLink>
           )}
           <NavLink to="/petlist" className="nav-link">
+
             <h3>Adopt</h3>
           </NavLink>
 
@@ -72,6 +73,8 @@ const Header = (props) => {
             <h3>Contact</h3>
           </NavLink>
 
+          
+
           {isLoggedIn && roleID === 1 && (
             <NavLink to="/admin" className="nav-link">
               <h3>Admin</h3>
@@ -87,6 +90,18 @@ const Header = (props) => {
           {isLoggedIn && roleID === 2 && (
             <NavLink to="/appoinment" className="nav-link">
               <h3>Appoiment</h3>
+            </NavLink>
+          )}
+
+          {isLoggedIn && roleID === 3 && (
+            <NavLink to="/petlist" className="nav-link">
+              <h3>Pet List</h3>
+            </NavLink>
+          )}
+
+          {isLoggedIn && roleID === 1 && (
+            <NavLink to="/petlistadmin" className="nav-link">
+              <h3>Pet List Admin</h3>
             </NavLink>
           )}
         </Nav>

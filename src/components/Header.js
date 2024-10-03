@@ -101,13 +101,13 @@ const Header = (props) => {
             </NavLink>
           )}
 
-          {isLoggedIn && roleID === 1 && (
+          {isLoggedIn && roleID === 1 && roleID === 2 && (
             <NavLink to="/petlistadmin" className="nav-link">
               <h3>Pet List Admin</h3>
             </NavLink>
           )}
         </Nav>
-        <span>{user.name}</span>
+       
         {/* Đổi đăng nhập và đăng ký thành profile */}
         <Nav className="settings">
           {isLoggedIn ? (

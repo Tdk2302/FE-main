@@ -29,7 +29,7 @@ const AppointmentPage = () => {
   const apiUnprocessedAppointments = useCallback(async () => {
     try {
       const response = await axios.get("appointment/showUnprocessed");
-      setUnprocessedAppointments(response.data);
+      setUnprocessedAppointments(response.data.data);
     } catch (error) {
       console.error("Error fetching unprocessed appointments:", error);
 
@@ -40,7 +40,7 @@ const AppointmentPage = () => {
   const apiNotHappenAppointments = useCallback(async () => {
     try {
       const response = await axios.get("appointment/showNotHappenedYet");
-      setNotHappenAppointments(response.data);
+      setNotHappenAppointments(response.data.data);
     } catch (error) {
       console.error("Error fetching not happen appointments:", error);
       setNotHappenAppointments([]);
@@ -50,7 +50,7 @@ const AppointmentPage = () => {
   const apiEndedAppointments = useCallback(async () => {
     try {
       const response = await axios.get("appointment/showEnded");
-      setEndedAppointments(response.data);
+      setEndedAppointments(response.data.data);
     } catch (error) {
       console.error("Error fetching ended appointments:", error);
       setEndedAppointments([]);
@@ -87,18 +87,17 @@ const AppointmentPage = () => {
     setProcessingAppointments((prev) => [...prev, appointmentId]);
     try {
       const staffId = currentUser.accountID;
-      await axios.put(`/appointment/accept/${staffId}`, {
+      const response = await axios.put(`/appointment/accept/${staffId}`, {
         appointID: appointmentId,
       });
 
       setUnprocessedAppointments((prev) =>
         prev.filter((app) => app.appointID !== appointmentId)
       );
-      toast.success("Appointment accepted successfully.");
+      toast.success(response.data.message);
       refreshAppointments();
     } catch (error) {
       console.error("Error accepting appointment:", error);
-      toast.error("Failed to accept appointment. Please try again.");
     } finally {
       setProcessingAppointments((prev) =>
         prev.filter((id) => id !== appointmentId)
@@ -124,20 +123,19 @@ const AppointmentPage = () => {
     }
     setProcessingAppointments((prev) => [...prev, appointmentToRefuse]);
     try {
-      await axios.delete(`/appointment/refuse/${refusalReason}`, {
+      const response = await axios.delete(`/appointment/refuse/${refusalReason}`, {
         data: { appointID: appointmentToRefuse },
       });
       setUnprocessedAppointments((prev) =>
         prev.filter((app) => app.appointID !== appointmentToRefuse)
       );
-      toast.success("Appointment refused successfully.");
+      toast.success(response.data.message);
       refreshAppointments();
     } catch (error) {
       console.error(
         "Error refusing appointment:",
         error.response?.data || error.message
       );
-      toast.error("Failed to refuse appointment. Please try again.");
     } finally {
       setProcessingAppointments((prev) =>
         prev.filter((id) => id !== appointmentToRefuse)
@@ -151,26 +149,24 @@ const AppointmentPage = () => {
   const handleFinalAccept = async (appointmentId) => {
     setProcessingAppointments((prev) => [...prev, appointmentId]);
     try {
-      await axios.put(`/appointment/acceptAdopt`, { appointID: appointmentId });
-      toast.success("Appointment final accepted successfully.");
+      const response = await axios.put(`/appointment/acceptAdopt`, { appointID: appointmentId });
+      toast.success(response.data.message);
       refreshAppointments();
     } catch (error) {
       console.error("Error final accepting appointment:", error);
-      toast.error("Failed to final accept appointment. Please try again.");
     }
   };
   // Xử lý từ chối cuộc hẹn ở bảng notHappenyet
   const handleFinalRefuse = async (appointmentId) => {
     setProcessingAppointments((prev) => [...prev, appointmentId]);
     try {
-      await axios.delete(`/appointment/refuseAdopt`, {
+      const response = await axios.delete(`/appointment/refuseAdopt`, {
         data: { appointID: appointmentId },
       });
-      toast.success("Appointment final refused successfully.");
+      toast.success(response.data.message);
       refreshAppointments();
     } catch (error) {
       console.error("Error final refusing appointment:", error);
-      toast.error("Failed to final refuse appointment. Please try again.");
     }
   };
   // Format ngày giờ
@@ -374,30 +370,22 @@ const AppointmentPage = () => {
       </div>
 
       {showModal && (
-        <div className="modal">
-          <div className="modal-content">
-            <h2>Refuse Appointment</h2>
-            <textarea
-              value={refusalReason}
-              onChange={(e) => setRefusalReason(e.target.value)}
-              placeholder="Enter reason for refusal"
-            />
-            <div className="modal-buttons">
-              <button className="submit-button" onClick={handleRefusalSubmit}>
-                Submit
-              </button>
-              <button
-                className="cancel-button"
-                onClick={() => {
-                  setShowModal(false);
-                  setRefusalReason("");
-                  setAppointmentToRefuse(null);
-                }}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
+                <div className="appointment-refusal-modal">
+                    <div className="modal-content">
+                        <h2>Refuse Appointment</h2>
+                        <textarea value={refusalReason} onChange={(e) => setRefusalReason(e.target.value)} placeholder="Enter reason for refusal" />
+                        <div className="modal-buttons">
+                            <button onClick={handleRefusalSubmit}>Submit</button>
+                            <button onClick={() => {
+                                setShowModal(false);
+                                setRefusalReason('');
+              setAppointmentToRefuse(null);
+            }}
+          >
+              Cancel
+          </button>
+        </div>
+      </div>
         </div>
       )}
     </div>

@@ -18,32 +18,24 @@ const PetsList = () => {
   const navigate = useNavigate();
   const [ageError, setAgeError] = useState("");
   const [noResults, setNoResults] = useState(false);
+  
+  // Gọi API lấy danh sách các pet cho người dùng
   useEffect(() => {
-    const checkRole = async () => {
-      const roleID = localStorage.getItem("roleID");
+    const apiListPets = async () => {
       try {
-        if (roleID === "3") {
-          await apiListPets();
-        }
+        const response = await axios.get("/pets/showListOfPets");
+        setPets(response.data);
       } catch (error) {
-        console.error("Error pets:", error);
+        console.error("Error Api pets:", error);
+        if (error.code === "ERR_NETWORK") {
+          console.error("Network error!");
+        }
       }
     };
-    checkRole();
+    apiListPets();
   }, [navigate]);
 
-  // Gọi API lấy danh sách các pet cho người dùng
-  const apiListPets = async () => {
-    try {
-      const response = await axios.get("/pets/showListOfPets");
-      setPets(response.data);
-    } catch (error) {
-      console.error("Error Api pets:", error);
-      if (error.code === "ERR_NETWORK") {
-        console.error("Network error!");
-      }
-    }
-  };
+  
   // Hàm xử lý khi người dùng nhập thông tin tìm kiếm
   const handleSearch = async (e) => {
     e.preventDefault();

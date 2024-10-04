@@ -23,7 +23,7 @@ const PetListAdmin = () => {
     const checkRole = async () => {
       const roleID = localStorage.getItem("roleID");
       try {
-        if (roleID === "1") {
+        if (roleID === "1" || roleID === "2") {
           await apiListAllPets();
         }
       } catch (error) {

@@ -13,7 +13,6 @@ const Header = (props) => {
   const [username, setUserName] = useState(null);
   const name = localStorage.getItem("name");
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("user"));
   useEffect(() => {
     const checkLoginStatus = () => {
       const loggedIn = localStorage.getItem("isLoggedIn") === "true";
@@ -65,7 +64,7 @@ const Header = (props) => {
           )}
 
           {(!isLoggedIn || roleID === 3) && (
-            <NavLink to="/adopt" className="nav-link">
+            <NavLink to="/petlist" className="nav-link">
               <h3>Adopt</h3>
             </NavLink>
           )}
@@ -99,7 +98,7 @@ const Header = (props) => {
             </NavLink>
           )}
         </Nav>
-        <h4 className="username">{username}</h4>
+        {isLoggedIn && <h4 className="username">{username}</h4>}
         {/* Đổi đăng nhập và đăng ký thành profile */}
         <Nav className="settings">
           {isLoggedIn ? (

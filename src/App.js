@@ -19,7 +19,7 @@ import Staff from "./Account/Staff";
 import AppoimentTable from "./Appoinment/AppoimentTable";
 import PetDetail from "./Pet_Page/PetDetail";
 import AdoptProcess from "./Adoption/AdoptProcess";
-import PetsLists from "./Pet_Page/PetLists";
+import PetsLists from "./Pet_Page/PetList";
 import PetListAdmin from "./Pet_Page/PetListAdmin";
 import AddPet from "./Pet_Page/AddPet";
 
@@ -43,6 +43,7 @@ function App() {
               <Route path="/Contact" element={<Contact />} />
               <Route path="/petdetail/:petID" element={<PetDetail />} />
               <Route path="/adoptprocess/:petID" element={<AdoptProcess />} />
+              <Route path="/petlist" element={<PetsLists />} />
 
               <Route
                 path="/admin"
@@ -75,14 +76,6 @@ function App() {
                 element={
                   <ProtectedRoute roleID={2}>
                     <AddPet />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/petlist"
-                element={
-                  <ProtectedRoute roleID={3}>
-                    <PetsLists />
                   </ProtectedRoute>
                 }
               />

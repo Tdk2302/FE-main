@@ -34,18 +34,21 @@ const AdoptionProcess = () => {
         petID,
       });
       setErrorMessage(response.data.message);
-
       // Kiểm tra nếu thành công thì hiển thị bảng cảm ơn
       if (response.status === 200) {
         setShowModal(false);
         setShowThankYou(true);
+      }
+      if (date_time === null) {
+        console.log("alo");
+        alert("Vui long nhap date va time");
       }
     } catch (error) {
       if (error.response && error.response.status === 409) {
         console.error("Conflict error:", error.response.data);
       }
       console.error("Lỗi khi gửi dữ liệu:", error);
-      alert("Có lỗi xảy ra khi đặt lịch hẹn. Vui lòng thử lại.");
+      alert(ErrorMessage);
     }
   };
 

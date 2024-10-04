@@ -90,17 +90,15 @@ const AppointmentPage = () => {
       const response = await axios.put(`/appointment/accept/${staffId}`, {
         appointID: appointmentId,
       });
-      if(response.data.status === 200){
 
       setUnprocessedAppointments((prev) =>
           prev.filter((app) => app.appointID !== appointmentId)
         );
         toast.success(response.data.message);
-      }else{
-        toast.error(response.data.message);
-      }
+      
       refreshAppointments();
     } catch (error) {
+      toast.error(error.response.data.message)
       console.error("Error accepting appointment:", error);
     } finally {
       setProcessingAppointments((prev) =>
@@ -133,16 +131,16 @@ const AppointmentPage = () => {
           data: { appointID: appointmentToRefuse },
         }
       );
-      if(response.data.status === 200){
+
       setUnprocessedAppointments((prev) =>
           prev.filter((app) => app.appointID !== appointmentToRefuse)
         );
         toast.success(response.data.message);
         refreshAppointments();
-      }else{
-        toast.error(response.data.message);
-      }
+      
     } catch (error) {
+        toast.error(error.response.data.message)
+    
       console.error(
         "Error refusing appointment:",
         error.response?.data || error.message
@@ -162,14 +160,11 @@ const AppointmentPage = () => {
     try {
       const response = await axios.put(`/appointment/acceptAdopt`, {
         appointID: appointmentId,
-      });
-      if(response.data.status === 200){ 
+      });     
       toast.success(response.data.message);
-      }else{
-        toast.error(response.data.message);
-      }
       refreshAppointments();
     } catch (error) {
+      toast.error(error.response.data.message)
       console.error("Error final accepting appointment:", error);
     }
   };
@@ -179,14 +174,12 @@ const AppointmentPage = () => {
     try {
       const response = await axios.delete(`/appointment/refuseAdopt`, {
         data: { appointID: appointmentId },
-      });
-      if(response.data.status === 200){ 
+      }); 
       toast.success(response.data.message);
       refreshAppointments();
-    }else{
-        toast.error(response.data.message);
-      }
+    
     } catch (error) {
+      toast.error(error.response.data.message)
       console.error("Error final refusing appointment:", error);
     }
   };

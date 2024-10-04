@@ -90,11 +90,15 @@ const AppointmentPage = () => {
       const response = await axios.put(`/appointment/accept/${staffId}`, {
         appointID: appointmentId,
       });
+      if(response.data.status === 200){
 
       setUnprocessedAppointments((prev) =>
-        prev.filter((app) => app.appointID !== appointmentId)
-      );
-      toast.success(response.data.message);
+          prev.filter((app) => app.appointID !== appointmentId)
+        );
+        toast.success(response.data.message);
+      }else{
+        toast.error(response.data.message);
+      }
       refreshAppointments();
     } catch (error) {
       console.error("Error accepting appointment:", error);
@@ -129,11 +133,15 @@ const AppointmentPage = () => {
           data: { appointID: appointmentToRefuse },
         }
       );
+      if(response.data.status === 200){
       setUnprocessedAppointments((prev) =>
-        prev.filter((app) => app.appointID !== appointmentToRefuse)
-      );
-      toast.success(response.data.message);
-      refreshAppointments();
+          prev.filter((app) => app.appointID !== appointmentToRefuse)
+        );
+        toast.success(response.data.message);
+        refreshAppointments();
+      }else{
+        toast.error(response.data.message);
+      }
     } catch (error) {
       console.error(
         "Error refusing appointment:",
@@ -155,7 +163,11 @@ const AppointmentPage = () => {
       const response = await axios.put(`/appointment/acceptAdopt`, {
         appointID: appointmentId,
       });
+      if(response.data.status === 200){ 
       toast.success(response.data.message);
+      }else{
+        toast.error(response.data.message);
+      }
       refreshAppointments();
     } catch (error) {
       console.error("Error final accepting appointment:", error);
@@ -168,10 +180,14 @@ const AppointmentPage = () => {
       const response = await axios.delete(`/appointment/refuseAdopt`, {
         data: { appointID: appointmentId },
       });
+      if(response.data.status === 200){ 
       toast.success(response.data.message);
       refreshAppointments();
+    }else{
+        toast.error(response.data.message);
+      }
     } catch (error) {
-      console.error("Error final refusing appointment:", error);
+      console.error("Error final refusing appointment:", error);``
     }
   };
   // Format ngày giờ
@@ -275,7 +291,7 @@ const AppointmentPage = () => {
               </table>
             ) : (
               <p className="no-appointments">
-                No unprocessed appointments found.
+                No appointments processed found
               </p>
             )}
           </>
@@ -335,7 +351,7 @@ const AppointmentPage = () => {
               </table>
             ) : (
               <p className="no-appointments">
-                No not happened yet appointments found.
+                No appointments processed found.
               </p>
             )}
           </>
@@ -368,7 +384,7 @@ const AppointmentPage = () => {
                 </tbody>
               </table>
             ) : (
-              <p className="no-appointments">No ended appointments found.</p>
+              <p className="no-appointments">No appointments processed found.</p>
             )}
           </>
         )}

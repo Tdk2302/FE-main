@@ -41,15 +41,24 @@ function App() {
               <Route path="/donate" element={<Donate />} />
               <Route path="/PetUpdate" element={<PetUpdate />} />
               <Route path="/Contact" element={<Contact />} />
+
               <Route path="/petdetail/:petID" element={<PetDetail />} />
               <Route path="/adoptprocess/:petID" element={<AdoptProcess />} />
-              <Route path="/petlist" element={<PetsLists />} />
 
               <Route
                 path="/admin"
                 element={
                   <ProtectedRoute roleID={1}>
                     <Admin />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/adoptprocess/:petID"
+                element={
+                  <ProtectedRoute roleID={3}>
+                    <AdoptProcess />
                   </ProtectedRoute>
                 }
               />

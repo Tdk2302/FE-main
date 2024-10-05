@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useCallback } from "react";
+import moment from "moment";
+import React, { useCallback, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import axios from "../services/axios";
 import "../styles/appoitment.scss";
-import moment from "moment";
-import { toast } from "react-toastify";
 
 const AppointmentPage = () => {
   // Các state để lưu trữ và quản lý dữ liệu
@@ -187,7 +187,7 @@ const AppointmentPage = () => {
         toast.error(response.data.message);
       }
     } catch (error) {
-      console.error("Error final refusing appointment:", error);``
+      console.error("Error final refusing appointment:", error);
     }
   };
   // Format ngày giờ

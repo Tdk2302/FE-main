@@ -5,7 +5,7 @@ import logoApp from "../assets/images/logo.png";
 import { useLocation, NavLink, useNavigate } from "react-router-dom";
 import "../styles/header.scss";
 import { useState, useEffect } from "react";
-
+import Notification from "../Notifications/Notification";
 const Header = (props) => {
   const location = useLocation();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -97,8 +97,17 @@ const Header = (props) => {
               <h3>Appoiment</h3>
             </NavLink>
           )}
+
+          {isLoggedIn && roleID === 1 && (
+            <NavLink to="/adminnotifications" className="nav-link">
+              <h3>Admin Notifications</h3>
+            </NavLink>
+          )}  
         </Nav>
-        {isLoggedIn && <h4 className="username">{username}</h4>}
+
+        <Notification roleID={Number(roleID)} />
+        <h4 className="username">{username}</h4>
+
         {/* Đổi đăng nhập và đăng ký thành profile */}
         <Nav className="settings">
           {isLoggedIn ? (

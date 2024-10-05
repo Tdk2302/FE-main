@@ -22,7 +22,7 @@ import AdoptProcess from "./Adoption/AdoptProcess";
 import PetsList from "./Pet_Page/PetList";
 import PetListAdmin from "./Pet_Page/PetListAdmin";
 import AddPet from "./Pet_Page/AddPet";
-
+import AdminNotifications from "./Notifications/AdminNotifications";
 function App() {
   const roleID = localStorage.getItem("roleID")
     ? Number(localStorage.getItem("roleID"))
@@ -98,6 +98,16 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+
+             <Route
+                path="/adminnotifications"
+                element={
+                  <ProtectedRoute roleID={1}>
+                    <AdminNotifications />
+                  </ProtectedRoute>
+                }
+              />
+
             </Routes>
           </Container>
         </div>

@@ -97,6 +97,7 @@ const AppointmentPage = () => {
       toast.success(response.data.message);
       refreshAppointments();
     } catch (error) {
+      toast.error(error.response.data.message);
       console.error("Error accepting appointment:", error);
     } finally {
       setProcessingAppointments((prev) =>
@@ -135,6 +136,8 @@ const AppointmentPage = () => {
       toast.success(response.data.message);
       refreshAppointments();
     } catch (error) {
+      toast.error(error.response.data.message);
+
       console.error(
         "Error refusing appointment:",
         error.response?.data || error.message
@@ -158,6 +161,7 @@ const AppointmentPage = () => {
       toast.success(response.data.message);
       refreshAppointments();
     } catch (error) {
+      toast.error(error.response.data.message);
       console.error("Error final accepting appointment:", error);
     }
   };
@@ -171,6 +175,7 @@ const AppointmentPage = () => {
       toast.success(response.data.message);
       refreshAppointments();
     } catch (error) {
+      toast.error(error.response.data.message);
       console.error("Error final refusing appointment:", error);
     }
   };

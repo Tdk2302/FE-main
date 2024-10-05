@@ -1,11 +1,12 @@
-// src/Pet_Page/AddPet.js
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+// src/Pet_Page/UpdatePet.js
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "../services/axios";
 import "../styles/addpet.scss";
 
-const AddPet = ({ onPetAdded }) => {
+const UpdatePet = ({ onPetUpdated }) => {
   const navigate = useNavigate();
+  const { petId } = useParams(); // Lấy ID thú cưng từ URL
 
   const [petData, setPetData] = useState({
     name: "",
@@ -13,15 +14,15 @@ const AddPet = ({ onPetAdded }) => {
     sex: "",
     age: "",
     weight: "",
-    note: "", // Thêm trường note
-    size: "", // Thêm trường size
+    note: "",
+    size: "",
     potty_trained: false,
-    dietary_requirements: false, // Thêm trường dietary_requirements
+    dietary_requirements: false,
     spayed: false,
     vaccinated: false,
     socialized: false,
     rabies_vaccinated: false,
-    origin: "", // Thêm trường origin
+    origin: "",
     img_url: null,
     categoryID: null,
     description: "",
@@ -29,6 +30,20 @@ const AddPet = ({ onPetAdded }) => {
 
   const [imagePreview, setImagePreview] = useState(null);
   const roleID = localStorage.getItem("roleID");
+
+  useEffect(() => {
+    const fetchPetData = async () => {
+      try {
+        const response = await axios.get(`pets/${petId}`);
+        setPetData(response.data);
+        setImagePreview(response.data.img_url); // Giả sử img_url là URL của hình ảnh
+      } catch (error) {
+        console.error("Error fetching pet data:", error);
+      }
+    };
+
+    fetchPetData();
+  }, [petId]);
 
   if (roleID === "3") {
     return <h1>Access Denied</h1>;
@@ -66,26 +81,26 @@ const AddPet = ({ onPetAdded }) => {
     }
 
     try {
-      await axios.post("pets/addPets", formData, {
+      await axios.put(`pets/updatePets/${petId}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-      alert("Pet added successfully!");
-      onPetAdded();
+      alert("Pet updated successfully!");
+      onPetUpdated();
       navigate("/petlist");
     } catch (error) {
       console.error(
-        "Error adding pet:",
+        "Error updating pet:",
         error.response ? error.response.data : error.message
       );
-      alert("Failed to add pet. Please try again.");
+      alert("Failed to update pet. Please try again.");
     }
   };
 
   return (
     <div className="container pets-container">
-      <h1 className="add-pet__title">CREATE PET</h1>
+      <h1 className="add-pet__title">UPDATE PET</h1>
       <form className="add-pet__form" onSubmit={handleSubmit}>
         <div className="row">
           <div className="col-lg-6 col-md-6 col-sm-12 text-center">
@@ -94,7 +109,6 @@ const AddPet = ({ onPetAdded }) => {
               name="img_url"
               accept="image/*"
               onChange={handleImageChange}
-              required
             />
             {imagePreview && (
               <img
@@ -254,7 +268,7 @@ const AddPet = ({ onPetAdded }) => {
               </div>
             </div>
             <button className="create-button w-50" type="submit">
-              Create
+              Update
             </button>
           </div>
         </div>
@@ -263,4 +277,4 @@ const AddPet = ({ onPetAdded }) => {
   );
 };
 
-export default AddPet;
+export default UpdatePet;

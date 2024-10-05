@@ -9,10 +9,18 @@ const PetDetail = () => {
   const location = useLocation(); // Lấy location
   const pet = location.state?.pet;
   console.log("Pet data:", pet); // Kiểm tra dữ liệu
-
+  const roleID = localStorage.getItem("roleID");
   const handleAdopt = (pet) => {
     if (pet.petID) {
       navigate(`/adoptprocess/${pet.petID}`, { state: { pet } });
+    } else {
+      console.error("Pet ID is undefined");
+    }
+  };
+
+  const handleUpdatePet = () => {
+    if (pet.petID) {
+      navigate(`/petupdate/${pet.petID}`); // Chuyển hướng đến trang cập nhật
     } else {
       console.error("Pet ID is undefined");
     }
@@ -37,7 +45,7 @@ const PetDetail = () => {
             <img src={getImageUrl(pet.img_url)} alt={pet.name} />
           </div>
         </div>
-        <div class="col-sm-7 col-md-7 col-lg-7 caption-adoption float-right">
+        <div class="col-sm-6 col-md-6 col-lg-6 caption-adoption float-right">
           <div className="pet-info">
             <h1>{pet.name}</h1> {/* Hiển thị tên thú cưng */}
             <p>
@@ -50,11 +58,22 @@ const PetDetail = () => {
               <strong>Sex:</strong> {pet.sex}
             </p>
             <p>
-              <strong>Vaccinated:</strong> {pet.spayed}
+              <strong>Vaccinated:</strong> {pet.spayed ? "Yes" : "No"}
             </p>
-            <div className="adopt-button">
-              <Button onClick={() => handleAdopt(pet)}>Adopt</Button>
-            </div>
+            <p>
+              <strong>Spayed:</strong> {pet.spayed ? "Yes" : "No"}
+            </p>
+            <p>
+              <strong>Potty Trained:</strong> {pet.potty_trained ? "Yes" : "No"}
+            </p>
+            {roleID === "3" && (
+              <div className="adopt-button">
+                <Button onClick={() => handleAdopt(pet)}>Adopt</Button>
+              </div>
+            )}
+          </div>
+          <div class="edit-button">
+            <Button onClick={handleUpdatePet}>Edit Pet</Button>
           </div>
         </div>
       </div>

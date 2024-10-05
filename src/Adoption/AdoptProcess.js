@@ -23,7 +23,6 @@ const AdoptionProcess = () => {
   const [maxDate, setMaxDate] = useState("");
   const [ErrorMessage, setErrorMessage] = useState("");
   const [showThankYou, setShowThankYou] = useState(false); // Trạng thái hiển thị bảng cảm ơn
-
   const accountID = localStorage.getItem("accountID"); // Lấy accountID
   // Xử lý khi người dùng nhấn nút "Đặt lịch hẹn"
   const handleSubmit = async () => {
@@ -34,18 +33,21 @@ const AdoptionProcess = () => {
         petID,
       });
       setErrorMessage(response.data.message);
-
       // Kiểm tra nếu thành công thì hiển thị bảng cảm ơn
       if (response.status === 200) {
         setShowModal(false);
         setShowThankYou(true);
+      }
+      if (date_time === null) {
+        console.log("alo");
+        alert("Vui long nhap date va time");
       }
     } catch (error) {
       if (error.response && error.response.status === 409) {
         console.error("Conflict error:", error.response.data);
       }
       console.error("Lỗi khi gửi dữ liệu:", error);
-      alert("Có lỗi xảy ra khi đặt lịch hẹn. Vui lòng thử lại.");
+      alert(ErrorMessage);
     }
   };
 
@@ -156,7 +158,7 @@ const AdoptionProcess = () => {
           </label>
         </div>
         <button className="confirm-button" onClick={handleConfirmClick}>
-          Xác nhận
+          Accept
         </button>
       </div>
 

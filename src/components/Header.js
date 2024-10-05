@@ -105,7 +105,7 @@ const Header = (props) => {
             </NavLink>
           )}  
         </Nav>
-        <Notification roleID={Number(roleID)} />
+        <Notification roleID={roleID ? roleID.toString() : ""} />
         <h4 className="username">{username}</h4>
         {/* Đổi đăng nhập và đăng ký thành profile */}
         <Nav className="settings">

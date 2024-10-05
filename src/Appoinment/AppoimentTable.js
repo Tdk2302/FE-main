@@ -198,7 +198,7 @@ const AppointmentPage = () => {
 
   return (
     <div className="appointment-container">
-      <div className="sidebar">
+      <div className="sidebar-appointment">
         <h2>Appointments</h2>
         <ul>
           <li

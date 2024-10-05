@@ -23,7 +23,6 @@ const AdoptionProcess = () => {
   const [maxDate, setMaxDate] = useState("");
   const [ErrorMessage, setErrorMessage] = useState("");
   const [showThankYou, setShowThankYou] = useState(false); // Trạng thái hiển thị bảng cảm ơn
-
   const accountID = localStorage.getItem("accountID"); // Lấy accountID
   // Xử lý khi người dùng nhấn nút "Đặt lịch hẹn"
   const handleSubmit = async () => {
@@ -159,7 +158,7 @@ const AdoptionProcess = () => {
           </label>
         </div>
         <button className="confirm-button" onClick={handleConfirmClick}>
-          Xác nhận
+          Accept
         </button>
       </div>
 

@@ -7,7 +7,7 @@ import Login from "./Account/Login";
 import Register from "./Account/Register";
 import Footer from "./components/Footer";
 import Events from "./Event/Events";
-import PetUpdate from "./Pet_Page/PetUpdate";
+import PetUpdate from "./Pet_Page/UpdatePet";
 import HomePage from "./components/HomePage";
 import Contact from "./Contact/Contact";
 import Donate from "./Donation/Donate";
@@ -19,7 +19,7 @@ import Staff from "./Account/Staff";
 import AppoimentTable from "./Appoinment/AppoimentTable";
 import PetDetail from "./Pet_Page/PetDetail";
 import AdoptProcess from "./Adoption/AdoptProcess";
-import PetsLists from "./Pet_Page/PetList";
+import PetsList from "./Pet_Page/PetList";
 import PetListAdmin from "./Pet_Page/PetListAdmin";
 import AddPet from "./Pet_Page/AddPet";
 
@@ -39,8 +39,9 @@ function App() {
               <Route path="/events" element={<Events />} />
               <Route path="/register" element={<Register />} />
               <Route path="/donate" element={<Donate />} />
-              <Route path="/PetUpdate" element={<PetUpdate />} />
+              <Route path="/PetUpdate/:petID" element={<PetUpdate />} />
               <Route path="/Contact" element={<Contact />} />
+              <Route path="/petlist" element={<PetsList />} />
 
               <Route path="/petdetail/:petID" element={<PetDetail />} />
               <Route path="/adoptprocess/:petID" element={<AdoptProcess />} />

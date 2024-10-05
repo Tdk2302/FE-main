@@ -22,29 +22,60 @@
   flex-direction: column; /* Căn theo cột */
 }
 
+.text-center {
+  padding-bottom: 100px;
+  select {
+    margin-bottom: 20px;
+  }
+}
+
 /* Định dạng các ô nhập */
-.add-pet__input,
+.add-pet__input {
+  width: 50%;
+  margin: 10px;
+  border-radius: 5px;
+}
 .add-pet__textarea {
-  width: 100%; /* Chiều rộng 100% */
-  padding: 10px; /* Khoảng cách bên trong */
-  margin: 10px 0; /* Khoảng cách bên ngoài */
-  border: 1px solid #ccc; /* Viền xám */
-  border-radius: 4px; /* Bo góc */
-  font-size: 16px; /* Kích thước chữ */
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.form-check {
+  display: flex;
+  align-items: center;
+  margin: 0;
+}
+
+.form-check-input {
+  margin-right: 10px;
+}
+
+.form-check-label {
+  white-space: nowrap;
 }
 
 /* Định dạng nút */
-.add-pet__button {
-  background-color: #4caf50; /* Màu nền nút */
-  color: white; /* Màu chữ */
-  padding: 10px 20px; /* Khoảng cách bên trong */
-  border: none; /* Không có viền */
-  border-radius: 5px; /* Bo góc */
-  cursor: pointer; /* Con trỏ chuột khi di chuột qua */
-  font-size: 16px; /* Kích thước chữ */
+.create-button {
+  background-color: #ecc874;
+  color: white;
+  border: none;
+  padding: 5px 40px;
+  font-size: 20px;
+  border-radius: 25px; // Tăng giá trị này để bo tròn các góc nhiều hơn
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    background-color: #f1ba3a;
+    transform: translateY(-2px);
+  }
 }
 
-/* Hiệu ứng khi di chuột qua nút */
-.add-pet__button:hover {
-  background-color: #45a049; /* Màu nền khi di chuột qua */
+.form-check-label {
+  font-weight: 400;
 }

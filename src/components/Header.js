@@ -59,7 +59,7 @@ const Header = (props) => {
           )}
           {isLoggedIn && (roleID === 1 || roleID === 2) && (
             <NavLink to="/petlistadmin" className="nav-link">
-              <h3>Pet List Admin</h3>
+              <h3>Pet List</h3>
             </NavLink>
           )}
 

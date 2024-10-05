@@ -13,7 +13,6 @@ const Header = (props) => {
   const [username, setUserName] = useState(null);
   const name = localStorage.getItem("name");
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("user"));
   useEffect(() => {
     const checkLoginStatus = () => {
       const loggedIn = localStorage.getItem("isLoggedIn") === "true";
@@ -60,7 +59,7 @@ const Header = (props) => {
           )}
           {isLoggedIn && (roleID === 1 || roleID === 2) && (
             <NavLink to="/petlistadmin" className="nav-link">
-              <h3>Pet List Admin</h3>
+              <h3>Pet List</h3>
             </NavLink>
           )}
 
@@ -105,8 +104,11 @@ const Header = (props) => {
             </NavLink>
           )}  
         </Nav>
+
         <Notification roleID={roleID ? roleID.toString() : ""} />
+
         <h4 className="username">{username}</h4>
+
         {/* Đổi đăng nhập và đăng ký thành profile */}
         <Nav className="settings">
           {isLoggedIn ? (

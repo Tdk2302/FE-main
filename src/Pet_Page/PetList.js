@@ -5,6 +5,8 @@ import { useEffect } from "react";
 import "../styles/petslist.scss";
 import { useCallback } from "react";
 import { FaFilter } from "react-icons/fa";
+import AddPet from "./AddPet";
+
 const PetsList = () => {
   const [pets, setPets] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -18,24 +20,38 @@ const PetsList = () => {
   const navigate = useNavigate();
   const [ageError, setAgeError] = useState("");
   const [noResults, setNoResults] = useState(false);
-  
-  // Gọi API lấy danh sách các pet cho người dùng
-  useEffect(() => {
-    const apiListPets = async () => {
-      try {
-        const response = await axios.get("/pets/showListOfPets");
-        setPets(response.data);
-      } catch (error) {
-        console.error("Error Api pets:", error);
-        if (error.code === "ERR_NETWORK") {
-          console.error("Network error!");
-        }
-      }
-    };
-    apiListPets();
-  }, [navigate]);
+  const roleID = localStorage.getItem("roleID");
 
-  
+  useEffect(() => {
+    if (roleID !== "3") {
+      // Nếu roleID không phải là 3, hiển thị thông báo Access Denied
+      return <div>Access Denied</div>;
+    }
+    // Gọi API để lấy danh sách pets
+    apiListPets();
+  }, [roleID]);
+
+  const apiListPets = async () => {
+    try {
+      const response = await axios.get("/pets/showListOfPets");
+      setPets(response.data);
+    } catch (error) {
+      console.error("Error Api pets:", error);
+      if (error.code === "ERR_NETWORK") {
+        console.error("Network error!");
+      }
+    }
+  };
+
+  // Gọi hàm apiListPets khi component được mount
+  useEffect(() => {
+    apiListPets();
+  }, []);
+
+  const handlePetAdded = () => {
+    apiListPets(); // Gọi lại API để cập nhật danh sách pet
+  };
+
   // Hàm xử lý khi người dùng nhập thông tin tìm kiếm
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -85,13 +101,14 @@ const PetsList = () => {
       }));
     }
   };
+
   // Hàm xử lý khi người dùng click vào một pet
   const handlePetClick = (pet) => {
     if (pet.petID) {
       console.log("Navigating to pet detail with ID:", pet.petID);
       navigate(`/petdetail/${pet.petID}`, { state: { pet } });
     } else {
-      console.error("Pet ID is undefined");
+      console.error("Pet ID is undefi ned");
     }
   };
   // Hàm lấy đường dẫn ảnh từ API
@@ -168,7 +185,7 @@ const PetsList = () => {
           </div>
         </form>
       </div>
-
+      <AddPet onPetAdded={handlePetAdded} />
       <div className="pets-grid">
         {currentPets.length > 0 ? (
           currentPets.map((pet) => (

@@ -7,24 +7,28 @@
 /* src/styles/petListAdmin.scss */
 
 /* Định dạng cho các nút chung */
-.nav-link-add-pet {
-  display: inline-flex; /* Hiển thị như một khối nội tuyến */
-  padding: 4px 15px;
-  font-size: 10px;
-  background-color: #f1cf7e;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  text-decoration: none; /* Không có gạch chân */
-  float: right;
-  transition: background-color 0.3s;
-  &:hover {
-    background-color: #f1cf7e;
-  }
 
-  h3 {
-    margin-top: 5px;
-    font-size: 20px;
+.add-update-button {
+  margin-right: 0;
+  .nav-link-add-pet {
+    display: inline-flex; /* Hiển thị như một khối nội tuyến */
+    padding: 4px 15px;
+    font-size: 10px;
+    background-color: #f1cf7e;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none; /* Không có gạch chân */
+    float: right;
+    transition: background-color 0.3s;
+    &:hover {
+      background-color: #f1cf7e;
+    }
+
+    h3 {
+      margin-top: 5px;
+      font-size: 20px;
+    }
   }
 }

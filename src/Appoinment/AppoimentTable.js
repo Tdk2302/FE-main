@@ -1,8 +1,8 @@
-import moment from "moment";
-import React, { useCallback, useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "../services/axios";
 import "../styles/appoitment.scss";
+import moment from "moment";
+import { toast } from "react-toastify";
 
 const AppointmentPage = () => {
   // Các state để lưu trữ và quản lý dữ liệu
@@ -92,13 +92,12 @@ const AppointmentPage = () => {
       });
 
       setUnprocessedAppointments((prev) =>
-          prev.filter((app) => app.appointID !== appointmentId)
-        );
-        toast.success(response.data.message);
-      
+        prev.filter((app) => app.appointID !== appointmentId)
+      );
+      toast.success(response.data.message);
       refreshAppointments();
     } catch (error) {
-      toast.error(error.response.data.message)
+      toast.error(error.response.data.message);
       console.error("Error accepting appointment:", error);
     } finally {
       setProcessingAppointments((prev) =>
@@ -131,16 +130,14 @@ const AppointmentPage = () => {
           data: { appointID: appointmentToRefuse },
         }
       );
-
       setUnprocessedAppointments((prev) =>
-          prev.filter((app) => app.appointID !== appointmentToRefuse)
-        );
-        toast.success(response.data.message);
-        refreshAppointments();
-      
+        prev.filter((app) => app.appointID !== appointmentToRefuse)
+      );
+      toast.success(response.data.message);
+      refreshAppointments();
     } catch (error) {
-        toast.error(error.response.data.message)
-    
+      toast.error(error.response.data.message);
+
       console.error(
         "Error refusing appointment:",
         error.response?.data || error.message
@@ -160,11 +157,11 @@ const AppointmentPage = () => {
     try {
       const response = await axios.put(`/appointment/acceptAdopt`, {
         appointID: appointmentId,
-      });     
+      });
       toast.success(response.data.message);
       refreshAppointments();
     } catch (error) {
-      toast.error(error.response.data.message)
+      toast.error(error.response.data.message);
       console.error("Error final accepting appointment:", error);
     }
   };
@@ -174,12 +171,11 @@ const AppointmentPage = () => {
     try {
       const response = await axios.delete(`/appointment/refuseAdopt`, {
         data: { appointID: appointmentId },
-      }); 
+      });
       toast.success(response.data.message);
       refreshAppointments();
-    
     } catch (error) {
-      toast.error(error.response.data.message)
+      toast.error(error.response.data.message);
       console.error("Error final refusing appointment:", error);
     }
   };
@@ -284,7 +280,7 @@ const AppointmentPage = () => {
               </table>
             ) : (
               <p className="no-appointments">
-                No appointments processed found
+                No unprocessed appointments found.
               </p>
             )}
           </>
@@ -344,7 +340,7 @@ const AppointmentPage = () => {
               </table>
             ) : (
               <p className="no-appointments">
-                No appointments processed found.
+                No not happened yet appointments found.
               </p>
             )}
           </>
@@ -377,7 +373,7 @@ const AppointmentPage = () => {
                 </tbody>
               </table>
             ) : (
-              <p className="no-appointments">No appointments processed found.</p>
+              <p className="no-appointments">No ended appointments found.</p>
             )}
           </>
         )}

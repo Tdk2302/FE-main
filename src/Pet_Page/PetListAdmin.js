@@ -3,6 +3,7 @@ import { useNavigate, NavLink } from "react-router-dom";
 import axios, { BASE_URL } from "../services/axios";
 import "../styles/petListAdmin.scss";
 import { FaFilter } from "react-icons/fa";
+import AddPet from "./AddPet";
 
 const PetListAdmin = () => {
   const [pets, setPets] = useState([]);
@@ -16,6 +17,7 @@ const PetListAdmin = () => {
   });
   const [ageError, setAgeError] = useState("");
   const [noResults, setNoResults] = useState(false);
+  const [showAddPet, setShowAddPet] = useState(false); // State để kiểm soát hiển thị AddPet
 
   const navigate = useNavigate();
 
@@ -33,6 +35,15 @@ const PetListAdmin = () => {
     checkRole();
   }, [navigate]);
 
+  const handlePetClick = (pet) => {
+    if (pet.petID) {
+      console.log("Navigating to pet detail with ID:", pet.petID);
+      navigate(`/petdetail/${pet.petID}`, { state: { pet } });
+    } else {
+      console.error("Pet ID is undefi ned");
+    }
+  };
+
   const apiListAllPets = async () => {
     try {
       const response = await axios.get("/pets/showListAllOfPets");
@@ -45,6 +56,13 @@ const PetListAdmin = () => {
         );
       }
     }
+  };
+  useEffect(() => {
+    apiListAllPets(); // Gọi hàm fetchPets khi component được mount
+  }, []);
+
+  const handlePetAdded = () => {
+    apiListAllPets(); // Gọi lại API để cập nhật danh sách pet
   };
 
   const handleSearch = async (e) => {
@@ -164,22 +182,35 @@ const PetListAdmin = () => {
               <option value="male">Male</option>
               <option value="female">Female</option>
             </select>
-            <NavLink to="/addpet" className="nav-link-add-pet">
-              <h3>Create Pet</h3>
-            </NavLink>
+            <div className="add-update-button">
+              <NavLink
+                to="/addpet"
+                className="nav-link-add-pet"
+                onClick={() => setShowAddPet(true)}
+              >
+                <h3>Create Pet</h3>
+              </NavLink>
+            </div>
           </div>
         </form>
       </div>
-
+      {showAddPet && <AddPet onPetAdded={handlePetAdded} />}{" "}
+      {/* Chỉ hiển thị AddPet khi showAddPet là true */}
+      {/* Truyền hàm handlePetAdded vào AddPet */}
       <div className="pets-grid">
         {currentPets.length > 0 ? (
           currentPets.map((pet) => (
-            <div key={pet.petID} className="pet-item">
+            <div
+              key={pet.petID}
+              className="pet-item"
+              onClick={() => handlePetClick(pet)}
+            >
               <img src={getImageUrl(pet.img_url)} alt={pet.name} />
               <h3>{pet.name}</h3>
               <div className="pet-info-divider"></div>
               <p>Age: {pet.age} month</p>
               <p>Sex: {pet.sex}</p>
+              <button onClick={() => handlePetClick(pet)}>View Details</button>
             </div>
           ))
         ) : (

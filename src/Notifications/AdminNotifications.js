@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from "../services/axios";
 import "../styles/adminpage.scss";
+import { toast } from 'react-toastify';
+
 const AdminNotifications = () => {
     const [notifications, setNotifications] = useState([]);
     const [activeTab, setActiveTab] = useState("other");
@@ -19,13 +21,31 @@ const AdminNotifications = () => {
             } else if (activeTab === "requestRegister") {
                 response = await axios.get("/notification/showRegisNoti");
             }
-            setNotifications(response.data.data || []);
+            
+            console.log('API Response:', response);
+
+            if (response.status === 200) {
+                const data = response.data.data || response.data;
+                setNotifications(Array.isArray(data) ? data : []);
+            } else {
+                setNotifications([]);
+                setError('No notifications found');
+            }
         } catch (error) {
             console.error('Error fetching notifications:', error);
-            if (error.response && error.response.status === 404) {
-                setError('Session expired or no notifications found. Please try logging in again.');
+            if (error.response) {
+                switch (error.response.status) {
+                    case 400:
+                    case 404:
+                        setError(error.response.data || 'No notifications found');
+                        break;
+                    default:
+                        setError('An error occurred. Please try again later.');
+                }
+            } else if (error.request) {
+                setError('No response received from the server. Please check your connection.');
             } else {
-                setError('Failed to fetch notifications. Please try again later.');
+                setError('Error setting up the request. Please try again.');
             }
             setNotifications([]);
         } finally {
@@ -34,29 +54,25 @@ const AdminNotifications = () => {
     }, [activeTab]);
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                await apiAdminNotifications();
-            } catch (error) {
-                console.error('Error in useEffect:', error);
-            }
-        };
-        fetchData();
+        apiAdminNotifications();
     }, [apiAdminNotifications]);
 
     const HandleStatusUpdate = async (notiID, status) => {
         try {
+            console.log(`Updating notification ${notiID} with status ${status}`);
             const response = await axios.put(`notification/${notiID}/status?status=${status}`);
+            console.log('Update response:', response);
             if (response.status === 200) {
                 if (response.data === "Delete pet and notification") {
-                    console.log("Pet and notification deleted");
+                    toast.success("Pet and notification deleted successfully");
                 } else {
-                    console.log(`Notification ${status ? 'Accepted' : 'Denied'} successfully`);
+                    toast.success(`Notification ${status ? 'Accepted' : 'Denied'} successfully`);
                 }
                 apiAdminNotifications();
             }
         } catch (error) {
             console.error('Error updating notification status:', error);
+            toast.error('Failed to update notification status');
         }
     }
 
@@ -87,15 +103,19 @@ const AdminNotifications = () => {
             </div>
             <div className="notifications-content">
                 <h2>{activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Notifications</h2>
-                {notifications.length > 0 ? (
+                {isLoading ? (
+                    <p>Loading...</p>
+                ) : error ? (
+                    <p className="error-message">{error}</p>
+                ) : notifications.length > 0 ? (
                     <ul className="notification-list">
                         {notifications.map((noti) => (
-                            <li key={noti.id} className="notification-item">
+                            <li key={noti.notiID} className="notification-item">
                                 <p>{noti.message}</p>
-                                {(activeTab === 'addPet' || activeTab === 'requestRegister') && (
+                                {(activeTab === 'addPet' || activeTab === 'requestRegister') && noti.button_status && (
                                     <div className="notification-actions">
-                                        <button onClick={() => HandleStatusUpdate(noti.id, true)}>Accept</button>
-                                        <button onClick={() => HandleStatusUpdate(noti.id, false)}>Deny</button>
+                                        <button onClick={() => HandleStatusUpdate(noti.notiID, true)}>Accept</button>
+                                        <button onClick={() => HandleStatusUpdate(noti.notiID, false)}>Deny</button>
                                     </div>
                                 )}
                             </li>

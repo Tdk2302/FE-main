@@ -106,10 +106,10 @@ const Header = (props) => {
             </NavLink>
           )}
         </Nav>
-
-        {isLoggedIn && <Notification roleID={Number(roleID)} />}
+        {isLoggedIn && (
+          <Notification roleID={roleID ? roleID.toString() : ""} />
+        )}
         {isLoggedIn && <h4 className="username">{username}</h4>}
-
         {/* Đổi đăng nhập và đăng ký thành profile */}
         <Nav className="settings">
           {isLoggedIn ? (

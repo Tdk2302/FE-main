@@ -6,6 +6,7 @@ import { useLocation, NavLink, useNavigate } from "react-router-dom";
 import "../styles/header.scss";
 import { useState, useEffect } from "react";
 import Notification from "../Notifications/Notification";
+
 const Header = (props) => {
   const location = useLocation();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -13,6 +14,7 @@ const Header = (props) => {
   const [username, setUserName] = useState(null);
   const name = localStorage.getItem("name");
   const navigate = useNavigate();
+
   useEffect(() => {
     const checkLoginStatus = () => {
       const loggedIn = localStorage.getItem("isLoggedIn") === "true";
@@ -100,7 +102,7 @@ const Header = (props) => {
 
           {isLoggedIn && roleID === 1 && (
             <NavLink to="/adminnotifications" className="nav-link">
-              <h3>Admin Notifications</h3>
+              <h3>Notifications</h3>
             </NavLink>
           )}
         </Nav>

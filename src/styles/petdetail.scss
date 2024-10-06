@@ -42,7 +42,6 @@
 
 .adopt-button {
   margin-top: auto;
-  //   margin-bottom: 0;
   button {
     background-color: #f1cf7e;
     color: white;
@@ -52,12 +51,65 @@
     border-radius: 25px; // Tăng giá trị này để bo tròn các góc nhiều hơn
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 
     &:hover {
       background-color: #f1ba3a;
       transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
   }
+}
+
+.edit-button {
+  margin-top: auto;
+  button {
+    background-color: #f1ba3a;
+    color: white;
+    border: none;
+    padding: 5px 60px;
+    font-size: 16px;
+    border-radius: 5px; // Tăng giá trị này để bo tròn các góc nhiều hơn
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: #dead43;
+      transform: translateY(-2px);
+    }
+  }
+}
+
+.support-banner {
+  margin-top: 30px;
+  background-image: url("../assets/images/banner.webp");
+  background-size: cover;
+  background-position: center;
+  border-radius: 5px;
+  // padding: 20px 0;
+  h2 {
+    font-size: 30px;
+    margin-top: 20px;
+    color: white;
+  }
+}
+.support-button {
+  background-color: #f1cf7e;
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  font-size: 16px;
+  border-radius: 25px; // Tăng giá trị này để bo tròn các góc nhiều hơn
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.support-button:hover {
+  background-color: #f1ba3a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.support-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }

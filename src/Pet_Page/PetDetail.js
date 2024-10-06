@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "react-bootstrap";
-import { useLocation, useNavigate } from "react-router-dom"; // Thêm useParams
+import { useLocation, useNavigate, NavLink } from "react-router-dom"; // Thêm useParams
 import { BASE_URL } from "../services/axios";
 import "../styles/petdetail.scss";
 const PetDetail = () => {
@@ -58,13 +58,30 @@ const PetDetail = () => {
               <strong>Sex:</strong> {pet.sex}
             </p>
             <p>
-              <strong>Vaccinated:</strong> {pet.spayed ? "Yes" : "No"}
+              <strong>Size:</strong> {pet.size}
             </p>
             <p>
-              <strong>Spayed:</strong> {pet.spayed ? "Yes" : "No"}
+              <strong>Weight:</strong> {pet.weight}kg
             </p>
             <p>
-              <strong>Potty Trained:</strong> {pet.potty_trained ? "Yes" : "No"}
+              <strong>Vaccinated:</strong> {pet.vaccinated ? "✓" : ""}
+            </p>
+            <p>
+              <strong>Spayed:</strong> {pet.spayed ? "✓" : ""}
+            </p>
+            <p>
+              <strong>Potty Trained:</strong> {pet.potty_trained ? "✓" : ""}
+            </p>
+            <p>
+              <strong>Dietary Requirements:</strong>{" "}
+              {pet.dietary_requirements ? "✓" : ""}
+            </p>
+            <p>
+              <strong>Friendly:</strong> {pet.socialized ? "✓" : ""}
+            </p>
+            <p>
+              <strong>Rabies Vaccinated:</strong>{" "}
+              {pet.rabies_vaccinated ? "✓" : ""}
             </p>
             {roleID === "3" && (
               <div className="adopt-button">
@@ -72,11 +89,29 @@ const PetDetail = () => {
               </div>
             )}
           </div>
-          <div class="edit-button">
-            <Button onClick={handleUpdatePet}>Edit Pet</Button>
-          </div>
+          {roleID === "2" && (
+            <div class="edit-button">
+              <Button onClick={handleUpdatePet}>Edit Pet</Button>
+            </div>
+          )}
         </div>
       </div>
+      {roleID === "3" && (
+        <div className="support-banner">
+          <div className="container">
+            <div className="row align-items-center">
+              <div className="col">
+                <h2 className="support-text">Have you already supported us?</h2>
+              </div>
+              <div className="col-auto">
+                <NavLink to="/donate" className="nav-link">
+                  <button className="support-button">DONATE NOW</button>
+                </NavLink>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

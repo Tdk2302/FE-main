@@ -102,11 +102,11 @@ const Header = (props) => {
             <NavLink to="/adminnotifications" className="nav-link">
               <h3>Admin Notifications</h3>
             </NavLink>
-          )}  
+          )}
         </Nav>
 
-        <Notification roleID={Number(roleID)} />
-        <h4 className="username">{username}</h4>
+        {isLoggedIn && <Notification roleID={Number(roleID)} />}
+        {isLoggedIn && <h4 className="username">{username}</h4>}
 
         {/* Đổi đăng nhập và đăng ký thành profile */}
         <Nav className="settings">

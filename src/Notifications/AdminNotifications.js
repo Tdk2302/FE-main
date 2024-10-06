@@ -8,45 +8,57 @@ const AdminNotifications = () => {
     const [activeTab, setActiveTab] = useState("other");
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [notificationCounts, setNotificationCounts] = useState({
+        other: 0,
+        addPet: 0,
+        requestRegister: 0
+    });
     
     const apiAdminNotifications = useCallback(async () => {
         setIsLoading(true);
         setError(null);
         try {
-            let response;
-            if (activeTab === "other") {
-                response = await axios.get("/notification/otherAdminNoti");
-            } else if (activeTab === "addPet") {
-                response = await axios.get("/notification/showAdminAdoptNoti");
-            } else if (activeTab === "requestRegister") {
-                response = await axios.get("/notification/showRegisNoti");
-            }
+            const [otherResponse, addPetResponse, requestRegisterResponse] = await Promise.all([
+                axios.get("/notification/otherAdminNoti"),
+                axios.get("/notification/showAdminAdoptNoti"),
+                axios.get("/notification/showRegisNoti")
+            ]);
             
-            console.log('API Response:', response);
+            const processNotifications = (response) => {
+                let data = response.data;
+                if (typeof data === 'object' && data !== null) {
+                    data = data.data || Object.values(data);
+                }
+                if (!Array.isArray(data)) {
+                    console.warn('Unexpected data format:', data);
+                    return [];
+                }
+                return data.map(noti => ({
+                    ...noti,
+                    isNew: !localStorage.getItem(`noti_${noti.notiID}_read`)
+                }));
+            };
 
-            if (response.status === 200) {
-                const data = response.data.data || response.data;
-                setNotifications(Array.isArray(data) ? data : []);
-            } else {
-                setNotifications([]);
-                setError('No notifications found');
+            const otherData = processNotifications(otherResponse);
+            const addPetData = processNotifications(addPetResponse);
+            const requestRegisterData = processNotifications(requestRegisterResponse);
+            
+            setNotificationCounts({
+                other: otherData.filter(noti => noti.isNew).length,
+                addPet: addPetData.filter(noti => noti.isNew).length,
+                requestRegister: requestRegisterData.filter(noti => noti.isNew).length
+            });
+
+            if (activeTab === "other") {
+                setNotifications(otherData);
+            } else if (activeTab === "addPet") {
+                setNotifications(addPetData);
+            } else if (activeTab === "requestRegister") {
+                setNotifications(requestRegisterData);
             }
         } catch (error) {
             console.error('Error fetching notifications:', error);
-            if (error.response) {
-                switch (error.response.status) {
-                    case 400:
-                    case 404:
-                        setError(error.response.data || 'No notifications found');
-                        break;
-                    default:
-                        setError('An error occurred. Please try again later.');
-                }
-            } else if (error.request) {
-                setError('No response received from the server. Please check your connection.');
-            } else {
-                setError('Error setting up the request. Please try again.');
-            }
+            setError('An error occurred. Please try again later.');
             setNotifications([]);
         } finally {
             setIsLoading(false);
@@ -56,6 +68,19 @@ const AdminNotifications = () => {
     useEffect(() => {
         apiAdminNotifications();
     }, [apiAdminNotifications]);
+
+    const handleTabClick = (tab) => {
+        setActiveTab(tab);
+        // Mark all notifications in this tab as read
+        notifications.forEach(noti => {
+            localStorage.setItem(`noti_${noti.notiID}_read`, 'true');
+        });
+        // Update counts
+        setNotificationCounts(prev => ({
+            ...prev,
+            [tab]: 0
+        }));
+    };
 
     const HandleStatusUpdate = async (notiID, status) => {
         try {
@@ -68,6 +93,7 @@ const AdminNotifications = () => {
                 } else {
                     toast.success(`Notification ${status ? 'Accepted' : 'Denied'} successfully`);
                 }
+                localStorage.setItem(`noti_${notiID}_read`, 'true');
                 apiAdminNotifications();
             }
         } catch (error) {
@@ -83,21 +109,24 @@ const AdminNotifications = () => {
                 <ul>
                     <li
                         className={activeTab === 'other' ? 'active' : ''}
-                        onClick={() => setActiveTab('other')}
+                        onClick={() => handleTabClick('other')}
                     >
                         Other
+                        {notificationCounts.other > 0 && <span className="notification-count">{notificationCounts.other}</span>}
                     </li>
                     <li
                         className={activeTab === 'addPet' ? 'active' : ''}
-                        onClick={() => setActiveTab('addPet')}
+                        onClick={() => handleTabClick('addPet')}
                     >
                         Add Pet
+                        {notificationCounts.addPet > 0 && <span className="notification-count">{notificationCounts.addPet}</span>}
                     </li>
                     <li
                         className={activeTab === 'requestRegister' ? 'active' : ''}
-                        onClick={() => setActiveTab('requestRegister')}
+                        onClick={() => handleTabClick('requestRegister')}
                     >
                         Request Register
+                        {notificationCounts.requestRegister > 0 && <span className="notification-count">{notificationCounts.requestRegister}</span>}
                     </li>
                 </ul>
             </div>
@@ -110,7 +139,7 @@ const AdminNotifications = () => {
                 ) : notifications.length > 0 ? (
                     <ul className="notification-list">
                         {notifications.map((noti) => (
-                            <li key={noti.notiID} className="notification-item">
+                            <li key={noti.notiID} className={`notification-item ${noti.isNew ? 'new' : ''}`}>
                                 <p>{noti.message}</p>
                                 {(activeTab === 'addPet' || activeTab === 'requestRegister') && noti.button_status && (
                                     <div className="notification-actions">

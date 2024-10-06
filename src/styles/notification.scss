@@ -2,9 +2,9 @@
   position: relative;
   cursor: pointer;
   padding: 5px;
-  margin-right: 20px;  // Thêm margin bên phải
-    margin-left: 20px;   // Thêm margin bên trái
-    margin-top: 10px;
+  margin-right: 20px; // Thêm margin bên phải
+  margin-left: 20px; // Thêm margin bên trái
+  margin-top: 10px;
   .fa-bell {
     font-size: 1.5rem;
     color: #333;
@@ -40,7 +40,7 @@
     .notification-item {
       padding: 12px 16px;
       border-bottom: 1px solid #f0f0f0;
-      
+
       &:last-child {
         border-bottom: none;
       }
@@ -52,7 +52,8 @@
   }
 }
 
-.staff-notifications, .member-notifications {
+.staff-notifications,
+.member-notifications {
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
@@ -74,7 +75,7 @@
       margin-bottom: 16px;
       padding: 16px;
       transition: box-shadow 0.3s ease;
-    
+
       &:hover {
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       }

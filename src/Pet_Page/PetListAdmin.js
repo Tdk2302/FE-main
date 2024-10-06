@@ -194,7 +194,8 @@ const PetListAdmin = () => {
           </div>
         </form>
       </div>
-      {showAddPet && <AddPet onPetAdded={handlePetAdded} />}
+      {showAddPet && <AddPet onPetAdded={handlePetAdded} />}{" "}
+      {/* Ensure this is correct */}
       {/* Chỉ hiển thị AddPet khi showAddPet là true */}
       {/* Truyền hàm handlePetAdded vào AddPet */}
       <div className="pets-grid">

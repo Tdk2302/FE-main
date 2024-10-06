@@ -1,15 +1,20 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
-import { useLocation, useNavigate, NavLink } from "react-router-dom"; // Thêm useParams
-import { BASE_URL } from "../services/axios";
+import { useLocation, useNavigate, NavLink } from "react-router-dom";
+import axios, { BASE_URL } from "../services/axios";
 import "../styles/petdetail.scss";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import Carousel from "react-multi-carousel";
+
 const PetDetail = () => {
   // Giả sử bạn có một hàm để lấy thông tin thú cưng theo petID
   const navigate = useNavigate();
+  const [otherPets, setOtherPets] = useState([]); // Khởi tạo là mảng rỗng
   const location = useLocation(); // Lấy location
   const pet = location.state?.pet;
   console.log("Pet data:", pet); // Kiểm tra dữ liệu
   const roleID = localStorage.getItem("roleID");
+
   const handleAdopt = (pet) => {
     if (pet.petID) {
       navigate(`/adoptprocess/${pet.petID}`, { state: { pet } });
@@ -17,6 +22,38 @@ const PetDetail = () => {
       console.error("Pet ID is undefined");
     }
   };
+
+  const responsive = {
+    superLargeDesktop: {
+      breakpoint: { max: 4000, min: 3000 },
+      items: 5, // Số lượng item hiển thị trên màn hình lớn
+    },
+    desktop: {
+      breakpoint: { max: 3000, min: 1024 },
+      items: 3, // Số lượng item hiển thị trên màn hình desktop
+    },
+    tablet: {
+      breakpoint: { max: 1024, min: 464 },
+      items: 2, // Số lượng item hiển thị trên màn hình tablet
+    },
+    mobile: {
+      breakpoint: { max: 464, min: 0 },
+      items: 1, // Số lượng item hiển thị trên màn hình mobile
+    },
+  };
+  // Hàm để lấy dữ liệu thú cưng khác
+  const fetchOtherPets = async () => {
+    try {
+      const response = await axios.get("/pets/showListOfPets");
+      setOtherPets(response.data);
+    } catch (error) {
+      console.error("Error fetching other pets:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchOtherPets();
+  }, []);
 
   const handleUpdatePet = () => {
     if (pet.petID) {
@@ -64,24 +101,88 @@ const PetDetail = () => {
               <strong>Weight:</strong> {pet.weight}kg
             </p>
             <p>
-              <strong>Vaccinated:</strong> {pet.vaccinated ? "✓" : ""}
+              <strong>Vaccinated:</strong>{" "}
+              {pet.vaccinated ? (
+                <i
+                  class="fa-solid fa-circle-check"
+                  style={{ color: "#2fe44d" }}
+                ></i>
+              ) : (
+                <i
+                  class="fa-solid fa-circle-xmark"
+                  style={{ color: "#d94545" }}
+                ></i>
+              )}
             </p>
             <p>
-              <strong>Spayed:</strong> {pet.spayed ? "✓" : ""}
+              <strong>Spayed:</strong>{" "}
+              {pet.spayed ? (
+                <i
+                  class="fa-solid fa-circle-check"
+                  style={{ color: "#2fe44d" }}
+                ></i>
+              ) : (
+                <i
+                  class="fa-solid fa-circle-xmark"
+                  style={{ color: "#d94545" }}
+                ></i>
+              )}
             </p>
             <p>
-              <strong>Potty Trained:</strong> {pet.potty_trained ? "✓" : ""}
+              <strong>Potty Trained: </strong>{" "}
+              {pet.potty_trained ? (
+                <i
+                  class="fa-solid fa-circle-check"
+                  style={{ color: "#2fe44d" }}
+                ></i>
+              ) : (
+                <i
+                  class="fa-solid fa-circle-xmark"
+                  style={{ color: "#d94545" }}
+                ></i>
+              )}
             </p>
             <p>
-              <strong>Dietary Requirements:</strong>{" "}
-              {pet.dietary_requirements ? "✓" : ""}
+              <strong>Dietary Requirements: </strong>
+              {pet.dietary_requirements ? (
+                <i
+                  class="fa-solid fa-circle-check"
+                  style={{ color: "#2fe44d" }}
+                ></i>
+              ) : (
+                <i
+                  class="fa-solid fa-circle-xmark"
+                  style={{ color: "#d94545" }}
+                ></i>
+              )}
             </p>
             <p>
-              <strong>Friendly:</strong> {pet.socialized ? "✓" : ""}
+              <strong>Friendly: </strong>
+              {pet.socialized ? (
+                <i
+                  class="fa-solid fa-circle-check"
+                  style={{ color: "#2fe44d" }}
+                ></i>
+              ) : (
+                <i
+                  class="fa-solid fa-circle-xmark"
+                  style={{ color: "#d94545" }}
+                ></i>
+              )}
             </p>
             <p>
-              <strong>Rabies Vaccinated:</strong>{" "}
-              {pet.rabies_vaccinated ? "✓" : ""}
+              <strong>Rabies Vaccinated: </strong>
+              {pet.rabies_vaccinated ? (
+                <i
+                  class="fa-solid fa-circle-check"
+                  style={{ color: "#2fe44d" }}
+                ></i>
+              ) : (
+                <i
+                  class="fa-solid fa-circle-xmark"
+                  style={{ color: "#d94545" }}
+                ></i>
+              )}
             </p>
             {roleID === "3" && (
               <div className="adopt-button">
@@ -112,6 +213,29 @@ const PetDetail = () => {
           </div>
         </div>
       )}
+      <section className="pets">
+        <h2>Các bé khác</h2> {/* Tiêu đề cho danh sách thú cưng khác */}
+        <Carousel
+          responsive={responsive}
+          infinite={true}
+          removeArrowOnDeviceType={["tablet", "mobile"]}
+        >
+          {otherPets.map((otherPet, index) => (
+            <div key={index} className="pet-card">
+              <NavLink to={`/petdetail/${otherPet.petID}`} className="nav-link">
+                <img src={otherPet.img_url} alt={otherPet.name} />
+                <h3>{otherPet.name}</h3>
+                <p>Sex: {otherPet.sex}</p>
+                <p>Age: {otherPet.age}</p>
+                <p>Vaccinated: {otherPet.vaccinated ? "Yes" : "No"}</p>
+              </NavLink>
+            </div>
+          ))}
+        </Carousel>
+        <NavLink to="/petlist" className="nav-link">
+          <button className="adopt-button">ADOPT</button>
+        </NavLink>
+      </section>
     </div>
   );
 };

@@ -26,7 +26,7 @@ const Header = (props) => {
       console.log("loginChange: ", loggedIn);
     };
     checkLoginStatus();
-  }, []);
+  }, [name, roleID]);
 
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn");
@@ -106,9 +106,12 @@ const Header = (props) => {
             </NavLink>
           )}
         </Nav>
+
+        {/* Chỉ hiển thị Notification khi đã đăng nhập */}
         {isLoggedIn && (
           <Notification roleID={roleID ? roleID.toString() : ""} />
         )}
+
         {isLoggedIn && <h4 className="username">{username}</h4>}
         {/* Đổi đăng nhập và đăng ký thành profile */}
         <Nav className="settings">

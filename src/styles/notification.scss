@@ -51,6 +51,11 @@
       &:hover {
         background-color: #f0f0f0;
       }
+
+      &.unread {
+        font-weight: bold;
+        background-color: #e6f7ff;
+      }
     }
   }
 }

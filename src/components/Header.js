@@ -84,6 +84,7 @@ const Header = (props) => {
           <NavLink to="/contact" className="nav-link">
             <h3>Contact</h3>
           </NavLink>
+          
 
           {isLoggedIn && roleID === 1 && (
             <NavLink to="/admin" className="nav-link">

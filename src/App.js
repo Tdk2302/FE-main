@@ -25,6 +25,7 @@ import AddPet from "./Pet_Page/AddPet";
 import AddPetNotifications from "./Notifications/AddPetNotifications";
 import RequestRegisterNotifications from "./Notifications/RequestRegisterNotifications";
 
+
 function App() {
   const roleID = localStorage.getItem("roleID")
     ? Number(localStorage.getItem("roleID"))
@@ -44,7 +45,8 @@ function App() {
               <Route path="/PetUpdate/:petID" element={<PetUpdate />} />
               <Route path="/Contact" element={<Contact />} />
               <Route path="/petlist" element={<PetsList />} />
-
+              
+              <Route path="/report/:petID" element={<Report />} />
               <Route path="/petdetail/:petID" element={<PetDetail />} />
               <Route path="/adoptprocess/:petID" element={<AdoptProcess />} />
 

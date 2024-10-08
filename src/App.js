@@ -16,7 +16,7 @@ import "react-toastify/dist/ReactToastify.css";
 import ProtectedRoute from "./Routes/ProtectRoute";
 import Admin from "./Account/Admin";
 import Staff from "./Account/Staff";
-import AppoimentTable from "./Appoinment/AppoimentTable";
+import AppoimentTable from "./Appointment/AppoimentTable";
 import PetDetail from "./Pet_Page/PetDetail";
 import AdoptProcess from "./Adoption/AdoptProcess";
 import PetsList from "./Pet_Page/PetList";

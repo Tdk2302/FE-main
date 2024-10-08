@@ -1,6 +1,7 @@
 /*Header*/
 .header {
-  background-color: rgba(242, 236, 236, 0.804) !important;
+  background: #f4f4f4;
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.07);
   width: 100vw;
   padding: 0 15px;
   margin-left: calc(-50vw + 50%);
@@ -31,29 +32,17 @@
   margin-left: 150px;
 
   h3 {
-    font-size: 18px;
+    font-size: 20px;
     position: relative; // Để có thể sử dụng z-index
     z-index: 1; // Đảm bảo văn bản nằm trên hình ảnh
     transition: color 0.3s; // Hiệu ứng chuyển màu
-    &:hover {
-      color: red;
-    }
   }
 
   .nav-link {
     position: relative; // Để có thể sử dụng z-index
     z-index: 1; // Đảm bảo văn bản nằm trên hình ảnh
-    display: inline-block; // Để có thể áp dụng padding và background
+    // display: inline-block; // Để có thể áp dụng padding và background
     margin: 10px 20px;
-
-    &:hover {
-      background-image: url("../assets/images/hover-header.png");
-      width: 40px;
-      opacity: 5%;
-      background-size: cover;
-      background-position: center; // Đặt hình ảnh ở giữa
-      z-index: 0; // Đưa hình ảnh xuống dưới văn bản
-    }
 
     &:active {
       background-color: rgb(149, 144, 141);
@@ -144,9 +133,3 @@
     }
   }
 }
-
-
-
-
-
-

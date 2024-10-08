@@ -22,6 +22,7 @@ import AdoptProcess from "./Adoption/AdoptProcess";
 import PetsList from "./Pet_Page/PetList";
 import PetListAdmin from "./Pet_Page/PetListAdmin";
 import AddPet from "./Pet_Page/AddPet";
+import Report from "./Report/Report";
 import AdminNotifications from "./Notifications/AdminNotifications";
 function App() {
   const roleID = localStorage.getItem("roleID")
@@ -42,7 +43,8 @@ function App() {
               <Route path="/PetUpdate/:petID" element={<PetUpdate />} />
               <Route path="/Contact" element={<Contact />} />
               <Route path="/petlist" element={<PetsList />} />
-
+              
+              <Route path="/report/:petID" element={<Report />} />
               <Route path="/petdetail/:petID" element={<PetDetail />} />
               <Route path="/adoptprocess/:petID" element={<AdoptProcess />} />
 

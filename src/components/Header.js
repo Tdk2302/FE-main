@@ -32,6 +32,8 @@ const Header = (props) => {
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("user");
     localStorage.removeItem("roleID");
+    localStorage.removeItem("name");
+    sessionStorage.removeItem("accountID");
     setIsLoggedIn(false);
     setRoleID(null);
     navigate("/");

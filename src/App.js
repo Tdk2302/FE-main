@@ -16,7 +16,7 @@ import "react-toastify/dist/ReactToastify.css";
 import ProtectedRoute from "./Routes/ProtectRoute";
 import Admin from "./Account/Admin";
 import Staff from "./Account/Staff";
-import AppoimentTable from "./Appoinment/AppoimentTable";
+import AppoimentTable from "./Appointment/AppoimentTable";
 import PetDetail from "./Pet_Page/PetDetail";
 import AdoptProcess from "./Adoption/AdoptProcess";
 import PetsList from "./Pet_Page/PetList";
@@ -45,8 +45,7 @@ function App() {
               <Route path="/PetUpdate/:petID" element={<PetUpdate />} />
               <Route path="/Contact" element={<Contact />} />
               <Route path="/petlist" element={<PetsList />} />
-              
-              <Route path="/report/:petID" element={<Report />} />
+
               <Route path="/petdetail/:petID" element={<PetDetail />} />
               <Route path="/adoptprocess/:petID" element={<AdoptProcess />} />
 
@@ -103,8 +102,6 @@ function App() {
                 }
               />
 
-           
-
               <Route
                 path="/admin-notifications/add-pet"
                 element={
@@ -122,7 +119,6 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-
             </Routes>
           </Container>
         </div>

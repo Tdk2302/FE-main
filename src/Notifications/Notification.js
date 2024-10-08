@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import axios from "../services/axios";
+import moment from 'moment';
 import "../styles/notification.scss";
 
 const Notification = ({ roleID }) => {
@@ -17,16 +18,18 @@ const Notification = ({ roleID }) => {
             } else if (roleID === "3") {
                 response = await axios.get("notification/memberNoti");
             }
-            console.log("API response:", response);
-
-            if (response && response.data) {
-                const notificationData = response.data.data || response.data;
-                const processedNotifications = Array.isArray(notificationData) 
-                    ? notificationData.map(noti => ({
-                        ...noti,
-                        isRead: localStorage.getItem(`noti_${noti.notiID}_read`) === 'true'
-                    }))
-                    : [];
+            
+            if (response && response.data && response.data.data) {
+                const notificationData = response.data.data;
+                const processedNotifications = notificationData.map(noti => ({
+                    ...noti,
+                    isRead: localStorage.getItem(`noti_${noti.notiID}_read`) === 'true',
+                    createdAt: noti.createdAt || noti.created_at || new Date().toISOString() // Fallback to current date if no date is provided
+                }));
+                
+                // Sắp xếp thông báo theo thời gian tạo, mới nhất lên đầu
+                processedNotifications.sort((a, b) => moment(b.createdAt).valueOf() - moment(a.createdAt).valueOf());
+                
                 setNotifications(processedNotifications);
                 setUnreadCount(processedNotifications.filter(noti => !noti.isRead).length);
             } else {
@@ -65,6 +68,29 @@ const Notification = ({ roleID }) => {
         setUnreadCount(0);
     };
 
+    const formatRelativeTime = (dateString) => {
+        if (!dateString) return 'Date not available';
+        const date = moment(dateString);
+        if (!date.isValid()) {
+            console.error('Invalid date:', dateString);
+            return 'Invalid Date';
+        }
+        
+        const now = moment();
+        const diffHours = now.diff(date, 'hours');
+        
+        if (diffHours < 24) {
+            return date.fromNow();
+        } else {
+            return date.format('MMMM D, YYYY HH:mm');
+        }
+    };
+
+    const parseDate = (dateString) => {
+        // Ví dụ nếu backend gửi dạng "DD-MM-YYYY HH:mm:ss"
+        return moment(dateString, "DD-MM-YYYY HH:mm:ss");
+    };
+
     return (
         <div className="notification-bell">
             <i className="fa-solid fa-bell" onClick={toggleDropdown}></i>
@@ -74,7 +100,10 @@ const Notification = ({ roleID }) => {
                     {notifications.length > 0 ? (
                         notifications.map((notification, index) => (
                             <div key={index} className={`notification-item ${notification.isRead ? '' : 'unread'}`}>
-                                {notification.message}
+                                <p>{notification.message}</p>
+                                <p className="notification-date">
+                                    {formatRelativeTime(notification.createdAt)}
+                                </p>
                             </div>
                         ))
                     ) : (

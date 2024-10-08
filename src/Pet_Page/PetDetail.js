@@ -4,11 +4,13 @@ import { useLocation, useNavigate, NavLink } from "react-router-dom";
 import axios, { BASE_URL } from "../services/axios";
 import "../styles/petdetail.scss";
 import Carousel from "react-multi-carousel";
+import { toast } from "react-toastify";
 
 const PetDetail = () => {
   // Giả sử bạn có một hàm để lấy thông tin thú cưng theo petID
   const navigate = useNavigate();
   const [otherPets, setOtherPets] = useState([]); // Khởi tạo là mảng rỗng
+  //const [videoSrc, setVideoSrc] = useState(null); // State để lưu URL video
   const location = useLocation(); // Lấy location
   const pet = location.state?.pet;
   console.log("Pet data:", pet); // Kiểm tra dữ liệu
@@ -22,6 +24,37 @@ const PetDetail = () => {
       console.error("Pet ID is undefined");
     }
   };
+
+  const handleReport = (pet) => {
+    if (pet.petID) {
+      navigate(`/report/${pet.petID}`, { state: { pet } });
+    } else {
+      console.error("Pet ID is undefined");
+    }
+  };
+  const handleRemind = async ()=>{
+    try{
+    const response = await axios.post(`notification/remindReport`, {
+      "petID" : pet.petID
+      });
+      toast.success(response.data.message);
+    }catch(error){
+      toast.error(error.response.data.message);
+      console.log(error);
+    }
+  }
+  const handleBanRequest = async ()=>{
+    try{
+      const response = await axios.post(`notification/banRequest/${localStorage.getItem("accountID")}`,{
+      "petID": pet.petID
+    });
+      toast.success(response.data.message)
+    }catch(error){
+      toast.error(error.response.data.message)
+      console.log(error)
+    }
+
+  }
 
   const responsive = {
     superLargeDesktop: {
@@ -54,6 +87,8 @@ const PetDetail = () => {
   useEffect(() => {
     fetchOtherPets();
   }, []);
+  
+  const videoSrc = `data:video/webm;base64,${pet.video_report}`;
 
   const handleUpdatePet = () => {
     if (pet.petID) {
@@ -113,13 +148,28 @@ const PetDetail = () => {
                 <Button onClick={() => handleAdopt(pet)}>Adopt</Button>
               </div>
             )}
+            {roleID === "3"&& pet.status.toLowerCase() === "unavailable" && pet.accountID&& (
+              <div>
+                <div className="adopt-button">
+                  <Button onClick={() => handleReport(pet)}>Report</Button>
+                </div>
+              </div>
+            )}
           </div>
           {roleID === "2" && (
             <div class="edit-button">
               <Button onClick={handleUpdatePet}>Edit Pet</Button>
             </div>
           )}
+          {roleID === "2" && pet.status === "Unavailable" && pet.accountID && (
+            <div class="edit-button">
+              <Button onClick={handleRemind}>Remind</Button>
+              <Button onClick={handleBanRequest}>Request Ban</Button>
+            </div>
+            
+          )}
         </div>
+<<<<<<< HEAD
         <div className="pet-status">
           <p>
             <strong>Vaccinated:</strong>{" "}
@@ -206,6 +256,26 @@ const PetDetail = () => {
             )}
           </p>
         </div>
+=======
+        {pet.status.toLowerCase() === "unavailable" && pet.accountID && (
+          <div className="pet-video">
+            {pet.video_report ? (
+              <div>
+                <h2>
+                  Video report of {pet.name} at {pet.date_time_report}
+                </h2>
+                <video
+                  src={videoSrc}
+                  controls
+                  style={{ width: "600px", height: "400px" }}
+                />
+              </div>
+            ) : (
+              <p>No video report available for this pet.</p>
+            )}
+          </div>
+        )}
+>>>>>>> 53dc225d3c54660216c93e2200983e1eac1fbf0e
       </div>
       {roleID === "3" && (
         <div className="support-banner">

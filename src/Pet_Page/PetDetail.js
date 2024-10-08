@@ -3,7 +3,6 @@ import { Button } from "react-bootstrap";
 import { useLocation, useNavigate, NavLink } from "react-router-dom";
 import axios, { BASE_URL } from "../services/axios";
 import "../styles/petdetail.scss";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import Carousel from "react-multi-carousel";
 import { toast } from "react-toastify";
 

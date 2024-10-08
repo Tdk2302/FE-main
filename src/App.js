@@ -24,7 +24,7 @@ import PetListAdmin from "./Pet_Page/PetListAdmin";
 import AddPet from "./Pet_Page/AddPet";
 import AddPetNotifications from "./Notifications/AddPetNotifications";
 import RequestRegisterNotifications from "./Notifications/RequestRegisterNotifications";
-
+import Report from "./Report/Report";
 
 function App() {
   const roleID = localStorage.getItem("roleID")

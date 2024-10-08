@@ -112,3 +112,19 @@
   }
 }
 
+.custom-dropdown .dropdown-toggle {
+  font-weight: 500;
+  font-size: 15px;
+  color: rgb(85, 83, 81);
+  .nav-link {
+    &:active {
+      background-color: rgb(149, 144, 141);
+    }
+  }
+}
+
+
+
+
+
+

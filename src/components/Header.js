@@ -105,7 +105,10 @@ const Header = (props) => {
           )}
 
 {isLoggedIn && roleID === 1 && (
-  <NavDropdown title="Request" id="admin-notification-dropdown">
+  <NavDropdown title="Request" id="admin-notification-dropdown"
+  className="custom-dropdown"
+
+    >
     <NavDropdown.Item as={NavLink} to="/admin-notifications/add-pet">
       Add Pet
     </NavDropdown.Item>

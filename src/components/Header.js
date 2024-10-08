@@ -14,10 +14,10 @@ const Header = (props) => {
   const [username, setUserName] = useState(null);
   const name = localStorage.getItem("name");
   const navigate = useNavigate();
+  const loggedIn = localStorage.getItem("isLoggedIn") === "true";
 
   useEffect(() => {
     const checkLoginStatus = () => {
-      const loggedIn = localStorage.getItem("isLoggedIn") === "true";
       const role = Number(localStorage.getItem("roleID"));
       setUserName(name);
       setIsLoggedIn(loggedIn);

@@ -1,6 +1,6 @@
 /*Header*/
 .header {
-  background-color: rgb(246, 239, 230) !important;
+  background-color: rgba(242, 236, 236, 0.804) !important;
   width: 100vw;
   padding: 0 15px;
   margin-left: calc(-50vw + 50%);
@@ -29,10 +29,26 @@
   margin: 0 auto;
   margin-top: 8px;
   margin-left: 200px;
+
   h3 {
     font-size: 18px;
+    position: relative; // Để có thể sử dụng z-index
+    z-index: 1; // Đảm bảo văn bản nằm trên hình ảnh
+    transition: color 0.3s; // Hiệu ứng chuyển màu
   }
+
   .nav-link {
+    position: relative; // Để có thể sử dụng z-index
+    z-index: 1; // Đảm bảo văn bản nằm trên hình ảnh
+    display: inline-block; // Để có thể áp dụng padding và background
+
+    &:hover {
+      background-image: url("../assets/images/hover.png");
+      background-size: cover;
+      background-position: center; // Đặt hình ảnh ở giữa
+      z-index: 0; // Đưa hình ảnh xuống dưới văn bản
+    }
+
     &:active {
       background-color: rgb(149, 144, 141);
     }
@@ -64,6 +80,6 @@
 }
 
 .notification-wrapper {
-  margin-right: 20px;  // Điều chỉnh giá trị này để tăng hoặc giảm khoảng cách
-  margin-left: 20px;   // Thêm margin bên trái nếu cần
+  margin-right: 20px; // Điều chỉnh giá trị này để tăng hoặc giảm khoảng cách
+  margin-left: 20px; // Thêm margin bên trái nếu cần
 }

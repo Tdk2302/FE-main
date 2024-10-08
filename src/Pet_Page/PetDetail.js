@@ -3,7 +3,6 @@ import { Button } from "react-bootstrap";
 import { useLocation, useNavigate, NavLink } from "react-router-dom";
 import axios, { BASE_URL } from "../services/axios";
 import "../styles/petdetail.scss";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import Carousel from "react-multi-carousel";
 
 const PetDetail = () => {
@@ -14,6 +13,7 @@ const PetDetail = () => {
   const pet = location.state?.pet;
   console.log("Pet data:", pet); // Kiểm tra dữ liệu
   const roleID = localStorage.getItem("roleID");
+  const isLoggedIn = localStorage.getItem("isLoggedIn");
 
   const handleAdopt = (pet) => {
     if (pet.petID) {
@@ -100,90 +100,14 @@ const PetDetail = () => {
             <p>
               <strong>Weight:</strong> {pet.weight}kg
             </p>
-            <p>
-              <strong>Vaccinated:</strong>{" "}
-              {pet.vaccinated ? (
-                <i
-                  class="fa-solid fa-circle-check"
-                  style={{ color: "#2fe44d" }}
-                ></i>
-              ) : (
-                <i
-                  class="fa-solid fa-circle-xmark"
-                  style={{ color: "#d94545" }}
-                ></i>
-              )}
-            </p>
-            <p>
-              <strong>Spayed:</strong>{" "}
-              {pet.spayed ? (
-                <i
-                  class="fa-solid fa-circle-check"
-                  style={{ color: "#2fe44d" }}
-                ></i>
-              ) : (
-                <i
-                  class="fa-solid fa-circle-xmark"
-                  style={{ color: "#d94545" }}
-                ></i>
-              )}
-            </p>
-            <p>
-              <strong>Potty Trained: </strong>{" "}
-              {pet.potty_trained ? (
-                <i
-                  class="fa-solid fa-circle-check"
-                  style={{ color: "#2fe44d" }}
-                ></i>
-              ) : (
-                <i
-                  class="fa-solid fa-circle-xmark"
-                  style={{ color: "#d94545" }}
-                ></i>
-              )}
-            </p>
-            <p>
-              <strong>Dietary Requirements: </strong>
-              {pet.dietary_requirements ? (
-                <i
-                  class="fa-solid fa-circle-check"
-                  style={{ color: "#2fe44d" }}
-                ></i>
-              ) : (
-                <i
-                  class="fa-solid fa-circle-xmark"
-                  style={{ color: "#d94545" }}
-                ></i>
-              )}
-            </p>
-            <p>
-              <strong>Friendly: </strong>
-              {pet.socialized ? (
-                <i
-                  class="fa-solid fa-circle-check"
-                  style={{ color: "#2fe44d" }}
-                ></i>
-              ) : (
-                <i
-                  class="fa-solid fa-circle-xmark"
-                  style={{ color: "#d94545" }}
-                ></i>
-              )}
-            </p>
-            <p>
-              <strong>Rabies Vaccinated: </strong>
-              {pet.rabies_vaccinated ? (
-                <i
-                  class="fa-solid fa-circle-check"
-                  style={{ color: "#2fe44d" }}
-                ></i>
-              ) : (
-                <i
-                  class="fa-solid fa-circle-xmark"
-                  style={{ color: "#d94545" }}
-                ></i>
-              )}
-            </p>
+            {/*Thông tin*/}
+            {!isLoggedIn && (
+              <div className="adopt-button">
+                <NavLink to="/login">
+                  <Button>Adopt</Button>
+                </NavLink>
+              </div>
+            )}
             {roleID === "3" && (
               <div className="adopt-button">
                 <Button onClick={() => handleAdopt(pet)}>Adopt</Button>
@@ -195,6 +119,92 @@ const PetDetail = () => {
               <Button onClick={handleUpdatePet}>Edit Pet</Button>
             </div>
           )}
+        </div>
+        <div className="pet-status">
+          <p>
+            <strong>Vaccinated:</strong>{" "}
+            {pet.vaccinated ? (
+              <i
+                class="fa-solid fa-circle-check"
+                style={{ color: "#2fe44d" }}
+              ></i>
+            ) : (
+              <i
+                class="fa-solid fa-circle-xmark"
+                style={{ color: "#d94545" }}
+              ></i>
+            )}
+          </p>
+          <p>
+            <strong>Spayed:</strong>{" "}
+            {pet.spayed ? (
+              <i
+                class="fa-solid fa-circle-check"
+                style={{ color: "#2fe44d" }}
+              ></i>
+            ) : (
+              <i
+                class="fa-solid fa-circle-xmark"
+                style={{ color: "#d94545" }}
+              ></i>
+            )}
+          </p>
+          <p>
+            <strong>Potty Trained: </strong>{" "}
+            {pet.potty_trained ? (
+              <i
+                class="fa-solid fa-circle-check"
+                style={{ color: "#2fe44d" }}
+              ></i>
+            ) : (
+              <i
+                class="fa-solid fa-circle-xmark"
+                style={{ color: "#d94545" }}
+              ></i>
+            )}
+          </p>
+          <p>
+            <strong>Dietary Requirements: </strong>
+            {pet.dietary_requirements ? (
+              <i
+                class="fa-solid fa-circle-check"
+                style={{ color: "#2fe44d" }}
+              ></i>
+            ) : (
+              <i
+                class="fa-solid fa-circle-xmark"
+                style={{ color: "#d94545" }}
+              ></i>
+            )}
+          </p>
+          <p>
+            <strong>Friendly: </strong>
+            {pet.socialized ? (
+              <i
+                class="fa-solid fa-circle-check"
+                style={{ color: "#2fe44d" }}
+              ></i>
+            ) : (
+              <i
+                class="fa-solid fa-circle-xmark"
+                style={{ color: "#d94545" }}
+              ></i>
+            )}
+          </p>
+          <p>
+            <strong>Rabies Vaccinated: </strong>
+            {pet.rabies_vaccinated ? (
+              <i
+                class="fa-solid fa-circle-check"
+                style={{ color: "#2fe44d" }}
+              ></i>
+            ) : (
+              <i
+                class="fa-solid fa-circle-xmark"
+                style={{ color: "#d94545" }}
+              ></i>
+            )}
+          </p>
         </div>
       </div>
       {roleID === "3" && (

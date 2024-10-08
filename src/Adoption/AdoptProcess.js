@@ -26,6 +26,10 @@ const AdoptionProcess = () => {
   const accountID = localStorage.getItem("accountID"); // Lấy accountID
   // Xử lý khi người dùng nhấn nút "Đặt lịch hẹn"
   const handleSubmit = async () => {
+    if (!appointment.date || !appointment.time) {
+      alert("Please enter date and time.");
+      return;
+    }
     try {
       const response = await axios.post(`appointment/adopt`, {
         date_time,
@@ -38,11 +42,8 @@ const AdoptionProcess = () => {
         setShowModal(false);
         setShowThankYou(true);
       }
-      if (date_time === null) {
-        console.log("alo");
-        alert("Vui long nhap date va time");
-      }
     } catch (error) {
+      alert(error.response.data.message);
       if (error.response && error.response.status === 409) {
         console.error("Conflict error:", error.response.data);
       }
@@ -51,7 +52,6 @@ const AdoptionProcess = () => {
     }
   };
 
-  console.log(ErrorMessage);
   useEffect(() => {
     const today = new Date();
     const min = new Date(today.setDate(today.getDate() + 4)) // Lấy ngày hiện tại cộng thêm 4 ngày
@@ -63,6 +63,7 @@ const AdoptionProcess = () => {
     setMinDate(min);
     setMaxDate(max);
   }, []);
+
   // Xử lý khi người dùng tick vào ô "Đồng ý với chính sách"
   const handleAgreeChange = (event) => {
     setAgreed(event.target.checked);
@@ -73,7 +74,7 @@ const AdoptionProcess = () => {
     if (agreed) {
       setShowModal(true);
     } else {
-      alert("Vui lòng đồng ý với chính sách trước khi tiếp tục.");
+      alert("Please agree to the policy before continuing.");
     }
   };
   useEffect(() => {
@@ -82,15 +83,27 @@ const AdoptionProcess = () => {
 
   const handleAppointmentChange = (event) => {
     const { name, value } = event.target;
+    if (name === "date") {
+      // Kiểm tra xem ngày nhập vào có nằm trong khoảng minDate và maxDate không
+      if (
+        new Date(value) < new Date(minDate) ||
+        new Date(value) > new Date(maxDate)
+      ) {
+        alert(`Please select a date from ${minDate} to ${maxDate}.`);
+        return; // Ngăn không cho cập nhật nếu ngày không hợp lệ
+      }
+    }
+
     if (name === "time") {
       const selectedTime = new Date(`1970-01-01T${value}:00`);
       const startTime = new Date(`1970-01-01T08:00:00`);
       const endTime = new Date(`1970-01-01T17:00:00`);
       if (selectedTime < startTime || selectedTime > endTime) {
-        alert("Vui lòng chọn thời gian từ 8:00 đến 17:00.");
+        alert("Please choose a time from 8:00 to 17:00.");
         return; // Ngăn không cho cập nhật nếu thời gian không hợp lệ
       }
     }
+
     setAppointment((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -118,7 +131,7 @@ const AdoptionProcess = () => {
             <span role="img" aria-label="step1">
               1️⃣
             </span>
-            Learn about the pet you want to adopt on HPA's website.
+            Learn about the pet you want to adopt on FFF's website.
           </li>
           <li>
             <span role="img" aria-label="step2">

@@ -180,3 +180,18 @@
     cursor: pointer;
   }
 }
+
+.pet-status {
+  display: flex; // Sử dụng flexbox để tạo layout cho các cột
+  justify-content: space-between; // Căn chỉnh các cột
+  margin-top: 20px; // Thêm khoảng cách trên
+
+  .column {
+    flex: 1; // Mỗi cột chiếm 1 phần không gian
+    margin-right: 20px; // Khoảng cách giữa các cột
+
+    &:last-child {
+      margin-right: 0; // Không có khoảng cách bên phải cho cột cuối
+    }
+  }
+}

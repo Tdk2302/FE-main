@@ -7,6 +7,7 @@ import "../styles/header.scss";
 import { useState, useEffect } from "react";
 import Notification from "../Notifications/Notification";
 
+
 const Header = (props) => {
   const location = useLocation();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -14,7 +15,7 @@ const Header = (props) => {
   const [username, setUserName] = useState(null);
   const name = localStorage.getItem("name");
   const navigate = useNavigate();
-
+  
   useEffect(() => {
     const checkLoginStatus = () => {
       const loggedIn = localStorage.getItem("isLoggedIn") === "true";
@@ -102,11 +103,16 @@ const Header = (props) => {
             </NavLink>
           )}
 
-          {isLoggedIn && roleID === 1 && (
-            <NavLink to="/adminnotifications" className="nav-link">
-              <h3>Notifications</h3>
-            </NavLink>
-          )}
+{isLoggedIn && roleID === 1 && (
+  <NavDropdown title="Request" id="admin-notification-dropdown">
+    <NavDropdown.Item as={NavLink} to="/admin-notifications/add-pet">
+      Add Pet
+    </NavDropdown.Item>
+    <NavDropdown.Item as={NavLink} to="/admin-notifications/request-register">
+      Request Register
+    </NavDropdown.Item>
+  </NavDropdown>
+)}
         </Nav>
 
         {/* Chỉ hiển thị Notification khi đã đăng nhập */}

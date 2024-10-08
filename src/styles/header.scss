@@ -28,22 +28,28 @@
 .me-auto {
   margin: 0 auto;
   margin-top: 8px;
-  margin-left: 200px;
+  margin-left: 150px;
 
   h3 {
     font-size: 18px;
     position: relative; // Để có thể sử dụng z-index
     z-index: 1; // Đảm bảo văn bản nằm trên hình ảnh
     transition: color 0.3s; // Hiệu ứng chuyển màu
+    &:hover {
+      color: red;
+    }
   }
 
   .nav-link {
     position: relative; // Để có thể sử dụng z-index
     z-index: 1; // Đảm bảo văn bản nằm trên hình ảnh
     display: inline-block; // Để có thể áp dụng padding và background
+    margin: 10px 20px;
 
     &:hover {
-      background-image: url("../assets/images/hover.png");
+      background-image: url("../assets/images/hover-header.png");
+      width: 40px;
+      opacity: 5%;
       background-size: cover;
       background-position: center; // Đặt hình ảnh ở giữa
       z-index: 0; // Đưa hình ảnh xuống dưới văn bản

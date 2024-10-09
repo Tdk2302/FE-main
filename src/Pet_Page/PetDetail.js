@@ -4,11 +4,11 @@ import { useLocation, useNavigate, NavLink } from "react-router-dom";
 import axios, { BASE_URL } from "../services/axios";
 import "../styles/petdetail.scss";
 import Carousel from "react-multi-carousel";
-
 import { toast } from "react-toastify";
+import Spinner from "../components/Spinner";
 
 const PetDetail = () => {
-  // Giả sử bạn có một hàm để lấy thông tin thú cưng theo petID
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const [otherPets, setOtherPets] = useState([]); // Khởi tạo là mảng rỗng
   //const [videoSrc, setVideoSrc] = useState(null); // State để lưu URL video
@@ -88,8 +88,23 @@ const PetDetail = () => {
   };
 
   useEffect(() => {
-    fetchOtherPets();
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        // Fetch pet details and other data here
+        await fetchOtherPets();
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
   }, []);
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   const videoSrc = `data:video/webm;base64,${pet.video_report}`;
 

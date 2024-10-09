@@ -85,6 +85,24 @@ const BanRequestNotifications = () => {
         }
     };
 
+    const formatMessage = (message) => {
+        const lines = message.split('\n');
+        const columnLength = Math.ceil(lines.length / 3);
+        return (
+            <div className="notification-message-container">
+                <div className="notification-message-column">
+                    {lines.slice(0, columnLength).join('\n')}
+                </div>
+                <div className="notification-message-column">
+                    {lines.slice(columnLength, 2 * columnLength).join('\n')}
+                </div>
+                <div className="notification-message-column">
+                    {lines.slice(2 * columnLength).join('\n')}
+                </div>
+            </div>
+        );
+    };
+
     return (
         <div className="admin-notifications">
             <div className="notifications-content">
@@ -97,7 +115,7 @@ const BanRequestNotifications = () => {
                     <ul className="notification-list">
                         {notifications.map((noti) => (
                             <li key={noti.notiID} className={`notification-item ${noti.isNew ? 'new' : ''}`}>
-                                <p>{noti.message}</p>
+                                {formatMessage(noti.message)}
                                 <p className="notification-date">
                                     {formatRelativeTime(noti.createdAt)}
                                 </p>

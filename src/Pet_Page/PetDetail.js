@@ -95,7 +95,7 @@ const PetDetail = () => {
 
   const handleUpdatePet = () => {
     if (pet.petID) {
-      navigate(`/petupdate/${pet.petID}`); // Chuyển hướng đến trang cập nhật
+      navigate(`/petupdate/${pet.petID}`);
     } else {
       console.error("Pet ID is undefined");
     }
@@ -111,6 +111,7 @@ const PetDetail = () => {
   if (!pet) {
     return <div>Pet not found</div>; // Xử lý trường hợp không có pet
   }
+  console.log("Video report:", pet?.video_report);
 
   return (
     <div className="petdetail-container">
@@ -124,19 +125,23 @@ const PetDetail = () => {
           <div className="pet-info">
             <h1>{pet.name}</h1> {/* Hiển thị tên thú cưng */}
             <p>
-              <strong>Breed:</strong> {pet.breed}
+              <strong>Breed: </strong> {pet.breed}
             </p>
             <p>
-              <strong>Age:</strong> {pet.age}
+              <strong>Age: </strong> {pet.age} month
             </p>
             <p>
-              <strong>Sex:</strong> {pet.sex}
+              <strong>Sex: </strong> {pet.sex}
             </p>
             <p>
-              <strong>Size:</strong> {pet.size}
+              <strong>Size: </strong> {pet.size}
             </p>
             <p>
-              <strong>Weight:</strong> {pet.weight}kg
+              <strong>Weight: </strong> {pet.weight}kg
+            </p>
+            <p>
+              <strong>Description: </strong>
+              {pet.description ? pet.description : "Not yet"}
             </p>
             {/*Thông tin*/}
             {!isLoggedIn && (
@@ -270,6 +275,7 @@ const PetDetail = () => {
             </div>
           </div>
         </div>
+
         {pet.status.toLowerCase() === "unavailable" && pet.accountID && (
           <div className="pet-video">
             {pet.video_report ? (
@@ -289,71 +295,78 @@ const PetDetail = () => {
           </div>
         )}
       </div>
+
+      {/*Donate banner */}
       {roleID === "3" && (
-        <div className="support-banner-wrapper">
-          <section className="support-banner-bg bg-fixed overlay">
+        <>
+          <div className="support-banner-wrapper">
+            <section className="support-banner-bg bg-fixed overlay">
+              <div className="support-banner">
+                <div className="container">
+                  <div className="row align-items-center">
+                    <div className="col">
+                      <h2 className="support-text">
+                        Have you already supported us?
+                      </h2>
+                    </div>
+                    <div className="col-auto">
+                      <NavLink to="/donate" className="nav-link">
+                        <button className="support-button">DONATE NOW</button>
+                      </NavLink>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <section className="pets">
+            <h2>Other Pets</h2>
+            <Carousel
+              responsive={responsive}
+              infinite={true}
+              removeArrowOnDeviceType={["tablet", "mobile"]}
+            >
+              {otherPets.map((otherPet, index) => (
+                <div key={index} className="pet-card">
+                  <NavLink
+                    to={`/petdetail/${otherPet.petID}`}
+                    className="nav-link"
+                  >
+                    <img src={otherPet.img_url} alt={otherPet.name} />
+                    <h3>{otherPet.name}</h3>
+                    <p>Sex: {otherPet.sex}</p>
+                    <p>Age: {otherPet.age}</p>
+                    <p>Vaccinated: {otherPet.vaccinated ? "Yes" : "No"}</p>
+                  </NavLink>
+                </div>
+              ))}
+            </Carousel>
+            <NavLink to="/petlist" className="nav-link">
+              <button className="adopt-button">ADOPT</button>
+            </NavLink>
+          </section>
+
+          <section className="container-fluid contact-bg overlay">
             <div className="support-banner">
               <div className="container">
                 <div className="row align-items-center">
                   <div className="col">
-                      <h2 className="support-text">
-                      Have you already supported us?
+                    <h2 className="support-text">
+                      You can contact us for more details!
                     </h2>
                   </div>
                   <div className="col-auto">
-                    <NavLink to="/donate" className="nav-link">
-                      <button className="support-button">DONATE NOW</button>
+                    <NavLink to="/contact" className="nav-link">
+                      <button className="support-button">CONTACT</button>
                     </NavLink>
                   </div>
                 </div>
               </div>
             </div>
           </section>
-        </div>
+        </>
       )}
-
-      <section className="pets">
-        <h2>Other Pets</h2> {/* Tiêu đề cho danh sách thú cưng khác */}
-        <Carousel
-          responsive={responsive}
-          infinite={true}
-          removeArrowOnDeviceType={["tablet", "mobile"]}
-        >
-          {otherPets.map((otherPet, index) => (
-            <div key={index} className="pet-card">
-              <NavLink to={`/petdetail/${otherPet.petID}`} className="nav-link">
-                <img src={otherPet.img_url} alt={otherPet.name} />
-                <h3>{otherPet.name}</h3>
-                <p>Sex: {otherPet.sex}</p>
-                <p>Age: {otherPet.age}</p>
-                <p>Vaccinated: {otherPet.vaccinated ? "Yes" : "No"}</p>
-              </NavLink>
-            </div>
-          ))}
-        </Carousel>
-        <NavLink to="/petlist" className="nav-link">
-          <button className="adopt-button">ADOPT</button>
-        </NavLink>
-      </section>
-
-      <section class="container-fluid contact-bg overlay">
-        <div className="support-banner">
-          <div className="container">
-            <div className="row align-items-center">
-              <div className="col">
-                <h2 className="support-text">
-                  You can contact us for more details!
-                </h2>
-              </div>
-              <div className="col-auto">
-                <NavLink to="/contact" className="nav-link">
-                  <button className="support-button">CONTACT</button>
-                </NavLink>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   );
 };

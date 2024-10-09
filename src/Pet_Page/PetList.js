@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios, { BASE_URL } from "../services/axios";
 import "../styles/petslist.scss";
 import { FaFilter } from "react-icons/fa";
-import StatusDot from '../components/StatusDot';  // Thêm dòng này
+import StatusDot from "../components/StatusDot"; // Thêm dòng này
 
 const PetsList = () => {
   const [pets, setPets] = useState([]);
@@ -28,8 +28,8 @@ const PetsList = () => {
     try {
       const response = await axios.get("/pets/showListOfPets");
       // Lọc chỉ lấy pet có status là 'Available' hoặc 'Waiting'
-      const filteredPets = response.data.filter(pet => 
-        pet.status === 'Available' || pet.status === 'Waiting'
+      const filteredPets = response.data.filter(
+        (pet) => pet.status === "Available" || pet.status === "Waiting"
       );
       setPets(filteredPets);
     } catch (error) {
@@ -186,8 +186,8 @@ const PetsList = () => {
             >
               <img src={getImageUrl(pet.img_url)} alt={pet.name} />
               <div className="pet-info">
-                <StatusDot status={pet.status} />
                 <h3>{pet.name}</h3>
+                <StatusDot status={pet.status} />
               </div>
               <div className="pet-info-divider"></div>
               <p>Age: {pet.age} month</p>

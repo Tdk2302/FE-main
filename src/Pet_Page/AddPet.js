@@ -152,6 +152,7 @@ const AddPet = ({ onPetAdded = () => {} }) => {
               value={petData.age}
               onChange={handleChange}
               required
+              min="0"
             />
             <input
               type="number"
@@ -161,6 +162,7 @@ const AddPet = ({ onPetAdded = () => {} }) => {
               name="weight"
               value={petData.weight}
               onChange={handleChange}
+              min="0"
             />
             <input
               type="text"
@@ -261,6 +263,16 @@ const AddPet = ({ onPetAdded = () => {} }) => {
                   onChange={handleChange}
                 />
                 <label className="form-check-label">Rabies Vaccinated</label>
+              </div>
+              <div className="form-check mb-3">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  name="dietary_requirements"
+                  checked={petData.dietary_requirements}
+                  onChange={handleChange}
+                />
+                <label className="form-check-label">Dietary Requirements</label>
               </div>
             </div>
             <button className="create-button w-50" type="submit">

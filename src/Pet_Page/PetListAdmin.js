@@ -4,7 +4,7 @@ import axios, { BASE_URL } from "../services/axios";
 import "../styles/petListAdmin.scss";
 import { FaFilter } from "react-icons/fa";
 import AddPet from "./AddPet";
-import StatusDot from '../components/StatusDot';
+import StatusDot from "../components/StatusDot";
 
 const PetListAdmin = () => {
   const [pets, setPets] = useState([]);
@@ -209,8 +209,8 @@ const PetListAdmin = () => {
             >
               <img src={getImageUrl(pet.img_url)} alt={pet.name} />
               <div className="pet-info">
-                <StatusDot status={pet.status} />
                 <h3>{pet.name}</h3>
+                <StatusDot status={pet.status} />
               </div>
               <div className="pet-info-divider"></div>
               <p>Age: {pet.age} month</p>

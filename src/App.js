@@ -25,6 +25,7 @@ import AddPet from "./Pet_Page/AddPet";
 import AddPetNotifications from "./Notifications/AddPetNotifications";
 import RequestRegisterNotifications from "./Notifications/RequestRegisterNotifications";
 import Report from "./Report/Report";
+import BanRequestNotifications from "./Notifications/BanRequestNotifications";
 
 function App() {
   const roleID = localStorage.getItem("roleID")
@@ -103,8 +104,6 @@ function App() {
                 }
               />
 
-           
-
               <Route
                 path="/admin-notifications/add-pet"
                 element={
@@ -119,6 +118,15 @@ function App() {
                 element={
                   <ProtectedRoute roleID={1}>
                     <RequestRegisterNotifications />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/admin-notifications/ban-request"
+                element={
+                  <ProtectedRoute roleID={1}>
+                    <BanRequestNotifications />
                   </ProtectedRoute>
                 }
               />

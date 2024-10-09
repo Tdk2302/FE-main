@@ -3,6 +3,7 @@ import axios from "../services/axios";
 import "../styles/adminpage.scss";
 import { toast } from 'react-toastify';
 import moment from 'moment';
+import Spinner from "../components/Spinner";
 
 const RequestRegisterNotifications = () => {
     const [notifications, setNotifications] = useState([]);
@@ -67,6 +68,10 @@ const RequestRegisterNotifications = () => {
             return date.format('MMMM D, YYYY HH:mm');
         }
     };
+
+    if (isLoading) {
+        return <Spinner />;
+    }
 
     return (
         <div className="admin-notifications">

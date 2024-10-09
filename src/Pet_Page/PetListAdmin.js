@@ -5,9 +5,11 @@ import "../styles/petListAdmin.scss";
 import { FaFilter } from "react-icons/fa";
 import AddPet from "./AddPet";
 import StatusDot from '../components/StatusDot';
+import Spinner from '../components/Spinner';
 
 const PetListAdmin = () => {
   const [pets, setPets] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [petsPerPage] = useState(8);
   const [searchParams, setSearchParams] = useState({
@@ -46,6 +48,7 @@ const PetListAdmin = () => {
   };
 
   const apiListAllPets = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.get("/pets/showListAllOfPets");
       setPets(response.data);
@@ -56,8 +59,11 @@ const PetListAdmin = () => {
           "Network error. Please check if the backend server is running on port 8081."
         );
       }
+    } finally {
+      setIsLoading(false);
     }
   };
+
   useEffect(() => {
     apiListAllPets(); // Gọi hàm fetchPets khi component được mount
   }, []);
@@ -126,6 +132,10 @@ const PetListAdmin = () => {
   const currentPets = pets.slice(indexOfFirstPet, indexOfLastPet);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <div className="pets-list-admin-container">

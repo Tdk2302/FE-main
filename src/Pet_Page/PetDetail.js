@@ -4,17 +4,15 @@ import { useLocation, useNavigate, NavLink } from "react-router-dom";
 import axios, { BASE_URL } from "../services/axios";
 import "../styles/petdetail.scss";
 import Carousel from "react-multi-carousel";
-
 import { toast } from "react-toastify";
+import Spinner from "../components/Spinner";
 
 const PetDetail = () => {
-  // Giả sử bạn có một hàm để lấy thông tin thú cưng theo petID
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
-  const [otherPets, setOtherPets] = useState([]); // Khởi tạo là mảng rỗng
-  //const [videoSrc, setVideoSrc] = useState(null); // State để lưu URL video
-  const location = useLocation(); // Lấy location
-  const pet = location.state?.pet;
-  console.log("Pet data:", pet); // Kiểm tra dữ liệu
+  const [otherPets, setOtherPets] = useState([]);
+  const location = useLocation();
+  const [pet, setPet] = useState(location.state?.pet);
   const roleID = localStorage.getItem("roleID");
   const isLoggedIn = localStorage.getItem("isLoggedIn");
 
@@ -88,10 +86,34 @@ const PetDetail = () => {
   };
 
   useEffect(() => {
-    fetchOtherPets();
-  }, []);
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        if (!pet) {
+          // Nếu pet không có trong state, lấy từ API dựa vào ID trong URL
+          const petId = location.pathname.split('/').pop();
+          const response = await axios.get(`/pets/${petId}`);
+          setPet(response.data);
+        }
+        await fetchOtherPets();
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, [location, pet]);
 
-  const videoSrc = `data:video/webm;base64,${pet.video_report}`;
+  if (isLoading) {
+    return <Spinner />;
+  }
+
+  if (!pet) {
+    return <div>Pet not found</div>;
+  }
+
+  const videoSrc = pet.video_report ? `data:video/webm;base64,${pet.video_report}` : null;
 
   const handleUpdatePet = () => {
     if (pet.petID) {
@@ -107,10 +129,6 @@ const PetDetail = () => {
       return `${BASE_URL}${imgUrl.replace("\\", "/")}`;
     return imgUrl;
   };
-
-  if (!pet) {
-    return <div>Pet not found</div>; // Xử lý trường hợp không có pet
-  }
 
   return (
     <div className="petdetail-container">
@@ -272,7 +290,7 @@ const PetDetail = () => {
         </div>
         {pet.status.toLowerCase() === "unavailable" && pet.accountID && (
           <div className="pet-video">
-            {pet.video_report ? (
+            {videoSrc ? (
               <div>
                 <h2>
                   Video report of {pet.name} at {pet.date_time_report}

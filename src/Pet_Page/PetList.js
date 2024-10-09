@@ -1,9 +1,10 @@
-import { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import axios, { BASE_URL } from "../services/axios";
 import "../styles/petslist.scss";
 import { FaFilter } from "react-icons/fa";
-import StatusDot from '../components/StatusDot';  // Thêm dòng này
+import StatusDot from '../components/StatusDot';
+import Spinner from '../components/Spinner';
 
 const PetsList = () => {
   const [pets, setPets] = useState([]);
@@ -19,12 +20,14 @@ const PetsList = () => {
   const [ageError, setAgeError] = useState("");
   const [noResults, setNoResults] = useState(false);
   const roleID = localStorage.getItem("roleID");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     apiListPets();
-  }, [roleID]);
+  }, []);
 
   const apiListPets = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.get("/pets/showListOfPets");
       // Lọc chỉ lấy pet có status là 'Available' hoặc 'Waiting'
@@ -37,6 +40,8 @@ const PetsList = () => {
       if (error.code === "ERR_NETWORK") {
         console.error("Network error!");
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -114,6 +119,10 @@ const PetsList = () => {
   const refreshPetsList = () => {
     apiListPets();
   };
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <div className="pets-list-container">

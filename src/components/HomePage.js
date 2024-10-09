@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import "../styles/homepage.scss";
-import { useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
 import dog1 from "../assets/images/dog-1.jpg";
@@ -10,8 +9,23 @@ import dog2 from "../assets/images/dog-2.jpg";
 import dog3 from "../assets/images/dog-3.jpg";
 import dog4 from "../assets/images/dog-4.jpg";
 import aboutUsImage from "../assets/images/logo.png"; // Đảm bảo bạn có hình ảnh này
+import Spinner from "./Spinner";
 
 const HomePage = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [currentNewsIndex, setCurrentNewsIndex] = useState(0);
+
+  useEffect(() => {
+    // Simulate loading
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+  }, []);
+
+  if (isLoading) {
+    return <Spinner />;
+  }
+
   const responsive = {
     desktop: {
       breakpoint: { max: 3000, min: 1024 },
@@ -26,8 +40,6 @@ const HomePage = () => {
       items: 1,
     },
   };
-
-  const [currentNewsIndex, setCurrentNewsIndex] = useState(0);
 
   const newsItems = [
     {

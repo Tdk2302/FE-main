@@ -3,6 +3,7 @@ import axios from "../services/axios";
 import "../styles/adminpage.scss";
 import { toast } from 'react-toastify';
 import moment from 'moment';
+import Spinner from "../components/Spinner";
 
 const BanRequestNotifications = () => {
     const [notifications, setNotifications] = useState([]);
@@ -102,6 +103,10 @@ const BanRequestNotifications = () => {
             </div>
         );
     };
+
+    if (isLoading) {
+        return <Spinner />;
+    }
 
     return (
         <div className="admin-notifications">

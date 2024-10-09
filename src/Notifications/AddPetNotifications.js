@@ -3,6 +3,7 @@ import axios from "../services/axios";
 import "../styles/adminpage.scss";
 import { toast } from 'react-toastify';
 import moment from 'moment';
+import Spinner from "../components/Spinner";
 
 const AddPetNotifications = () => {
     const [notifications, setNotifications] = useState([]);
@@ -90,13 +91,15 @@ const AddPetNotifications = () => {
         );
     };
 
+    if (isLoading) {
+        return <Spinner />;
+    }
+
     return (
         <div className="admin-notifications">
             <div className="notifications-content">
                 <h2>Add Pet Notifications {newNotificationsCount > 0 && <span className="notification-count">({newNotificationsCount})</span>}</h2>
-                {isLoading ? (
-                    <p>Loading...</p>
-                ) : error ? (
+                {error ? (
                     <p className="error-message">{error}</p>
                 ) : notifications.length > 0 ? (
                     <ul className="notification-list">

@@ -187,7 +187,8 @@
 .pet-status {
   display: flex; // Sử dụng flexbox để tạo layout cho các cột
   justify-content: space-between; // Căn chỉnh các cột
-  margin-top: 20px; // Thêm khoảng cách trên
+  margin: 30px;
+  padding: 10px;
   h2 {
     font-weight: 700;
   }

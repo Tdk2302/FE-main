@@ -123,6 +123,18 @@
           border-left: 4px solid #1890ff;
           background-color: #e6f7ff;
         }
+
+        .notification-message-container {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 8px;
+        }
+
+        .notification-message-column {
+          width: 32%; // Để có khoảng cách giữa ba cột
+          white-space: pre-wrap;
+          word-wrap: break-word;
+        }
       }
     }
   }

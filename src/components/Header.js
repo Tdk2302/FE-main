@@ -47,20 +47,34 @@ const Header = () => {
             <NavLink to="/contact" className="nav-link">
               <h3>Contact</h3>
             </NavLink>
+            <NavLink to="/donate" className="nav-link">
+              <h3>Donate</h3>
+            </NavLink>
           </>
         )}
         <NavLink to="/events" className="nav-link">
           <h3>Events</h3>
         </NavLink>
-        <NavLink to="/donate" className="nav-link">
-          <h3>Donate</h3>
-        </NavLink>
+
+        {isLoggedIn && roleID === 2 && (
+          <>
+            <NavLink to="/petlist" className="nav-link">
+              <h3>Pet List</h3>
+            </NavLink>
+            {/* <NavLink to="/staff" className="nav-link">
+              <h3>Staff</h3>
+            </NavLink> */}
+            <NavLink to="/appointment" className="nav-link">
+              <h3>Appointment</h3>
+            </NavLink>
+          </>
+        )}
         {isLoggedIn && roleID === 1 && (
           <>
-            <NavLink to="/admin" className="nav-link">
-              <h3>Admin</h3>
-            </NavLink>
-            <NavDropdown title="Request" id="admin-notification-dropdown">
+            <NavDropdown
+              title={<h3>Request</h3>}
+              id="admin-notification-dropdown"
+            >
               <NavDropdown.Item as={NavLink} to="/admin-notifications/add-pet">
                 Add Pet
               </NavDropdown.Item>
@@ -78,38 +92,6 @@ const Header = () => {
               </NavDropdown.Item>
             </NavDropdown>
           </>
-        )}
-        {isLoggedIn && roleID === 2 && (
-          <>
-            <NavLink to="/petlist" className="nav-link">
-              <h3>Pet List</h3>
-            </NavLink>
-            {/* <NavLink to="/staff" className="nav-link">
-              <h3>Staff</h3>
-            </NavLink> */}
-            <NavLink to="/appointment" className="nav-link">
-              <h3>Appointment</h3>
-            </NavLink>
-          </>
-        )}
-        {isLoggedIn && roleID === 1 && (
-          <NavDropdown title="Request" id="admin-notification-dropdown">
-            <NavDropdown.Item as={NavLink} to="/admin-notifications/add-pet">
-              Add Pet
-            </NavDropdown.Item>
-            <NavDropdown.Item
-              as={NavLink}
-              to="/admin-notifications/request-register"
-            >
-              Request Register
-            </NavDropdown.Item>
-            <NavDropdown.Item
-              as={NavLink}
-              to="/admin-notifications/ban-request"
-            >
-              Ban Request
-            </NavDropdown.Item>
-          </NavDropdown>
         )}
       </>
     );

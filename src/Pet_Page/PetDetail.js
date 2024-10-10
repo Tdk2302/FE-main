@@ -83,11 +83,11 @@ const PetDetail = () => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
+        const petId = location.pathname.split("/").pop();
         if (!pet) {
           // Nếu pet không có trong state, lấy từ API dựa vào ID trong URL
-          const petId = location.pathname.split("/").pop();
-          const response = await axios.get(`/pets/getByID`);
-          setPet(response.data);
+          const response = await axios.get(`/pets/getByID/${petID}`);
+          setPet(response.data.data);
         }
         console.log("Fetching other pets..."); // Kiểm tra việc gọi fetchOtherPets
         await fetchOtherPets();

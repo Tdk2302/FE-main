@@ -28,19 +28,18 @@
 /*Menu*/
 .me-auto {
   margin: 0 auto;
-  margin-top: 8px;
+  // margin-top: 8px;
   margin-left: 80px;
 
   h3 {
     font-size: 20px;
-
     z-index: 1;
     transition: color 0.3s;
   }
 
   .nav-link {
-    position: relative;
-
+    margin-top: 20px;
+    display: flex;
     margin: 10px 20px;
     &:hover {
       border-radius: 5px;
@@ -101,9 +100,15 @@
 
 /* Định dạng cho dropdown item trong Notifications */
 .nav-dropdown .dropdown-item {
-  display: flex;
+  // display: flex;
   justify-content: space-between;
   align-items: center;
+
+  .nav-dropdown {
+    .title {
+      padding: 0px 20px;
+    }
+  }
 
   .notification-count {
     background-color: red;
@@ -120,11 +125,21 @@
 
 /* Định dạng cho dropdown Notifications */
 #admin-notification-dropdown {
+  display: flex;
+  margin-top: 10px;
   .dropdown-menu {
     min-width: 250px; /* Độ rộng tối thiểu của menu */
   }
 }
+.nav-dropdown-title {
+  display: flex;
+  align-items: center;
+}
 
+.nav-dropdown-title h3 {
+  margin: 0;
+  padding-right: 8px; /* Căn chỉnh khoảng cách giữa chữ và mũi tên */
+}
 .custom-dropdown .dropdown-toggle {
   font-weight: 500;
   font-size: 16px;

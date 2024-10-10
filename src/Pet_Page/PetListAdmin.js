@@ -43,7 +43,7 @@ const PetListAdmin = () => {
       console.log("Navigating to pet detail with ID:", pet.petID);
       navigate(`/petdetail/${pet.petID}`, { state: { pet } });
     } else {
-      console.error("Pet ID is undefi ned");
+      console.error("Pet ID is undefied");
     }
   };
 

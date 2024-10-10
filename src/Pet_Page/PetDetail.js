@@ -83,12 +83,12 @@ const PetDetail = () => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        if (!pet) {
+       // if (!pet) {
           // Nếu pet không có trong state, lấy từ API dựa vào ID trong URL
-          const petId = location.pathname.split("/").pop();
-          const response = await axios.get(`/pets/getByID`);
-          setPet(response.data);
-        }
+          //const petId = location.pathname.split("/").pop();
+          const response = await axios.get(`/pets/getByID/${petID}`);
+          setPet(response.data.data);
+        
         console.log("Fetching other pets..."); // Kiểm tra việc gọi fetchOtherPets
         await fetchOtherPets();
       } catch (error) {
@@ -186,7 +186,7 @@ const PetDetail = () => {
               </div>
             )}
             {roleID === "3" &&
-              pet.status.toLowerCase() === "unavailable" &&
+              pet.status === "Unavailable" &&
               pet.accountID && (
                 <div>
                   <div className="adopt-button">
@@ -305,7 +305,7 @@ const PetDetail = () => {
           </div>
         </div>
 
-        {pet.status.toLowerCase() === "unavailable" && pet.accountID && (
+        {pet.status === "Unavailable" && pet.accountID && (
           <div className="pet-video">
             {videoSrc ? (
               <div>

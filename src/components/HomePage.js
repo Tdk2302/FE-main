@@ -30,11 +30,11 @@ const HomePage = () => {
 
   useEffect(() => {
     // Simulate loading
-    const accountID = localStorage.getItem("accountID")
-    if(accountID){
-      sessionStorage.setItem("accountID", accountID)
+    const accountID = localStorage.getItem("accountID");
+    if (accountID) {
+      sessionStorage.setItem("accountID", accountID);
     }
-    
+
     setTimeout(() => {
       setIsLoading(false);
     }, 2000);

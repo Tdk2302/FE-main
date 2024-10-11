@@ -158,17 +158,7 @@ const PetListAdmin = () => {
             Search
           </button>
         </div>
-        {roleID === 2 && (
-          <div className="add-update-button">
-            <NavLink
-              to="/addpet"
-              className="nav-link-add-pet"
-              onClick={() => setShowAddPet(true)}
-            >
-              <h3>Create Pet</h3>
-            </NavLink>
-          </div>
-        )}
+
         <form onSubmit={handleSearch} className="search-form">
           <div className="other-filters">
             <div className="filter-section">
@@ -204,6 +194,15 @@ const PetListAdmin = () => {
               <option value="male">Male</option>
               <option value="female">Female</option>
             </select>
+            <div className="add-update-button">
+              <NavLink
+                to="/addpet"
+                className="nav-link-add-pet"
+                onClick={() => setShowAddPet(true)}
+              >
+                <h3>Create Pet</h3>
+              </NavLink>
+            </div>
           </div>
         </form>
       </div>

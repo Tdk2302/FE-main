@@ -1,34 +1,33 @@
 /*Header*/
+
 .header {
   background: #f4f4f4;
   box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.07);
   width: 100vw;
-  padding: 0 15px;
   margin-left: calc(-50vw + 50%);
   margin-right: calc(-50vw + 50%);
-
-  p {
-    margin-top: 5px;
-    font-size: 30px;
-  }
 }
 
 /*Logo*/
 .logo {
-  margin-left: 70px;
+  margin-left: 150px;
   font-size: 1000;
   display: flex;
   justify-items: center;
   img {
-    margin-top: 10px;
+    margin-top: 5px;
     margin-right: 5px;
+  }
+
+  p {
+    margin-top: 5px;
+    font-size: 27px;
   }
 }
 
 /*Menu*/
 .me-auto {
   margin: 0 auto;
-  // margin-top: 8px;
   margin-left: 80px;
 
   h3 {
@@ -38,7 +37,6 @@
   }
 
   .nav-link {
-    margin-top: 20px;
     display: flex;
     margin: 10px 20px;
     &:hover {
@@ -148,5 +146,23 @@
     &:active {
       background-color: rgb(149, 144, 141);
     }
+  }
+}
+
+.user-icon {
+  display: flex;
+  align-items: center;
+  margin-right: 50px;
+  margin-top: 10px;
+
+  font-size: 18px !important;
+
+  i {
+    margin-left: 10px;
+  }
+
+  p {
+    font-weight: 400;
+    font-size: 18px;
   }
 }

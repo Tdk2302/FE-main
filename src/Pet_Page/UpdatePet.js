@@ -62,6 +62,14 @@ const UpdatePet = ({ onPetUpdated }) => {
     }));
   };
 
+  const handleCategoryChange = (e) => {
+    const value = e.target.value;
+    setPetData((prev) => ({
+      ...prev,
+      categoryID: value ? parseInt(value, 10) : 0,
+    }));
+  };
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     setPetData((prev) => ({
@@ -86,7 +94,7 @@ const UpdatePet = ({ onPetUpdated }) => {
     }
 
     try {
-      await axios.put(`pets/updatepet`, formData, {
+      await axios.put(`/pets/updatepet`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -197,9 +205,10 @@ const UpdatePet = ({ onPetUpdated }) => {
               className="form-select"
               name="categoryID"
               value={petData.categoryID}
-              onChange={handleChange}
+              onChange={handleCategoryChange}
               required
             >
+              <option value="">Category</option>
               <option value="1">Dog</option>
               <option value="2">Cat</option>
             </select>

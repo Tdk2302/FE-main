@@ -10,10 +10,23 @@ import dog3 from "../assets/images/dog-3.jpg";
 import dog4 from "../assets/images/dog-4.jpg";
 import aboutUsImage from "../assets/images/logo.png"; // Đảm bảo bạn có hình ảnh này
 import Spinner from "./Spinner";
+import axios from "../services/axios";
 
 const HomePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [currentNewsIndex, setCurrentNewsIndex] = useState(0);
+  const [otherPets, setOtherPets] = useState([]);
+  useEffect(() => {
+    const fetchOtherPets = async () => {
+      try {
+        const response = await axios.get("/pets/showListOfPets");
+        setOtherPets(response.data); // Cập nhật danh sách otherPets vào state
+      } catch (error) {
+        console.error("Error fetching other pets:", error);
+      }
+    };
+    fetchOtherPets();
+  }, []);
 
   useEffect(() => {
     // Simulate loading
@@ -80,36 +93,6 @@ const HomePage = () => {
       (prevIndex) => (prevIndex - 1 + newsItems.length) % newsItems.length
     );
   };
-  const pets = [
-    {
-      name: "Win",
-      image: dog1,
-      gender: "Male",
-      age: "Adult",
-      vaccinated: "Yes",
-    },
-    {
-      name: "Elvis",
-      image: dog2,
-      gender: "Male",
-      age: "Adult",
-      vaccinated: "Unknown",
-    },
-    {
-      name: "Nicky",
-      image: dog3,
-      gender: "Male",
-      age: "Adult",
-      vaccinated: "Yes",
-    },
-    {
-      name: "Orion",
-      image: dog4,
-      gender: "Female",
-      age: "Adult",
-      vaccinated: "Yes",
-    },
-  ];
 
   return (
     /**Banner */
@@ -160,14 +143,14 @@ const HomePage = () => {
           infinite={true}
           removeArrowOnDeviceType={["tablet", "mobile"]}
         >
-          {pets.map((pet, index) => (
+          {otherPets.map((otherPet, index) => (
             <div key={index} className="pet-card">
-              <NavLink to="/adopt" className="nav-link">
-                <img src={pet.image} alt={pet.name} />
-                <h3>{pet.name}</h3>
-                <p>Sex: {pet.gender}</p>
-                <p>Age: {pet.age}</p>
-                <p>Vaccinated: {pet.vaccinated}</p>
+              <NavLink to={`/petdetail/${otherPet.petID}`} className="nav-link">
+                <img src={otherPet.img_url} alt={otherPet.name} />
+                <h3>{otherPet.name}</h3>
+                <p>Sex: {otherPet.sex}</p>
+                <p>Age: {otherPet.age}</p>
+                <p>Vaccinated: {otherPet.vaccinated ? "Yes" : "No"}</p>
               </NavLink>
             </div>
           ))}

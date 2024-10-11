@@ -86,7 +86,7 @@ const UpdatePet = ({ onPetUpdated }) => {
     }
 
     try {
-      await axios.put(`pets/updatePets/${petId}`, formData, {
+      await axios.put(`pets/updatepet`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -217,7 +217,6 @@ const UpdatePet = ({ onPetUpdated }) => {
               name="description"
               value={petData.description}
               onChange={handleChange}
-              required
             />
             {/*Checkboxes*/}
 

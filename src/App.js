@@ -73,7 +73,7 @@ function App() {
                 }
               />
               <Route
-                path="/appoinment"
+                path="/appointment"
                 element={
                   <ProtectedRoute roleID={2}>
                     <AppoimentTable />

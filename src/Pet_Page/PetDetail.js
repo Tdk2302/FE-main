@@ -123,7 +123,7 @@ const PetDetail = () => {
 
   const handleUpdatePet = () => {
     if (pet.petID) {
-      navigate(`/petupdate/${pet.petID}`);
+      navigate(`/petupdate/${pet.petID}`, { state: { pet } });
     } else {
       console.error("Pet ID is undefined");
     }

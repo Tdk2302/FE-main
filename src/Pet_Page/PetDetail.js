@@ -4,7 +4,7 @@ import { useLocation, useNavigate, NavLink, useParams } from "react-router-dom";
 import axios, { BASE_URL } from "../services/axios";
 import "../styles/petdetail.scss";
 import Carousel from "react-multi-carousel";
-import { toast } from "react-toastify";
+import { collapseToast, toast } from "react-toastify";
 import Spinner from "../components/Spinner";
 
 const PetDetail = () => {
@@ -83,13 +83,11 @@ const PetDetail = () => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const petId = location.pathname.split("/").pop();
-        if (!pet) {
-          // Nếu pet không có trong state, lấy từ API dựa vào ID trong URL
-          const response = await axios.get(`/pets/getByID/${petID}`);
-          setPet(response.data.data);
-        }
+        // Nếu pet không có trong state, lấy từ API dựa vào ID trong URL
+        const response = await axios.get(`/pets/getByID/${petID}`);
+        setPet(response.data.data);
         console.log("Fetching other pets..."); // Kiểm tra việc gọi fetchOtherPets
+
         await fetchOtherPets();
       } catch (error) {
         console.error("Error fetching data:", error);

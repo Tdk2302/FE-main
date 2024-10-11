@@ -22,7 +22,7 @@ const Login = () => {
       } else if (roleID === "3") {
         navigate("/");
       } else if (roleID === "1") {
-        navigate("/admin");
+        navigate("/petlistadmin");
       }
     }
   }, [navigate]);

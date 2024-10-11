@@ -1,6 +1,6 @@
 import React from 'react';
 import Lottie from 'react-lottie';
-import animationData from '../Animation - 1728482104513.json';
+import animationData from '../Animation - 1728475105129.json';
 import '../styles/spinner.scss';
 
 const Spinner = () => {

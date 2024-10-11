@@ -9,7 +9,7 @@ import Spinner from "../components/Spinner";
 const PetsList = () => {
   const [pets, setPets] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [petsPerPage] = useState(8);
+  const [petsPerPage] = useState(12);
   const [searchParams, setSearchParams] = useState({
     name: "",
     age: "",

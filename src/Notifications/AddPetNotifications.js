@@ -30,7 +30,7 @@ const AddPetNotifications = () => {
         } catch (error) {
             console.error('Error fetching notifications:', error);
             if (error.response && error.response.status === 400) {
-                setError(error.response.data || 'No adopt notifications found');
+                setError(error.response.data || 'No notifications found');
             } else {
                 setError('An error occurred. Please try again later.');
             }

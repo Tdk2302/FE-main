@@ -250,13 +250,13 @@ const Register = () => {
         </select>
       </div>
 
-      <div className="button-container">
+      <div className="button-containerR">
         <div className="backRegister" onClick={handleGoBack}>
           <i className="fa-solid fa-angles-left"></i>
           <span>Go back</span>
         </div>
         <button onClick={handleRegister} className="register-button">
-          <h3>Register</h3>
+          Register
         </button>
       </div>
     </div>

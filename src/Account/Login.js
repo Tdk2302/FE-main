@@ -18,7 +18,7 @@ const Login = () => {
     const roleID = localStorage.getItem("roleID");
     if (isLoggedIn) {
       if (roleID === "2") {
-        navigate("/appoinment");
+        navigate("/appointment");
       } else if (roleID === "3") {
         navigate("/");
       } else if (roleID === "1") {
@@ -48,7 +48,7 @@ const Login = () => {
         localStorage.setItem("roleID", response.data.roleID);
         localStorage.setItem("name", String(response.data.name));
         localStorage.setItem("accountID", String(response.data.accountID));
-        sessionStorage.setItem("accountID",String(response.data.accountID));
+        sessionStorage.setItem("accountID", String(response.data.accountID));
 
         const currentLoginChange =
           localStorage.getItem("loginChange") === "true";

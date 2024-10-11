@@ -58,7 +58,7 @@ const Header = () => {
 
         {isLoggedIn && roleID === 2 && (
           <>
-            <NavLink to="/petlist" className="nav-link">
+            <NavLink to="/petlistadmin" className="nav-link">
               <h3>Pet List</h3>
             </NavLink>
             {/* <NavLink to="/staff" className="nav-link">
@@ -71,9 +71,13 @@ const Header = () => {
         )}
         {isLoggedIn && roleID === 1 && (
           <>
+            <NavLink to="/petlistadmin" className="nav-link">
+              <h3>Pet List</h3>
+            </NavLink>
             <NavDropdown
               title={<h3>Request</h3>}
-              id="admin-notification-dropdown"
+              id="basic-nav-dropdown"
+              // className="custom-dropdown"
             >
               <NavDropdown.Item as={NavLink} to="/admin-notifications/add-pet">
                 Add Pet

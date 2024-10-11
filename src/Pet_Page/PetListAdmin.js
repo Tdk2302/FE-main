@@ -21,12 +21,12 @@ const PetListAdmin = () => {
   const [ageError, setAgeError] = useState("");
   const [noResults, setNoResults] = useState(false);
   const [showAddPet, setShowAddPet] = useState(false); // State để kiểm soát hiển thị AddPet
+  const roleID = localStorage.getItem("roleID");
 
   const navigate = useNavigate();
 
   useEffect(() => {
     const checkRole = async () => {
-      const roleID = localStorage.getItem("roleID");
       try {
         if (roleID === "1" || roleID === "2") {
           await apiListAllPets();
@@ -158,6 +158,17 @@ const PetListAdmin = () => {
             Search
           </button>
         </div>
+        {roleID === 2 && (
+          <div className="add-update-button">
+            <NavLink
+              to="/addpet"
+              className="nav-link-add-pet"
+              onClick={() => setShowAddPet(true)}
+            >
+              <h3>Create Pet</h3>
+            </NavLink>
+          </div>
+        )}
         <form onSubmit={handleSearch} className="search-form">
           <div className="other-filters">
             <div className="filter-section">
@@ -193,19 +204,10 @@ const PetListAdmin = () => {
               <option value="male">Male</option>
               <option value="female">Female</option>
             </select>
-            <div className="add-update-button">
-              <NavLink
-                to="/addpet"
-                className="nav-link-add-pet"
-                onClick={() => setShowAddPet(true)}
-              >
-                <h3>Create Pet</h3>
-              </NavLink>
-            </div>
           </div>
         </form>
       </div>
-      {showAddPet && <AddPet onPetAdded={handlePetAdded} />}{" "}
+      {showAddPet && <AddPet onPetAdded={handlePetAdded} />}
       {/* Ensure this is correct */}
       {/* Chỉ hiển thị AddPet khi showAddPet là true */}
       {/* Truyền hàm handlePetAdded vào AddPet */}

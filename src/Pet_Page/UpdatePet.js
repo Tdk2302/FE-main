@@ -94,7 +94,7 @@ const UpdatePet = ({ onPetUpdated }) => {
     }
 
     try {
-      await axios.put(`/pets/updatepet`, formData, {
+      await axios.put(`/pets/updatepet/${petId}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

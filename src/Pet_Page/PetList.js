@@ -5,6 +5,8 @@ import "../styles/petslist.scss";
 import { FaFilter } from "react-icons/fa";
 import StatusDot from "../components/StatusDot";
 import Spinner from "../components/Spinner";
+import BackToTop from "../components/BackToTop";
+import BannerDonate from "../components/BannerDonate";
 
 const PetsList = () => {
   const [pets, setPets] = useState([]);
@@ -218,6 +220,8 @@ const PetsList = () => {
           )
         )}
       </div>
+      <BannerDonate />
+      <BackToTop />
     </div>
   );
 };

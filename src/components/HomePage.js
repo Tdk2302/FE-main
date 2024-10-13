@@ -11,6 +11,8 @@ import dog4 from "../assets/images/dog-4.jpg";
 import aboutUsImage from "../assets/images/logo.png"; // Đảm bảo bạn có hình ảnh này
 import Spinner from "./Spinner";
 import axios from "../services/axios";
+import BackToTop from "./BackToTop"; // Import component
+import BannerDonate from "./BannerDonate";
 
 const HomePage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -194,27 +196,9 @@ const HomePage = () => {
         </div>
         <button className="read-more">READ MORE</button>
       </section>
+      <BannerDonate />
 
-      <div className="support-banner-wrapper">
-        <section className="support-banner-bg bg-fixed overlay">
-          <div className="support-banner">
-            <div className="container">
-              <div className="row align-items-center">
-                <div className="col">
-                  <h2 className="support-text">
-                    Have you already supported us?
-                  </h2>
-                </div>
-                <div className="col-auto">
-                  <NavLink to="/donate" className="nav-link">
-                    <button className="support-button">DONATE NOW</button>
-                  </NavLink>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      </div>
+      <BackToTop />
     </div>
   );
 };

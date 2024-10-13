@@ -75,11 +75,11 @@
 
   .confirm-button {
     display: block;
-    width: 80%;
+    width: 20%;
     align-items: center;
     padding: 15px;
     font-size: 1.2rem;
-    background-color: #ec5338;
+    background-color: #2b8dd8;
     color: #fff;
     border: none;
     border-radius: 4px;
@@ -87,7 +87,7 @@
     text-align: center;
 
     &:hover {
-      background-color: #a42b0ad5;
+      background-color: #116494d5;
     }
   }
 }
@@ -136,7 +136,7 @@
   border-top: none;
   background-color: #fff;
   .cancel-button {
-    background-color: #f1cf7e;
+    background-color: #73a7cf;
     margin-left: 75px;
     margin-right: 20;
     color: rgb(0, 0, 0);
@@ -144,29 +144,21 @@
     padding: 6px 20px;
     display: inline-block; // Thay đổi từ block sang inline-block
     font-size: 16px;
-    border-radius: 25px; // Tăng giá trị này để bo tròn các góc nhiều hơn
+    border-radius: 5px; // Tăng giá trị này để bo tròn các góc nhiều hơn
     cursor: pointer;
     transition: all 0.3s ease;
-    :hover {
-      background-color: #f1ba3a;
-      transform: translateY(-2px);
-    }
   }
 
   .agree-button {
-    background-color: #f1cf7e;
+    background-color: #73a7cf;
     color: rgb(0, 0, 0);
     border: none;
-    display: inline-block; // Thay đổi từ block sang inline-block
+    display: inline-block;
     padding: 6px 20px;
     font-size: 16px;
-    border-radius: 25px; // Tăng giá trị này để bo tròn các góc nhiều hơn
+    border-radius: 5px;
     cursor: pointer;
     transition: all 0.3s ease;
-    :hover {
-      background-color: #f1ba3a;
-      transform: translateY(-2px);
-    }
   }
 }
 

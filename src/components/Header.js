@@ -79,34 +79,43 @@ const Header = () => {
         {isLoggedIn && roleID === 1 && (
           <>
             {isLoggedIn && roleID === 1 && (
-  <>
-    <NavLink to="/petlistadmin" className="nav-link">
-      <h3>Pet List</h3>
-    </NavLink>
-    <NavDropdown
-      title={
-        <span className="nav-dropdown-title">
-          <h3>Request</h3>
-        </span>
-      }
-      id="request-nav-dropdown"
-      className="request-dropdown"
-    >
-      <NavDropdown.Item as={NavLink} to="/admin-notifications/add-pet">
-        Add Pet
-      </NavDropdown.Item>
-      <NavDropdown.Item
-        as={NavLink}
-        to="/admin-notifications/request-register"
-      >
-        Request Register
-      </NavDropdown.Item>
-      <NavDropdown.Item as={NavLink} to="/admin-notifications/ban-request">
-                  Ban Request
-                </NavDropdown.Item>
-              </NavDropdown>
-            </>
-)}
+              <>
+                <NavLink to="/petlistadmin" className="nav-link">
+                  <h3>Pet List</h3>
+                </NavLink>
+                <NavLink to="/events" className="nav-link">
+                  <h3>Events</h3>
+                </NavLink>
+                <NavDropdown
+                  title={
+                    <span className="nav-dropdown-title">
+                      <h3>Request</h3>
+                    </span>
+                  }
+                  id="request-nav-dropdown"
+                  className="request-dropdown"
+                >
+                  <NavDropdown.Item
+                    as={NavLink}
+                    to="/admin-notifications/add-pet"
+                  >
+                    Add Pet
+                  </NavDropdown.Item>
+                  <NavDropdown.Item
+                    as={NavLink}
+                    to="/admin-notifications/request-register"
+                  >
+                    Request Register
+                  </NavDropdown.Item>
+                  <NavDropdown.Item
+                    as={NavLink}
+                    to="/admin-notifications/ban-request"
+                  >
+                    Ban Request
+                  </NavDropdown.Item>
+                </NavDropdown>
+              </>
+            )}
           </>
         )}
       </>

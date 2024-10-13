@@ -171,7 +171,7 @@ const AddPet = ({ onPetAdded = () => {} }) => {
               name="weight"
               value={petData.weight}
               onChange={handleChange}
-              min="0"
+              min="0.1"
             />
             <input
               type="text"

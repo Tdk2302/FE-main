@@ -67,10 +67,11 @@
 .edit-button {
   margin-top: auto;
   button {
+    margin: 20px;
     background-color: #f1ba3a;
     color: white;
     border: none;
-    padding: 5px 60px;
+    padding: 10px 60px;
     font-size: 16px;
     border-radius: 5px;
     cursor: pointer;
@@ -185,8 +186,8 @@
 }
 
 .pet-status {
-  display: flex; // Sử dụng flexbox để tạo layout cho các cột
-  justify-content: space-between; // Căn chỉnh các cột
+  display: flex;
+  justify-content: space-between;
   margin: 30px;
   padding: 10px;
   h2 {

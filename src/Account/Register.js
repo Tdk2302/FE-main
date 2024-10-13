@@ -23,7 +23,7 @@ const Register = () => {
   const navigate = useNavigate();
 
   const handleGoBack = () => {
-    navigate("/");
+    navigate("/login");
   };
 
   const isPhoneNumberValid = (phoneNumber) => {

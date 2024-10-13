@@ -3,6 +3,7 @@
   flex-direction: column;
   margin: 0 auto;
   margin-top: 80px;
+  margin-bottom: 80px;
 }
 
 /*Title*/
@@ -72,6 +73,13 @@ button:disabled {
   cursor: not-allowed;
 }
 
+.input-username {
+  position: relative;
+  input {
+    padding: 10px;
+  }
+}
+
 /*Password*/
 .input-password {
   position: relative;
@@ -79,6 +87,7 @@ button:disabled {
     padding-right: 40px;
   }
   i {
+    // font-size: 20px;
     position: absolute;
     right: 10px;
     top: 50%;

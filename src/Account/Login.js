@@ -76,12 +76,14 @@ const Login = () => {
     <div className="login-container col-12 col-sm-4">
       <form onSubmit={handleLogin}>
         <div className="title">Login</div>
-        <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(event) => setUsername(event.target.value)}
-        />
+        <div className="input-username">
+          <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(event) => setUsername(event.target.value)}
+          />
+        </div>
         <div className="input-password">
           <input
             type={isShowPassword ? "text" : "password"}

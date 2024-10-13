@@ -4,7 +4,9 @@
   align-items: center;
   margin-top: 40px;
   margin-bottom: 60px;
-  max-width: 400px; /* Set a maximum width for the container */
+  max-width: 400px;
+  width: 100%;
+  padding: 0 20px;
 }
 
 .title {
@@ -74,45 +76,43 @@
 
 .button-containerR {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center; /* Centers the "Register" button */
   width: 100%;
-  position: relative; /* Allows positioning of the "Go back" button */
+  margin-top: 20px;
+  position: relative;
 }
 
 .backRegister {
   position: absolute;
-  left: 0; /* Positions the "Go back" button to the left */
-  cursor: pointer;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
   align-items: center;
+  cursor: pointer;
+  color: #000;
+  text-decoration: none;
+
+  i {
+    margin-right: 5px;
+  }
 }
 
-.backRegister i {
-  margin-right: 5px; /* Adds some space between the icon and text */
-}
-
-/* Đổi từ .btn thành .register-btn để tránh xung đột */
 .register-button {
-  width: 50%;
-  padding: 8px 40px;
-  background-color: #f1cf7e; /* Màu nền ban đầu */
-  color: white;
+  width: auto;
+  padding: 10px 60px;
+  background-color: #000000;
+  color: rgb(247, 247, 247);
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  margin: 0 auto; /* Căn giữa */
-
-  h3 {
-    margin-top: 5px;
-    font-size: 18px;
-    font-weight: 600;
-  }
+  transition: all 0.3s ease;
+  font-size: 18px;
+  font-weight: 600;
 
   &:active {
-    background-color: #eec157 !important;
-    color: white !important;
-    border-color: transparent !important;
-    transform: translateY(-5px);
+    background-color: #eec157;
+    transform: translateY(-2px);
   }
 }

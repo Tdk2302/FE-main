@@ -29,7 +29,11 @@ const RequestRegisterNotifications = () => {
             }
         } catch (error) {
             console.error('Error fetching notifications:', error);
-            setError('An error occurred. Please try again later.');
+            if (error.response && error.response.status === 400) {
+                setError(error.response.data.message || 'No notifications found');
+            } else {
+                setError('An error occurred. Please try again later.');
+            }
             setNotifications([]);
         } finally {
             setIsLoading(false);

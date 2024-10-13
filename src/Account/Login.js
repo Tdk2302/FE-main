@@ -22,7 +22,7 @@ const Login = () => {
       } else if (roleID === "3") {
         navigate("/");
       } else if (roleID === "1") {
-        navigate("/admin");
+        navigate("/petlistadmin");
       }
     }
   }, [navigate]);
@@ -30,10 +30,6 @@ const Login = () => {
   // Handle login action
   const handleLogin = async (event) => {
     event.preventDefault();
-    if (!username || !password) {
-      toast.error("Username/Password is required!");
-      return;
-    }
 
     setIsLoading(true);
     try {
@@ -43,7 +39,6 @@ const Login = () => {
       });
 
       if (response && response.data) {
-        localStorage.setItem("user", JSON.stringify(response.data));
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("roleID", response.data.roleID);
         localStorage.setItem("name", String(response.data.name));

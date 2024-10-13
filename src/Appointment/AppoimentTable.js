@@ -3,6 +3,7 @@ import axios from "../services/axios";
 import "../styles/appoitment.scss";
 import moment from "moment";
 import { toast } from "react-toastify";
+import Spinner from "../components/Spinner"; // Thêm dòng này
 
 const AppointmentPage = () => {
   // Các state để lưu trữ và quản lý dữ liệu
@@ -15,6 +16,7 @@ const AppointmentPage = () => {
   const [appointmentToRefuse, setAppointmentToRefuse] = useState(null);
   const [notHappenAppointments, setNotHappenAppointments] = useState([]);
   const [endedAppointments, setEndedAppointments] = useState([]);
+  const [isLoading, setIsLoading] = useState(false); // Thêm state này
 
   // Lấy thông tin người dùng hiện tại từ localStorage
   useEffect(() => {
@@ -27,32 +29,41 @@ const AppointmentPage = () => {
 
   // Lấy danh sách cuộc hẹn chưa xử lý
   const apiUnprocessedAppointments = useCallback(async () => {
+    setIsLoading(true);
     try {
       const response = await axios.get("appointment/showUnprocessed");
       setUnprocessedAppointments(response.data.data);
     } catch (error) {
       console.error("Error fetching unprocessed appointments:", error);
       setUnprocessedAppointments([]);
+    } finally {
+      setIsLoading(false);
     }
   }, []);
   // Lấy danh sách cuộc hẹn đang chờ gặp mặt
   const apiNotHappenAppointments = useCallback(async () => {
+    setIsLoading(true);
     try {
       const response = await axios.get("appointment/showNotHappenedYet");
       setNotHappenAppointments(response.data.data);
     } catch (error) {
       console.error("Error fetching not happen appointments:", error);
       setNotHappenAppointments([]);
+    } finally {
+      setIsLoading(false);
     }
   }, []);
   // Lấy danh sách cuộc hẹn kết thúc
   const apiEndedAppointments = useCallback(async () => {
+    setIsLoading(true);
     try {
       const response = await axios.get("appointment/showEnded");
       setEndedAppointments(response.data.data);
     } catch (error) {
       console.error("Error fetching ended appointments:", error);
       setEndedAppointments([]);
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
@@ -227,152 +238,158 @@ const AppointmentPage = () => {
       </div>
 
       <div className="main-content">
-        {activeTab === "unprocessed" && (
+        {isLoading ? (
+          <Spinner />
+        ) : (
           <>
-            {unprocessedAppointments.length > 0 ? (
-              <table className="appointments-table">
-                <thead>
-                  <tr>
-                    <th>Date Time</th>
-                    <th>Account ID</th>
-                    <th>Pet ID</th>
-                    <th>Status</th>
-                    <th>Adopt Status</th>
-                    <th>Button</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {unprocessedAppointments.map((appointment) => (
-                    <tr key={appointment.appointID}>
-                      <td>{formatDateTime(appointment.date_time)}</td>
-                      <td>{appointment.accountID}</td>
-                      <td>{appointment.petID}</td>
-                      <td>{renderStatus(appointment.status)}</td>
-                      <td>{renderAdoptStatus(appointment.adopt_status)}</td>
-                      <td>
-                        <button
-                          className="btn btn-success"
-                          onClick={() =>
-                            acceptAppointment(appointment.appointID)
-                          }
-                          disabled={processingAppointments.includes(
-                            appointment.appointID
-                          )}
-                        >
-                          Accept
-                        </button>
-                        <button
-                          className="btn btn-danger"
-                          onClick={() =>
-                            refuseAppointment(appointment.appointID)
-                          }
-                          disabled={processingAppointments.includes(
-                            appointment.appointID
-                          )}
-                        >
-                          Refuse
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            ) : (
-              <p className="no-appointments">
-                No unprocessed appointments found.
-              </p>
+            {activeTab === "unprocessed" && (
+              <>
+                {unprocessedAppointments.length > 0 ? (
+                  <table className="appointments-table">
+                    <thead>
+                      <tr>
+                        <th>Date Time</th>
+                        <th>Account ID</th>
+                        <th>Pet ID</th>
+                        <th>Status</th>
+                        <th>Adopt Status</th>
+                        <th>Button</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {unprocessedAppointments.map((appointment) => (
+                        <tr key={appointment.appointID}>
+                          <td>{formatDateTime(appointment.date_time)}</td>
+                          <td>{appointment.accountID}</td>
+                          <td>{appointment.petID}</td>
+                          <td>{renderStatus(appointment.status)}</td>
+                          <td>{renderAdoptStatus(appointment.adopt_status)}</td>
+                          <td>
+                            <button
+                              className="btn btn-success"
+                              onClick={() =>
+                                acceptAppointment(appointment.appointID)
+                              }
+                              disabled={processingAppointments.includes(
+                                appointment.appointID
+                              )}
+                            >
+                              Accept
+                            </button>
+                            <button
+                              className="btn btn-danger"
+                              onClick={() =>
+                                refuseAppointment(appointment.appointID)
+                              }
+                              disabled={processingAppointments.includes(
+                                appointment.appointID
+                              )}
+                            >
+                              Refuse
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <p className="no-appointments">
+                    No unprocessed appointments found.
+                  </p>
+                )}
+              </>
             )}
-          </>
-        )}
 
-        {activeTab === "notHappenYet" && (
-          <>
-            {notHappenAppointments.length > 0 ? (
-              <table className="appointments-table">
-                <thead>
-                  <tr>
-                    <th>Date Time</th>
-                    <th>Account ID</th>
-                    <th>Pet ID</th>
-                    <th>Staff ID</th>
-                    <th>Status</th>
-                    <th>Adopt Status</th>
-                    <th>Button</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {notHappenAppointments.map((appointment) => (
-                    <tr key={appointment.appointID}>
-                      <td>{formatDateTime(appointment.date_time)}</td>
-                      <td>{appointment.accountID}</td>
-                      <td>{appointment.petID}</td>
-                      <td>{appointment.staffID}</td>
-                      <td>{renderStatus(appointment.status)}</td>
-                      <td>{renderAdoptStatus(appointment.adopt_status)}</td>
-                      <td>
-                        <button
-                          className="btn btn-success"
-                          onClick={() =>
-                            handleFinalAccept(appointment.appointID)
-                          }
-                          disabled={processingAppointments.includes(
-                            appointment.appointID
-                          )}
-                        >
-                          Accept
-                        </button>
-                        <button
-                          className="btn btn-danger"
-                          onClick={() =>
-                            handleFinalRefuse(appointment.appointID)
-                          }
-                          disabled={processingAppointments.includes(
-                            appointment.appointID
-                          )}
-                        >
-                          Refuse
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            ) : (
-              <p className="no-appointments">
-                No not happened yet appointments found.
-              </p>
+            {activeTab === "notHappenYet" && (
+              <>
+                {notHappenAppointments.length > 0 ? (
+                  <table className="appointments-table">
+                    <thead>
+                      <tr>
+                        <th>Date Time</th>
+                        <th>Account ID</th>
+                        <th>Pet ID</th>
+                        <th>Staff ID</th>
+                        <th>Status</th>
+                        <th>Adopt Status</th>
+                        <th>Button</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {notHappenAppointments.map((appointment) => (
+                        <tr key={appointment.appointID}>
+                          <td>{formatDateTime(appointment.date_time)}</td>
+                          <td>{appointment.accountID}</td>
+                          <td>{appointment.petID}</td>
+                          <td>{appointment.staffID}</td>
+                          <td>{renderStatus(appointment.status)}</td>
+                          <td>{renderAdoptStatus(appointment.adopt_status)}</td>
+                          <td>
+                            <button
+                              className="btn btn-success"
+                              onClick={() =>
+                                handleFinalAccept(appointment.appointID)
+                              }
+                              disabled={processingAppointments.includes(
+                                appointment.appointID
+                              )}
+                            >
+                              Accept
+                            </button>
+                            <button
+                              className="btn btn-danger"
+                              onClick={() =>
+                                handleFinalRefuse(appointment.appointID)
+                              }
+                              disabled={processingAppointments.includes(
+                                appointment.appointID
+                              )}
+                            >
+                              Refuse
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <p className="no-appointments">
+                    No not happened yet appointments found.
+                  </p>
+                )}
+              </>
             )}
-          </>
-        )}
-        {activeTab === "ended" && (
-          <>
-            {endedAppointments.length > 0 ? (
-              <table className="appointments-table">
-                <thead>
-                  <tr>
-                    <th>Date Time</th>
-                    <th>Account ID</th>
-                    <th>Pet ID</th>
-                    <th>Staff ID</th>
-                    <th>Status</th>
-                    <th>Adopt Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {endedAppointments.map((appointment) => (
-                    <tr key={appointment.appointID}>
-                      <td>{formatDateTime(appointment.date_time)}</td>
-                      <td>{appointment.accountID}</td>
-                      <td>{appointment.petID}</td>
-                      <td>{appointment.staffID}</td>
-                      <td>{renderStatus(appointment.status)}</td>
-                      <td>{renderAdoptStatus(appointment.adopt_status)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            ) : (
-              <p className="no-appointments">No ended appointments found.</p>
+            {activeTab === "ended" && (
+              <>
+                {endedAppointments.length > 0 ? (
+                  <table className="appointments-table">
+                    <thead>
+                      <tr>
+                        <th>Date Time</th>
+                        <th>Account ID</th>
+                        <th>Pet ID</th>
+                        <th>Staff ID</th>
+                        <th>Status</th>
+                        <th>Adopt Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {endedAppointments.map((appointment) => (
+                        <tr key={appointment.appointID}>
+                          <td>{formatDateTime(appointment.date_time)}</td>
+                          <td>{appointment.accountID}</td>
+                          <td>{appointment.petID}</td>
+                          <td>{appointment.staffID}</td>
+                          <td>{renderStatus(appointment.status)}</td>
+                          <td>{renderAdoptStatus(appointment.adopt_status)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <p className="no-appointments">No ended appointments found.</p>
+                )}
+              </>
             )}
           </>
         )}

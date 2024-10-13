@@ -12,11 +12,11 @@ const UpdatePet = ({ onPetUpdated }) => {
   const initialPetData = location.state?.pet || {
     name: "",
     breed: "",
-    sex: "",
+    sex: "Male",
     age: "",
     weight: "",
     note: "",
-    size: "",
+    size: "Small",
     potty_trained: false,
     dietary_requirements: false,
     spayed: false,
@@ -158,7 +158,6 @@ const UpdatePet = ({ onPetUpdated }) => {
               onChange={handleChange}
               required
             >
-              <option value="">Gender</option>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
             </select>

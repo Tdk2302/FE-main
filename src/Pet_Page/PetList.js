@@ -11,7 +11,7 @@ import BannerDonate from "../components/BannerDonate";
 const PetsList = () => {
   const [pets, setPets] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [petsPerPage] = useState(8);
+  const [petsPerPage] = useState(12);
   const [searchParams, setSearchParams] = useState({
     name: "",
     age: "",

@@ -67,6 +67,7 @@
 .edit-button {
   margin-top: auto;
   button {
+    width: 68%;
     margin: 20px;
     background-color: #f1ba3a;
     color: white;
@@ -79,7 +80,25 @@
 
     &:hover {
       background-color: #dead43;
-      transform: translateY(-2px);
+    }
+  }
+}
+
+.remind-button {
+  margin-top: auto;
+  button {
+    margin: 20px;
+    background-color: #f1ba3a;
+    color: white;
+    border: none;
+    padding: 10px 60px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: red;
     }
   }
 }

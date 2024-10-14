@@ -203,7 +203,7 @@ const PetDetail = () => {
             </div>
           )}
           {roleID === "2" && pet.status === "Unavailable" && pet.accountID && (
-            <div class="edit-button">
+            <div class="remind-button">
               <Button onClick={handleRemind}>Remind</Button>
               <Button onClick={handleBanRequest}>Request Ban</Button>
             </div>

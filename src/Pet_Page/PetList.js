@@ -207,7 +207,7 @@ const PetsList = () => {
             </div>
           ))
         ) : (
-          <p>No pets found</p>
+          <h2>No pets found on the system! </h2>
         )}
       </div>
       <div className="pagination">

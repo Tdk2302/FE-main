@@ -8,7 +8,6 @@ import Spinner from "../components/Spinner"; // Thêm dòng này
 const AppointmentPage = () => {
   // Các state để lưu trữ và quản lý dữ liệu
   const [unprocessedAppointments, setUnprocessedAppointments] = useState([]);
-  const [currentUser, setCurrentUser] = useState(null);
   const [processingAppointments, setProcessingAppointments] = useState([]);
   const [activeTab, setActiveTab] = useState("unprocessed");
   const [showModal, setShowModal] = useState(false);
@@ -19,13 +18,8 @@ const AppointmentPage = () => {
   const [isLoading, setIsLoading] = useState(false); // Thêm state này
 
   // Lấy thông tin người dùng hiện tại từ localStorage
-  useEffect(() => {
-    const userString = localStorage.getItem("user");
-    if (userString) {
-      const user = JSON.parse(userString);
-      setCurrentUser(user);
-    }
-  }, []);
+
+  const userID = localStorage.getItem("accountID");
 
   // Lấy danh sách cuộc hẹn chưa xử lý
   const apiUnprocessedAppointments = useCallback(async () => {
@@ -96,7 +90,7 @@ const AppointmentPage = () => {
     }
     setProcessingAppointments((prev) => [...prev, appointmentId]);
     try {
-      const staffId = currentUser.accountID;
+      const staffId = userID;
       const response = await axios.put(`/appointment/accept/${staffId}`, {
         appointID: appointmentId,
       });
@@ -387,7 +381,9 @@ const AppointmentPage = () => {
                     </tbody>
                   </table>
                 ) : (
-                  <p className="no-appointments">No ended appointments found.</p>
+                  <p className="no-appointments">
+                    No ended appointments found.
+                  </p>
                 )}
               </>
             )}

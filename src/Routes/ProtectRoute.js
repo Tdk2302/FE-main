@@ -1,15 +1,15 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
 
-const ProtectedRoute = ({ children, role }) => {
-  const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
-  const user = JSON.parse(localStorage.getItem("user"));
+const ProtectedRoute = ({ children, roleID }) => {
+  const token = localStorage.getItem("token");
+  const userRoleID = localStorage.getItem("roleID");
 
-  if (!isLoggedIn) {
+  if (!token || !userRoleID) {
     return <Navigate to="/login" replace />;
   }
 
-  if (role && user.roleID !== role) {
+  if (roleID && !roleID.includes(Number(userRoleID))) {
     return <Navigate to="/" replace />;
   }
 

@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
-import "../styles/login.scss";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import { jwtDecode } from 'jwt-decode'; // Sử dụng named import
+import React, { useEffect, useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useNavigate, NavLink } from "react-router-dom";
-import api from "../services/axios";
 import Spinner from "../components/Spinner";
-import { jwtDecode } from 'jwt-decode'; // Correct import
+import api from "../services/axios";
+import "../styles/login.scss";
+
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -15,27 +16,17 @@ const Login = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("useEffect executed"); // Check if useEffect is running
     const token = localStorage.getItem("token");
-    console.log("Token:", token); // Check if token is retrieved
-  
-    if (token) {
-      try {
-        const decodedToken = jwtDecode(token);
-        console.log("Decoded Token:", decodedToken); // Check the decoded token
-        const roles = decodedToken.roles;
-        console.log("User roles:", roles); // Check the roles
-        if (roles === "1") {
-          navigate("/petlistadmin");
-        } else if (roles === "2") {
-          navigate("/appointment");
-        } else {
-          navigate("/");
-        }
-      } catch (error) {
-        console.error("Lỗi giải mã token:", error);
-        // localStorage.removeItem("token");
-        toast.error("Token không hợp lệ. Vui lòng đăng nhập lại.");
+    const roleID = localStorage.getItem("roleID");
+    if (token && roleID) {
+      console.log("Token found in localStorage:", token);
+      console.log("RoleID found in localStorage:", roleID);
+      if (roleID === "1" || roleID === 1) {
+        navigate("/petlistadmin", { replace: true });
+      } else if (roleID === "2" || roleID === 2) {
+        navigate("/appointment", { replace: true });
+      } else {
+        navigate("/", { replace: true });
       }
     }
   }, [navigate]);
@@ -50,7 +41,23 @@ const Login = () => {
       });
       if (response && response.data && response.data.jwt) {
         localStorage.setItem("token", response.data.jwt);
+        const decodedToken = jwtDecode(response.data.jwt);
+        const role = decodedToken.roles[0];
+        localStorage.setItem("roleID", role);
         toast.success("Đăng nhập thành công!");
+        
+        console.log("Role:", role); // Thêm log để kiểm tra
+        
+        if (role === "1" || role === 1) {
+          console.log("Redirecting to /petlistadmin");
+          navigate("/petlistadmin", { replace: true });
+        } else if (role === "2" || role === 2) {
+          console.log("Redirecting to /appointment");
+          navigate("/appointment", { replace: true });
+        } else {
+          console.log("Redirecting to /");
+          navigate("/", { replace: true });
+        }
       } else {
         toast.error("Tên đăng nhập hoặc mật khẩu không hợp lệ");
       }

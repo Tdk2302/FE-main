@@ -105,15 +105,12 @@ const PetsList = () => {
     }
   };
 
-  const getImageUrl = (imgUrl) => {
+  const getImageUrl = useCallback((imgUrl) => {
     if (!imgUrl) return "/path/to/default/image.jpg";
-    if (imgUrl.startsWith("images/")) {
-      const url = `${BASE_URL}${imgUrl}`;
-      console.log("Image URL:", url); // Thêm dòng này
-      return url;
-    }
+    if (imgUrl.startsWith("images\\"))
+      return `${BASE_URL}${imgUrl.replace("\\", "/")}`;
     return imgUrl;
-  };
+  }, []);
 
   const indexOfLastPet = currentPage * petsPerPage;
   const indexOfFirstPet = indexOfLastPet - petsPerPage;
@@ -198,8 +195,7 @@ const PetsList = () => {
               className="pet-item"
               onClick={() => handlePetClick(pet)}
             >
-               {console.log("Pet image URL:", pet.img_url)}
-             <img src={getImageUrl(pet.img_url)} alt={pet.name} />
+              <img src={getImageUrl(pet.img_url)} alt={pet.name} />
               <div className="pet-info">
                 <h3>{pet.name}</h3>
                 <StatusDot status={pet.status} />

@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { useNavigate, NavLink } from "react-router-dom";
 import api from "../services/axios";
 import Spinner from "../components/Spinner";
+import { jwtDecode } from 'jwt-decode'; // Correct import
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -14,51 +15,48 @@ const Login = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
-    const roleID = localStorage.getItem("roleID");
-    if (isLoggedIn) {
-      if (roleID === "2") {
-        navigate("/appointment");
-      } else if (roleID === "3") {
-        navigate("/");
-      } else if (roleID === "1") {
-        navigate("/petlistadmin");
+    console.log("useEffect executed"); // Check if useEffect is running
+    const token = localStorage.getItem("token");
+    console.log("Token:", token); // Check if token is retrieved
+  
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        console.log("Decoded Token:", decodedToken); // Check the decoded token
+        const roles = decodedToken.roles;
+        console.log("User roles:", roles); // Check the roles
+        if (roles === "1") {
+          navigate("/petlistadmin");
+        } else if (roles === "2") {
+          navigate("/appointment");
+        } else {
+          navigate("/");
+        }
+      } catch (error) {
+        console.error("Lỗi giải mã token:", error);
+        // localStorage.removeItem("token");
+        toast.error("Token không hợp lệ. Vui lòng đăng nhập lại.");
       }
     }
   }, [navigate]);
 
-  // Handle login action
   const handleLogin = async (event) => {
     event.preventDefault();
-
     setIsLoading(true);
     try {
       const response = await api.post("accounts/login", {
         accountID: username,
         password,
       });
-
-      if (response && response.data) {
-        localStorage.setItem("isLoggedIn", "true");
-        localStorage.setItem("roleID", response.data.roleID);
-        localStorage.setItem("name", String(response.data.name));
-        localStorage.setItem("accountID", String(response.data.accountID));
-        sessionStorage.setItem("accountID", String(response.data.accountID));
-
-        const currentLoginChange =
-          localStorage.getItem("loginChange") === "true";
-        localStorage.setItem("loginChange", (!currentLoginChange).toString());
-        toast.success("Login successful!");
-        window.location.reload();
-        navigate("/");
-        setTimeout(() => {
-          navigate("/");
-        }, 1000);
+      if (response && response.data && response.data.jwt) {
+        localStorage.setItem("token", response.data.jwt);
+        toast.success("Đăng nhập thành công!");
       } else {
-        toast.error("Invalid username or password");
+        toast.error("Tên đăng nhập hoặc mật khẩu không hợp lệ");
       }
     } catch (error) {
-      toast.error("Invalid username or password");
+      console.error("Lỗi đăng nhập:", error.response || error);
+      toast.error(error.response?.data?.message || "Đăng nhập thất bại. Vui lòng thử lại.");
     } finally {
       setIsLoading(false);
     }
@@ -82,6 +80,7 @@ const Login = () => {
             placeholder="Username"
             value={username}
             onChange={(event) => setUsername(event.target.value)}
+            autoComplete="username"
           />
         </div>
         <div className="input-password">
@@ -90,6 +89,7 @@ const Login = () => {
             placeholder="Password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
+            autoComplete="current-password"
           />
           <i
             className={

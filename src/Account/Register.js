@@ -52,7 +52,8 @@ const Register = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleRegister = async () => {
+  const handleRegister = async (event) => {
+    event.preventDefault(); // Ngăn chặn form submit mặc định
     if (!validateForm()) {
       return;
     }
@@ -69,23 +70,33 @@ const Register = () => {
         roleID: role === "Staff" ? 2 : 3,
       };
 
-      const checkUsername = await api.get(`accounts/search/${username}`);
-      if (checkUsername.data && checkUsername) {
-        toast.error("Username already exists!");
-        return;
+      // Kiểm tra username trước khi đăng ký
+      try {
+        const checkUsername = await api.get(`accounts/search/${username}`);
+        if (checkUsername.data) {
+          toast.error("Username already exists!");
+          setIsLoading(false);
+          return;
+        }
+      } catch (error) {
+        // Nếu không tìm thấy username, tiếp tục đăng ký
+        if (error.response && error.response.status !== 404) {
+          throw error;
+        }
       }
 
-      await api.post("/accounts/register", userData);
-      if (role === "Staff") {
-        toast.success(
-          "Registration successful! Please wait for admin approval."
-        );
-      } else {
-        toast.success("Registered successfully!");
+      const response = await api.post("/accounts/register", userData);
+      if (response.data) {
+        if (role === "Staff") {
+          toast.success("Registration successful! Please wait for admin approval.");
+        } else {
+          toast.success("Registered successfully!");
+        }
+        navigate("/login");
       }
-      navigate("/login");
     } catch (error) {
-      toast.error("Registration failed. Please try again.");
+      console.error("Registration error:", error);
+      toast.error(error.response?.data || "Registration failed. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -97,6 +108,7 @@ const Register = () => {
 
   return (
     <div className="register-container col-12 col-sm-6 mx-auto">
+      <form onSubmit={handleRegister}>
       <div className="title">Register</div>
 
       <div className="form-group">
@@ -259,6 +271,7 @@ const Register = () => {
           Register
         </button>
       </div>
+      </form>
     </div>
   );
 };

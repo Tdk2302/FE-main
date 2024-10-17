@@ -1,12 +1,11 @@
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import { jwtDecode } from 'jwt-decode'; // Sử dụng named import
+import { jwtDecode } from "jwt-decode"; // Sử dụng named import
 import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
 import api from "../services/axios";
 import "../styles/login.scss";
-
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -15,21 +14,21 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const roleID = localStorage.getItem("roleID");
-    if (token && roleID) {
-      console.log("Token found in localStorage:", token);
-      console.log("RoleID found in localStorage:", roleID);
-      if (roleID === "1" || roleID === 1) {
-        navigate("/petlistadmin", { replace: true });
-      } else if (roleID === "2" || roleID === 2) {
-        navigate("/appointment", { replace: true });
-      } else {
-        navigate("/", { replace: true });
-      }
-    }
-  }, [navigate]);
+  // useEffect(() => {
+  //   const token = localStorage.getItem("token");
+  //   const roleID = localStorage.getItem("roleID");
+  //   if (token && roleID) {
+  //     console.log("Token found in localStorage:", token);
+  //     console.log("RoleID found in localStorage:", roleID);
+  //     if (roleID === "1" || roleID === 1) {
+  //       navigate("/petlistadmin", { replace: true });
+  //     } else if (roleID === "2" || roleID === 2) {
+  //       navigate("/appointment", { replace: true });
+  //     } else {
+  //       navigate("/", { replace: true });
+  //     }
+  //   }
+  // }, [navigate]);
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -44,14 +43,17 @@ const Login = () => {
         const decodedToken = jwtDecode(response.data.jwt);
         const role = decodedToken.roles[0];
         localStorage.setItem("roleID", role);
+        localStorage.setItem("name", username);
+        localStorage.setItem("isLoggedIn", true);
         toast.success("Đăng nhập thành công!");
-        
+        console.log("Name:", username);
+
         console.log("Role:", role); // Thêm log để kiểm tra
-        
-        if (role === "1" || role === 1) {
+
+        if (role === "1") {
           console.log("Redirecting to /petlistadmin");
           navigate("/petlistadmin", { replace: true });
-        } else if (role === "2" || role === 2) {
+        } else if (role === "2") {
           console.log("Redirecting to /appointment");
           navigate("/appointment", { replace: true });
         } else {
@@ -63,7 +65,9 @@ const Login = () => {
       }
     } catch (error) {
       console.error("Lỗi đăng nhập:", error.response || error);
-      toast.error(error.response?.data?.message || "Đăng nhập thất bại. Vui lòng thử lại.");
+      toast.error(
+        error.response?.data?.message || "Đăng nhập thất bại. Vui lòng thử lại."
+      );
     } finally {
       setIsLoading(false);
     }

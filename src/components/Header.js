@@ -18,14 +18,14 @@ const Header = () => {
   const [isLoading, setIsLoading] = useState(true);
   const name = localStorage.getItem("name");
   const loggedIn = localStorage.getItem("isLoggedIn") === "true";
-
+  const role = Number(localStorage.getItem("roleID"));
   useEffect(() => {
     setIsLoading(true);
-    const role = Number(localStorage.getItem("roleID"));
     setUserName(name);
     setIsLoggedIn(loggedIn);
     setRoleID(role);
     setIsLoading(false);
+    console.log("isLoggedIn:", loggedIn, "roleID:", role); // Debugging line
   }, [name, loggedIn]);
 
   const handleLogout = () => {
@@ -39,12 +39,20 @@ const Header = () => {
   if (isLoading) {
     return <Spinner />;
   }
-
   const renderNavLinks = () => {
+    console.log(
+      "Rendering nav links. isLoggedIn:",
+      isLoggedIn,
+      "roleID:",
+      roleID
+    ); // Debugging line
     return (
       <>
         {(!isLoggedIn || roleID === 3) && (
           <>
+            <NavLink onClick={handleLogout} className="nav-link">
+              <h3>Logout</h3>
+            </NavLink>
             <NavLink to="/" className="nav-link">
               <h3>Home</h3>
             </NavLink>
@@ -76,48 +84,47 @@ const Header = () => {
             </NavLink>
           </>
         )}
-        {isLoggedIn && roleID === 1 && (
-          <>
-            {isLoggedIn && roleID === 1 && (
-              <>
-                <NavLink to="/petlistadmin" className="nav-link">
-                  <h3>Pet List</h3>
-                </NavLink>
-                <NavLink to="/events" className="nav-link">
-                  <h3>Events</h3>
-                </NavLink>
-                <NavDropdown
-                  title={
-                    <span className="nav-dropdown-title">
-                      <h3>Request</h3>
-                    </span>
-                  }
-                  id="request-nav-dropdown"
-                  className="request-dropdown"
+
+        <>
+          {isLoggedIn && roleID === 1 && (
+            <>
+              <NavLink to="/petlistadmin" className="nav-link">
+                <h3>Pet List</h3>
+              </NavLink>
+              <NavLink to="/events" className="nav-link">
+                <h3>Events</h3>
+              </NavLink>
+              <NavDropdown
+                title={
+                  <span className="nav-dropdown-title">
+                    <h3>Request</h3>
+                  </span>
+                }
+                id="request-nav-dropdown"
+                className="request-dropdown"
+              >
+                <NavDropdown.Item
+                  as={NavLink}
+                  to="/admin-notifications/add-pet"
                 >
-                  <NavDropdown.Item
-                    as={NavLink}
-                    to="/admin-notifications/add-pet"
-                  >
-                    Add Pet
-                  </NavDropdown.Item>
-                  <NavDropdown.Item
-                    as={NavLink}
-                    to="/admin-notifications/request-register"
-                  >
-                    Request Register
-                  </NavDropdown.Item>
-                  <NavDropdown.Item
-                    as={NavLink}
-                    to="/admin-notifications/ban-request"
-                  >
-                    Ban Request
-                  </NavDropdown.Item>
-                </NavDropdown>
-              </>
-            )}
-          </>
-        )}
+                  Add Pet
+                </NavDropdown.Item>
+                <NavDropdown.Item
+                  as={NavLink}
+                  to="/admin-notifications/request-register"
+                >
+                  Request Register
+                </NavDropdown.Item>
+                <NavDropdown.Item
+                  as={NavLink}
+                  to="/admin-notifications/ban-request"
+                >
+                  Ban Request
+                </NavDropdown.Item>
+              </NavDropdown>
+            </>
+          )}
+        </>
       </>
     );
   };

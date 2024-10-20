@@ -50,9 +50,6 @@ const Header = () => {
       <>
         {(!isLoggedIn || roleID === 3) && (
           <>
-            <NavLink onClick={handleLogout} className="nav-link">
-              <h3>Logout</h3>
-            </NavLink>
             <NavLink to="/" className="nav-link">
               <h3>Home</h3>
             </NavLink>

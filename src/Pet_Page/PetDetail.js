@@ -6,6 +6,7 @@ import "../styles/petdetail.scss";
 import Carousel from "react-multi-carousel";
 import { collapseToast, toast } from "react-toastify";
 import Spinner from "../components/Spinner";
+import PetHealthRecord from "../PetHealthRecord/PethealthRecord";
 
 const PetDetail = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -306,6 +307,7 @@ const PetDetail = () => {
             </div>
           </div>
         </div>
+        <PetHealthRecord petID={petID} />
 
         {pet.status.toLowerCase() === "unavailable" && pet.accountID && (
           <div className="pet-video">

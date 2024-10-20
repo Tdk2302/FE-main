@@ -1,0 +1,119 @@
+.pet-health-records {
+  margin: 20px 0;
+  padding: 20px;
+  border-radius: 8px;
+
+  h2 {
+    color: #333;
+    margin-bottom: 20px;
+  }
+
+  .add-record-btn {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 20px;
+
+    &:hover {
+      background-color: #218838;
+    }
+  }
+
+  .add-record-form {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 400px;
+
+    input, textarea {
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    button {
+      padding: 10px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #218838;
+      }
+    }
+  }
+
+  .health-record-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #f2f2f2;
+      font-weight: bold;
+      color: #333;
+    }
+
+    tr:hover {
+      background-color: #f5f5f5;
+    }
+
+    .edit-btn, .delete-btn, .save-btn, .cancel-btn {
+      padding: 5px 10px;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-right: 5px;
+    }
+
+    .edit-btn {
+      background-color: #007bff;
+      &:hover {
+        background-color: #0056b3;
+      }
+    }
+
+    .delete-btn {
+      background-color: #dc3545;
+      &:hover {
+        background-color: #c82333;
+      }
+    }
+
+    .save-btn {
+      background-color: #28a745;
+      &:hover {
+        background-color: #218838;
+      }
+    }
+
+    .cancel-btn {
+      background-color: #6c757d;
+      &:hover {
+        background-color: #5a6268;
+      }
+    }
+  }
+}
+
+.error-message {
+  color: #721c24;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  padding: 10px;
+  margin-top: 10px;
+}

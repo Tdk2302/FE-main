@@ -27,20 +27,30 @@ const Register = () => {
   };
 
   const isPhoneNumberValid = (phoneNumber) => {
-    const regex = /^\d{9,10}$/;
+    const regex = /^0\d{9,10}$/;
     return regex.test(phoneNumber);
   };
 
   const validateForm = () => {
     const newErrors = {};
+    const currentDate = new Date();
+    const tenYearsAgo = new Date();
+    tenYearsAgo.setFullYear(currentDate.getFullYear() - 10);
+    
     if (!fullName.trim()) newErrors.fullName = "Full name is required";
-    if (!birthday) newErrors.birthday = "Birthday is required";
+    if (!birthday) {
+      newErrors.birthday = "Birthday is required";
+    } else if (new Date(birthday) > tenYearsAgo) {
+      newErrors.birthday = "You must be at least 10 years old";
+    }
     if (!sex) newErrors.sex = "Sex is required";
     if (!address.trim()) newErrors.address = "Address is required";
     if (!phoneNumber) newErrors.phoneNumber = "Phone number is required";
     else if (!isPhoneNumberValid(phoneNumber))
-      newErrors.phoneNumber = "Invalid phone number! Must be 9-10 digits.";
+      newErrors.phoneNumber = "Invalid phone number! Must start with 0 and be 9-10 digits.";
+
     if (!username.trim()) newErrors.username = "Username is required";
+    else if (username.length < 3) newErrors.username = "Username must be at least 3 characters";
     if (!password) newErrors.password = "Password is required";
     if (!confirmPassword)
       newErrors.confirmPassword = "Confirm password is required";
@@ -52,8 +62,7 @@ const Register = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleRegister = async (event) => {
-    event.preventDefault(); // Ngăn chặn form submit mặc định
+  const handleRegister = async () => {
     if (!validateForm()) {
       return;
     }
@@ -70,33 +79,23 @@ const Register = () => {
         roleID: role === "Staff" ? 2 : 3,
       };
 
-      // Kiểm tra username trước khi đăng ký
-      try {
-        const checkUsername = await api.get(`accounts/search/${username}`);
-        if (checkUsername.data) {
-          toast.error("Username already exists!");
-          setIsLoading(false);
-          return;
-        }
-      } catch (error) {
-        // Nếu không tìm thấy username, tiếp tục đăng ký
-        if (error.response && error.response.status !== 404) {
-          throw error;
-        }
+      const checkUsername = await api.get(`accounts/search/${username}`);
+      if (checkUsername.data && checkUsername) {
+        toast.error("Username already exists!");
+        return;
       }
 
-      const response = await api.post("/accounts/register", userData);
-      if (response.data) {
-        if (role === "Staff") {
-          toast.success("Registration successful! Please wait for admin approval.");
-        } else {
-          toast.success("Registered successfully!");
-        }
-        navigate("/login");
+      await api.post("/accounts/register", userData);
+      if (role === "Staff") {
+        toast.success(
+          "Registration successful! Please wait for admin approval."
+        );
+      } else {
+        toast.success("Registered successfully!");
       }
+      navigate("/login");
     } catch (error) {
-      console.error("Registration error:", error);
-      toast.error(error.response?.data || "Registration failed. Please try again.");
+      toast.error("Registration failed. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -108,7 +107,6 @@ const Register = () => {
 
   return (
     <div className="register-container col-12 col-sm-6 mx-auto">
-      <form onSubmit={handleRegister}>
       <div className="title">Register</div>
 
       <div className="form-group">
@@ -258,7 +256,7 @@ const Register = () => {
         >
           <option value="">Select Role</option>
           <option value="Staff">Staff</option>
-          <option value="Customer">Customer</option>
+          <option value="Member">Member</option>
         </select>
       </div>
 
@@ -271,7 +269,6 @@ const Register = () => {
           Register
         </button>
       </div>
-      </form>
     </div>
   );
 };

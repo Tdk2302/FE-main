@@ -15,7 +15,7 @@ import Header from "./components/Header";
 import HomePage from "./components/HomePage";
 import Contact from "./Contact/Contact";
 import Donate from "./Donation/Donate";
-import Events from "./Event/Events";
+
 import AddPetNotifications from "./Notifications/AddPetNotifications";
 import BanRequestNotifications from "./Notifications/BanRequestNotifications";
 import RequestRegisterNotifications from "./Notifications/RequestRegisterNotifications";
@@ -25,7 +25,10 @@ import PetsList from "./Pet_Page/PetList";
 import PetListAdmin from "./Pet_Page/PetListAdmin";
 import PetUpdate from "./Pet_Page/UpdatePet";
 import ProtectedRoute from "./Routes/ProtectRoute";
-
+import EventList from './Events/EventList';
+import AddEvent from './Events/AddEvent';
+import UpdateEvent from './Events/UpdateEvent';
+import Profile from './Account/ProfileUser';
 
 function App() {
   const roleID = localStorage.getItem("roleID")
@@ -40,7 +43,7 @@ function App() {
             <Routes>
               <Route path="/login" element={<Login />} />
               <Route path="/" element={<HomePage />} />
-              <Route path="/events" element={<Events />} />
+              <Route path="/events" element={<EventList />} />
               <Route path="/register" element={<Register />} />
               <Route path="/donate" element={<Donate />} />
               <Route path="/PetUpdate/:petID" element={<PetUpdate />} />
@@ -120,6 +123,23 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="/events/add"
+                element={
+                  <ProtectedRoute roleID={2}>
+                    <AddEvent />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/events/update/:eventID"
+                element={
+                  <ProtectedRoute roleID={2}> 
+                    <UpdateEvent />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="/profile" element={<Profile />} />
             </Routes>
           </Container>
         </div>

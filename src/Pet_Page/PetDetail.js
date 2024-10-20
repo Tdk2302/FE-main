@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { useLocation, useNavigate, NavLink, useParams } from "react-router-dom";
-import axios, { BASE_URL } from "../services/axios";
+import { BASE_URL } from "../services/axios";
 import "../styles/petdetail.scss";
 import Carousel from "react-multi-carousel";
 import { collapseToast, toast } from "react-toastify";
 import Spinner from "../components/Spinner";
-
+import api from "../services/axios";
 const PetDetail = () => {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
@@ -34,7 +34,7 @@ const PetDetail = () => {
   };
   const handleRemind = async () => {
     try {
-      const response = await axios.post(`notification/remindReport`, {
+      const response = await api.post(`notification/remindReport`, {
         petID: pet.petID,
       });
       toast.success(response.data.message);
@@ -45,7 +45,7 @@ const PetDetail = () => {
   };
   const handleBanRequest = async () => {
     try {
-      const response = await axios.post(
+      const response = await api.post(
         `notification/banRequest/${localStorage.getItem("accountID")}`,
         {
           petID: pet.petID,
@@ -84,7 +84,7 @@ const PetDetail = () => {
       setIsLoading(true);
       try {
         // Nếu pet không có trong state, lấy từ API dựa vào ID trong URL
-        const response = await axios.get(`/pets/getByID/${petID}`);
+        const response = await api.get(`/pets/getByID/${petID}`);
         setPet(response.data.data);
         console.log("Fetching other pets..."); // Kiểm tra việc gọi fetchOtherPets
 
@@ -100,7 +100,7 @@ const PetDetail = () => {
 
   const fetchOtherPets = async () => {
     try {
-      const response = await axios.get("/pets/showListOfPets");
+      const response = await api.get("/pets/showListOfPets");
       console.log("Fetched other pets:", response.data); // Kiểm tra dữ liệu otherPets
       setOtherPets(response.data); // Cập nhật danh sách otherPets vào state
       console.log("Updated other pets state:", response.data); // Kiểm tra state sau khi cập nhật

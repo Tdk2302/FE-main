@@ -7,7 +7,7 @@ import StatusDot from "../components/StatusDot";
 import Spinner from "../components/Spinner";
 import BackToTop from "../components/BackToTop";
 import BannerDonate from "../components/BannerDonate";
-
+import api from "../services/axios";
 const PetsList = () => {
   const [pets, setPets] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -31,7 +31,7 @@ const PetsList = () => {
   const apiListPets = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get("/pets/showListOfPets");
+      const response = await api.get("/pets/showListOfPets");
       // Lọc chỉ lấy pet có status là 'Available' hoặc 'Waiting'
       const filteredPets = response.data.filter(
         (pet) => pet.status === "Available" || pet.status === "Waiting"
@@ -57,7 +57,7 @@ const PetsList = () => {
         sex: searchParams.sex || "",
       };
 
-      const response = await axios.get("/pets/searchByNameAndBreed", {
+      const response = await api.get("/pets/searchByNameAndBreed", {
         params: searchData,
       });
       if (response.data.length === 0) {

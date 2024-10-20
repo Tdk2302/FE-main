@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import axios from "../services/axios";
 import "../styles/addpet.scss";
-
+import api from "../services/axios";
 const UpdatePet = ({ onPetUpdated }) => {
   const navigate = useNavigate();
   const { petId } = useParams(); // Lấy ID thú cưng từ URL
@@ -38,7 +38,7 @@ const UpdatePet = ({ onPetUpdated }) => {
     if (!location.state?.pet) {
       const fetchPetData = async () => {
         try {
-          const response = await axios.get(`pets/${petId}`);
+          const response = await api.get(`pets/${petId}`);
           setPetData(response.data);
           setImagePreview(response.data.img_url); // Giả sử img_url là URL của hình ảnh
         } catch (error) {
@@ -94,7 +94,7 @@ const UpdatePet = ({ onPetUpdated }) => {
     }
 
     try {
-      await axios.put(`/pets/updatepet/${petId}`, formData, {
+      await api.put(`/pets/updatepet/${petId}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

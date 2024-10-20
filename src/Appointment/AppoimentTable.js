@@ -4,7 +4,7 @@ import "../styles/appoitment.scss";
 import moment from "moment";
 import { toast } from "react-toastify";
 import Spinner from "../components/Spinner"; // Thêm dòng này
-
+import api from "../services/axios";
 const AppointmentPage = () => {
   // Các state để lưu trữ và quản lý dữ liệu
   const [unprocessedAppointments, setUnprocessedAppointments] = useState([]);
@@ -25,7 +25,7 @@ const AppointmentPage = () => {
   const apiUnprocessedAppointments = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get("appointment/showUnprocessed");
+      const response = await api.get("appointment/showUnprocessed");
       setUnprocessedAppointments(response.data.data);
     } catch (error) {
       console.error("Error fetching unprocessed appointments:", error);
@@ -38,7 +38,7 @@ const AppointmentPage = () => {
   const apiNotHappenAppointments = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get("appointment/showNotHappenedYet");
+      const response = await api.get("appointment/showNotHappenedYet");
       setNotHappenAppointments(response.data.data);
     } catch (error) {
       console.error("Error fetching not happen appointments:", error);
@@ -51,7 +51,7 @@ const AppointmentPage = () => {
   const apiEndedAppointments = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get("appointment/showEnded");
+      const response = await api.get("appointment/showEnded");
       setEndedAppointments(response.data.data);
     } catch (error) {
       console.error("Error fetching ended appointments:", error);
@@ -91,7 +91,7 @@ const AppointmentPage = () => {
     setProcessingAppointments((prev) => [...prev, appointmentId]);
     try {
       const staffId = userID;
-      const response = await axios.put(`/appointment/accept/${staffId}`, {
+      const response = await api.put(`/appointment/accept/${staffId}`, {
         appointID: appointmentId,
       });
 
@@ -128,7 +128,7 @@ const AppointmentPage = () => {
     }
     setProcessingAppointments((prev) => [...prev, appointmentToRefuse]);
     try {
-      const response = await axios.delete(
+      const response = await api.delete(
         `/appointment/refuse/${refusalReason}`,
         {
           data: { appointID: appointmentToRefuse },
@@ -159,7 +159,7 @@ const AppointmentPage = () => {
   const handleFinalAccept = async (appointmentId) => {
     setProcessingAppointments((prev) => [...prev, appointmentId]);
     try {
-      const response = await axios.put(`/appointment/acceptAdopt`, {
+      const response = await api.put(`/appointment/acceptAdopt`, {
         appointID: appointmentId,
       });
       toast.success(response.data.message);
@@ -173,7 +173,7 @@ const AppointmentPage = () => {
   const handleFinalRefuse = async (appointmentId) => {
     setProcessingAppointments((prev) => [...prev, appointmentId]);
     try {
-      const response = await axios.delete(`/appointment/refuseAdopt`, {
+      const response = await api.delete(`/appointment/refuseAdopt`, {
         data: { appointID: appointmentId },
       });
       toast.success(response.data.message);

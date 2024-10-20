@@ -42,7 +42,7 @@ const Login = () => {
         localStorage.setItem("token", response.data.jwt);
         const decodedToken = jwtDecode(response.data.jwt);
         const role = decodedToken.roles[0];
-        localStorage.setItem("roleID", role);
+        localStorage.setItem("roleID", Number(role));
         localStorage.setItem("name", username);
         localStorage.setItem("isLoggedIn", true);
         toast.success("Đăng nhập thành công!");

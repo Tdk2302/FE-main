@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import axios from "../services/axios";
 import Spinner from "../components/Spinner";
 import "../styles/petHealthRecord.scss";
+import { toast } from "react-toastify";
 
 const PetHealthRecord = ({ petID }) => {
   const [healthRecords, setHealthRecords] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const roleID = localStorage.getItem("roleID");
   const [editingId, setEditingId] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [newRecord, setNewRecord] = useState({
@@ -49,8 +51,9 @@ const PetHealthRecord = ({ petID }) => {
       if (response.data.data) {
         fetchPetHealthRecords();
         setEditingId(null);
+        toast.success(response.data.message);
       } else {
-        setError(response.data.message);
+        toast.error(response.data.message);
       }
     } catch (err) {
       setError("Failed to update health record");
@@ -66,8 +69,10 @@ const PetHealthRecord = ({ petID }) => {
         );
         if (response.data.data) {
           fetchPetHealthRecords();
+          toast.success(response.data.message);
         } else {
           setError(response.data.message);
+          toast.error(response.data.message);
         }
       } catch (err) {
         setError("Failed to delete health record");
@@ -111,6 +116,7 @@ const PetHealthRecord = ({ petID }) => {
           veterinary_fee: "",
           note: "",
         });
+        toast.success(response.data.message);
       } else {
         setError(response.data.message);
       }
@@ -126,7 +132,10 @@ const PetHealthRecord = ({ petID }) => {
   return (
     <div className="pet-health-records">
       <h2>Pet Health Records</h2>
-      <button onClick={() => setShowAddForm(!showAddForm)}>
+      <button
+        className="add-record-btn"
+        onClick={() => setShowAddForm(!showAddForm)}
+      >
         {showAddForm ? "Cancel" : "Add New Record"}
       </button>
 
@@ -269,23 +278,38 @@ const PetHealthRecord = ({ petID }) => {
                     record.note
                   )}
                 </td>
-                <td>
-                  {editingId === record.recordID ? (
-                    <>
-                      <button onClick={() => handleSave(record)}>Save</button>
-                      <button onClick={handleCancel}>Cancel</button>
-                    </>
-                  ) : (
-                    <>
-                      <button onClick={() => handleEdit(record.recordID)}>
-                        Edit
-                      </button>
-                      <button onClick={() => handleDelete(record.recordID)}>
-                        Delete
-                      </button>
-                    </>
-                  )}
-                </td>
+                {roleID === 2 && (
+                  <td>
+                    {editingId === record.recordID ? (
+                      <>
+                        <button
+                          className="save-btn"
+                          onClick={() => handleSave(record)}
+                        >
+                          Save
+                        </button>
+                        <button className="cancel-btn" onClick={handleCancel}>
+                          Cancel
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button
+                          className="edit-btn"
+                          onClick={() => handleEdit(record.recordID)}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          className="delete-btn"
+                          onClick={() => handleDelete(record.recordID)}
+                        >
+                          Delete
+                        </button>
+                      </>
+                    )}
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>

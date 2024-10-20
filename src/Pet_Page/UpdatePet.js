@@ -87,35 +87,18 @@ const UpdatePet = ({ onPetUpdated }) => {
     const formData = new FormData();
     for (const key in petData) {
       formData.append(key, petData[key]);
-      console.log("Sending request to:", `/pets/updatePets/${petData.petID}`);
-      console.log("Headers:", {
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      });
-    }
-    for (let [key, value] of formData.entries()) {
-      console.log(key, value);
     }
 
     try {
       const response = await axios.post(
         `/pets/updatePets/${petData.petID}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${localStorage.getItem("token")}`, // Nếu sử dụng JWT
-          },
-        }
+        formData
       );
       console.log("Response:", response.data);
-      alert("Pet updated successfully!");
+      alert(response.data.message);
       onPetUpdated();
       navigate("/petlist");
     } catch (error) {
-      console.error("Error:", error.response?.data || error.message);
-      console.error("Status:", error.response?.status);
-      console.error("Headers:", error.response?.headers);
       console.error(
         "Error updating pet:",
         error.response ? error.response.data : error.message

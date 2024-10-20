@@ -7,6 +7,8 @@ import Carousel from "react-multi-carousel";
 import { collapseToast, toast } from "react-toastify";
 import Spinner from "../components/Spinner";
 import api from "../services/axios";
+import PetHealthRecord from "../PetHealthRecord/PethealthRecord";
+
 const PetDetail = () => {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
@@ -306,6 +308,7 @@ const PetDetail = () => {
             </div>
           </div>
         </div>
+        <PetHealthRecord petID={petID} />
 
         {pet.status.toLowerCase() === "unavailable" && pet.accountID && (
           <div className="pet-video">

@@ -1,31 +1,34 @@
-import "./App.scss";
-import Header from "./components/Header";
-import Container from "react-bootstrap/Container";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Routes, Route } from "react-router-dom";
+import Container from "react-bootstrap/Container";
+import { Route, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Admin from "./Account/Admin";
 import Login from "./Account/Login";
 import Register from "./Account/Register";
+import Staff from "./Account/Staff";
+import AdoptProcess from "./Adoption/AdoptProcess";
+import "./App.scss";
+import AppoimentTable from "./Appointment/AppoimentTable";
 import Footer from "./components/Footer";
-import Events from "./Event/Events";
-import PetUpdate from "./Pet_Page/UpdatePet";
+import Header from "./components/Header";
 import HomePage from "./components/HomePage";
 import Contact from "./Contact/Contact";
 import Donate from "./Donation/Donate";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import ProtectedRoute from "./Routes/ProtectRoute";
-import Admin from "./Account/Admin";
-import Staff from "./Account/Staff";
-import AppoimentTable from "./Appointment/AppoimentTable";
+
+import AddPetNotifications from "./Notifications/AddPetNotifications";
+import BanRequestNotifications from "./Notifications/BanRequestNotifications";
+import RequestRegisterNotifications from "./Notifications/RequestRegisterNotifications";
+import AddPet from "./Pet_Page/AddPet";
 import PetDetail from "./Pet_Page/PetDetail";
-import AdoptProcess from "./Adoption/AdoptProcess";
 import PetsList from "./Pet_Page/PetList";
 import PetListAdmin from "./Pet_Page/PetListAdmin";
-import AddPet from "./Pet_Page/AddPet";
-import AddPetNotifications from "./Notifications/AddPetNotifications";
-import RequestRegisterNotifications from "./Notifications/RequestRegisterNotifications";
-import Report from "./Report/Report";
-import BanRequestNotifications from "./Notifications/BanRequestNotifications";
+import PetUpdate from "./Pet_Page/UpdatePet";
+import ProtectedRoute from "./Routes/ProtectRoute";
+import EventList from './Events/EventList';
+import AddEvent from './Events/AddEvent';
+import UpdateEvent from './Events/UpdateEvent';
+import Profile from './Account/ProfileUser';
 
 function App() {
   const roleID = localStorage.getItem("roleID")
@@ -40,7 +43,7 @@ function App() {
             <Routes>
               <Route path="/login" element={<Login />} />
               <Route path="/" element={<HomePage />} />
-              <Route path="/events" element={<Events />} />
+              <Route path="/events" element={<EventList />} />
               <Route path="/register" element={<Register />} />
               <Route path="/donate" element={<Donate />} />
               <Route path="/PetUpdate/:petID" element={<PetUpdate />} />
@@ -120,6 +123,23 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="/events/add"
+                element={
+                  <ProtectedRoute roleID={2}>
+                    <AddEvent />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/events/update/:eventID"
+                element={
+                  <ProtectedRoute roleID={2}> 
+                    <UpdateEvent />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="/profile" element={<Profile />} />
             </Routes>
           </Container>
         </div>

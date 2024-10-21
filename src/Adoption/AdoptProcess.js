@@ -5,8 +5,7 @@ import { Modal, Button, Form } from "react-bootstrap";
 import "../styles/adoptprocess.scss";
 import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
-
-import axios from "../services/axios";
+import api from "../services/axios";
 
 const AdoptionProcess = () => {
   const navigate = useNavigate();
@@ -34,7 +33,7 @@ const AdoptionProcess = () => {
     }
 
     try {
-      const response = await axios.post(`appointment/adopt`, {
+      const response = await api.post(`appointment/adopt`, {
         date_time,
         accountID,
         petID,

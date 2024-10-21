@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate, NavLink } from "react-router-dom";
-import axios, { BASE_URL } from "../services/axios";
+import { BASE_URL } from "../services/axios";
 import "../styles/petListAdmin.scss";
 import { FaFilter } from "react-icons/fa";
 import AddPet from "./AddPet";
 import StatusDot from "../components/StatusDot";
 import Spinner from "../components/Spinner";
-
+import api from "../services/axios";
 const PetListAdmin = () => {
   const [pets, setPets] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -26,6 +26,8 @@ const PetListAdmin = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log("Token:", localStorage.getItem("token"));
+    console.log("RoleID:", roleID);
     const checkRole = async () => {
       try {
         if (roleID === "1" || roleID === "2") {
@@ -50,15 +52,30 @@ const PetListAdmin = () => {
   const apiListAllPets = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get("/pets/showListAllOfPets");
-      setPets(response.data);
+      const response = await api.get("/pets/showListAllOfPets");
+      console.log("API response:", response);
+      if (response.data && Array.isArray(response.data)) {
+        setPets(response.data);
+      } else {
+        console.error("Unexpected data format:", response.data);
+        setPets([]);
+      }
     } catch (error) {
       console.error("Error fetching all pets:", error);
-      if (error.code === "ERR_NETWORK") {
-        console.error(
-          "Network error. Please check if the backend server is running on port 8081."
-        );
+      if (error.response) {
+        if (error.response.status) {
+          console.error("Error response status:", error.response.status);
+        } else {
+          console.error("Status is missing in response.");
+        }
+        console.error("Error response data:", error.response.data);
+        console.error("Error response headers:", error.response.headers);
+      } else if (error.request) {
+        console.error("No response received:", error.request);
+      } else {
+        console.error("Error message:", error.message);
       }
+      setPets([]);
     } finally {
       setIsLoading(false);
     }
@@ -81,7 +98,7 @@ const PetListAdmin = () => {
         categoryID: searchParams.categoryID || 0,
         sex: searchParams.sex || "",
       };
-      const response = await axios.get("/pets/searchByNameAndBreedAdmin", {
+      const response = await api.get("/pets/searchByNameAndBreedAdmin", {
         params: searchData,
       });
       if (response.data.length === 0) {
@@ -97,6 +114,7 @@ const PetListAdmin = () => {
       setPets([]);
     }
   };
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -221,7 +239,7 @@ const PetListAdmin = () => {
               <img src={getImageUrl(pet.img_url)} alt={pet.name} />
               <div className="pet-info">
                 <h3>{pet.name}</h3>
-                <StatusDot status={pet.status} />
+                {pet.status && <StatusDot status={pet.status} />}
               </div>
               <div className="pet-info-divider"></div>
               <p>Age: {pet.age} month</p>

@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
-import "../styles/login.scss";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import { jwtDecode } from "jwt-decode"; // Sử dụng named import
+import React, { useEffect, useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useNavigate, NavLink } from "react-router-dom";
-import api from "../services/axios";
 import Spinner from "../components/Spinner";
+import api from "../services/axios";
+import "../styles/login.scss";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -13,52 +14,61 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
-    const roleID = localStorage.getItem("roleID");
-    if (isLoggedIn) {
-      if (roleID === "2") {
-        navigate("/appointment");
-      } else if (roleID === "3") {
-        navigate("/");
-      } else if (roleID === "1") {
-        navigate("/petlistadmin");
-      }
-    }
-  }, [navigate]);
+  // useEffect(() => {
+  //   const token = localStorage.getItem("token");
+  //   const roleID = localStorage.getItem("roleID");
+  //   if (token && roleID) {
+  //     console.log("Token found in localStorage:", token);
+  //     console.log("RoleID found in localStorage:", roleID);
+  //     if (roleID === "1" || roleID === 1) {
+  //       navigate("/petlistadmin", { replace: true });
+  //     } else if (roleID === "2" || roleID === 2) {
+  //       navigate("/appointment", { replace: true });
+  //     } else {
+  //       navigate("/", { replace: true });
+  //     }
+  //   }
+  // }, [navigate]);
 
-  // Handle login action
   const handleLogin = async (event) => {
     event.preventDefault();
-
     setIsLoading(true);
     try {
       const response = await api.post("accounts/login", {
         accountID: username,
         password,
       });
+      if (response && response.data && response.data.jwt) {
+        localStorage.setItem("token", response.data.jwt);
+        const decodedToken = jwtDecode(response.data.jwt);
+        const role = decodedToken.roles[0];
+        localStorage.setItem("roleID", Number(role));
+        localStorage.setItem("name", username);
+        localStorage.setItem("accountID", decodedToken.sub);
+        localStorage.setItem("isLoggedIn", true);
+        toast.success("Đăng nhập thành công!");
+        console.log("Name:", username);
 
-      if (response && response.data) {
-        localStorage.setItem("isLoggedIn", "true");
-        localStorage.setItem("roleID", response.data.roleID);
-        localStorage.setItem("name", String(response.data.name));
-        localStorage.setItem("accountID", String(response.data.accountID));
-        sessionStorage.setItem("accountID", String(response.data.accountID));
+        console.log("Role:", role); // Thêm log để kiểm tra
 
-        const currentLoginChange =
-          localStorage.getItem("loginChange") === "true";
-        localStorage.setItem("loginChange", (!currentLoginChange).toString());
-        toast.success("Login successful!");
-        window.location.reload();
-        navigate("/");
-        setTimeout(() => {
-          navigate("/");
-        }, 1000);
+        if (role === "1") {
+          console.log("Redirecting to /petlistadmin");
+          navigate("/petlistadmin", { replace: true });
+        } else if (role === "2") {
+          console.log("Redirecting to /appointment");
+          navigate("/appointment", { replace: true });
+        } else {
+          console.log("Redirecting to /");
+          navigate("/", { replace: true });
+        }
       } else {
-        toast.error("Invalid username or password");
+        toast.error("Tên đăng nhập hoặc mật khẩu không hợp lệ");
       }
     } catch (error) {
-      toast.error("Invalid username or password");
+      console.error("Lỗi đăng nhập:", error.response || error);
+      toast.error(
+        error.response?.data?.message || "Đăng nhập thất bại. Vui lòng thử lại."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -82,6 +92,7 @@ const Login = () => {
             placeholder="Username"
             value={username}
             onChange={(event) => setUsername(event.target.value)}
+            autoComplete="username"
           />
         </div>
         <div className="input-password">
@@ -90,6 +101,7 @@ const Login = () => {
             placeholder="Password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
+            autoComplete="current-password"
           />
           <i
             className={

@@ -27,20 +27,30 @@ const Register = () => {
   };
 
   const isPhoneNumberValid = (phoneNumber) => {
-    const regex = /^\d{9,10}$/;
+    const regex = /^0\d{9,10}$/;
     return regex.test(phoneNumber);
   };
 
   const validateForm = () => {
     const newErrors = {};
+    const currentDate = new Date();
+    const tenYearsAgo = new Date();
+    tenYearsAgo.setFullYear(currentDate.getFullYear() - 10);
+    
     if (!fullName.trim()) newErrors.fullName = "Full name is required";
-    if (!birthday) newErrors.birthday = "Birthday is required";
+    if (!birthday) {
+      newErrors.birthday = "Birthday is required";
+    } else if (new Date(birthday) > tenYearsAgo) {
+      newErrors.birthday = "You must be at least 10 years old";
+    }
     if (!sex) newErrors.sex = "Sex is required";
     if (!address.trim()) newErrors.address = "Address is required";
     if (!phoneNumber) newErrors.phoneNumber = "Phone number is required";
     else if (!isPhoneNumberValid(phoneNumber))
-      newErrors.phoneNumber = "Invalid phone number! Must be 9-10 digits.";
+      newErrors.phoneNumber = "Invalid phone number! Must start with 0 and be 9-10 digits.";
+
     if (!username.trim()) newErrors.username = "Username is required";
+    else if (username.length < 3) newErrors.username = "Username must be at least 3 characters";
     if (!password) newErrors.password = "Password is required";
     if (!confirmPassword)
       newErrors.confirmPassword = "Confirm password is required";
@@ -246,7 +256,7 @@ const Register = () => {
         >
           <option value="">Select Role</option>
           <option value="Staff">Staff</option>
-          <option value="Customer">Customer</option>
+          <option value="Member">Member</option>
         </select>
       </div>
 

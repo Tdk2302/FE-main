@@ -23,6 +23,7 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import WarningIcon from '@mui/icons-material/Warning';
+import DeleteDialog from '../components/DeleteDialog';
 
 // Transition component
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -202,69 +203,12 @@ const EventList = () => {
           </button>
         ))}
       </div>
-      <Dialog
+      <DeleteDialog
         open={openDeleteDialog}
-        TransitionComponent={Transition}
-        keepMounted
         onClose={handleCloseDeleteDialog}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-        PaperProps={{
-          style: {
-            borderRadius: '12px',
-            padding: '24px',
-            maxWidth: '400px'
-          },
-        }}
-      >
-        <DialogTitle id="alert-dialog-title">
-          <Box display="flex" alignItems="center" mb={2}>
-            <WarningIcon color="warning" style={{ fontSize: 40, marginRight: '16px' }} />
-            <Typography variant="h5" component="span" fontWeight="bold">
-              Delete Event
-            </Typography>
-          </Box>
-        </DialogTitle>
-        <DialogContent>
-          <Typography variant="body1" gutterBottom>
-            Are you sure you want to delete this event? This action cannot be undone.
-          </Typography>
-        </DialogContent>
-        <DialogActions sx={{ justifyContent: 'space-between', mt: 2 }}>
-          <Button 
-            onClick={handleCloseDeleteDialog}
-            variant="outlined"
-            sx={{ 
-              borderRadius: '20px', 
-              px: 3,
-              borderColor: 'grey.400',
-              color: 'grey.700',
-              '&:hover': {
-                borderColor: 'grey.600',
-                backgroundColor: 'grey.100'
-              }
-            }}
-          >
-            Cancel
-          </Button>
-          <Button 
-            onClick={handleConfirmDelete}
-            variant="contained"
-            color="error"
-            startIcon={<DeleteIcon />}
-            sx={{ 
-              borderRadius: '20px', 
-              px: 3,
-              boxShadow: 2,
-              '&:hover': {
-                boxShadow: 4
-              }
-            }}
-          >
-            Delete Event
-          </Button>
-        </DialogActions>
-      </Dialog>
+        onConfirm={handleConfirmDelete}
+        itemName="Event"
+      />
     </div>
   );
 };

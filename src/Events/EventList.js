@@ -22,6 +22,9 @@ const EventList = () => {
   const [eventsPerPage] = useState(12);
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedEventId, setSelectedEventId] = useState(null);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [eventToDelete, setEventToDelete] = useState(null);
+  const [deleteConfirmation, setDeleteConfirmation] = useState("");
 
   useEffect(() => {
     fetchEvents();
@@ -74,6 +77,38 @@ const EventList = () => {
   const handleMenuClose = () => {
     setAnchorEl(null);
     setSelectedEventId(null);
+  };
+
+  const handleDeleteClick = (eventID) => {
+    setEventToDelete(eventID);
+    setOpenDeleteDialog(true);
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setOpenDeleteDialog(false);
+    setEventToDelete(null);
+  };
+
+  const handleConfirmDelete = () => {
+    deleteEvent(eventToDelete);
+  };
+
+  const deleteEvent = async (eventID) => {
+    try {
+      await api.delete(`/events/${eventID}/deleteEvents`);
+      fetchEvents();
+      toast.success("Event deleted successfully");
+    } catch (error) {
+      console.error("Error deleting event:", error);
+      if (error.response && error.response.status === 409) {
+        toast.error(
+          "Cannot delete the event. It may be referenced by other data."
+        );
+      } else {
+        toast.error("Failed to delete event. Please try again.");
+      }
+    }
+    handleCloseDeleteDialog();
   };
 
   const handleMenuAction = (action) => {
@@ -166,6 +201,12 @@ const EventList = () => {
           )
         )}
       </div>
+      <DeleteDialog
+        open={openDeleteDialog}
+        onClose={handleCloseDeleteDialog}
+        onConfirm={handleConfirmDelete}
+        itemName="Event"
+      />
     </div>
   );
 };

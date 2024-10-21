@@ -44,6 +44,7 @@ const Login = () => {
         const role = decodedToken.roles[0];
         localStorage.setItem("roleID", Number(role));
         localStorage.setItem("name", username);
+        localStorage.setItem("accountID", decodedToken.sub);
         localStorage.setItem("isLoggedIn", true);
         toast.success("Đăng nhập thành công!");
         console.log("Name:", username);

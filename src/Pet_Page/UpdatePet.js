@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import axios from "../services/axios";
+import { toast } from "react-toastify";
 import "../styles/addpet.scss";
-import api from "../services/axios";
 const UpdatePet = ({ onPetUpdated }) => {
   const navigate = useNavigate();
-  const { petId } = useParams(); // Lấy ID thú cưng từ URL
   const location = useLocation();
 
   // Nhận dữ liệu thú cưng từ state (nếu có)
@@ -31,24 +30,6 @@ const UpdatePet = ({ onPetUpdated }) => {
 
   const [petData, setPetData] = useState(initialPetData);
   const [imagePreview, setImagePreview] = useState(initialPetData.img_url); // Hiển thị ảnh từ dữ liệu ban đầu
-  const roleID = localStorage.getItem("roleID");
-
-  useEffect(() => {
-    // Nếu không có dữ liệu thú cưng trong state, lấy dữ liệu từ API
-    if (!location.state?.pet) {
-      const fetchPetData = async () => {
-        try {
-          const response = await api.get(`pets/${petId}`);
-          setPetData(response.data);
-          setImagePreview(response.data.img_url); // Giả sử img_url là URL của hình ảnh
-        } catch (error) {
-          console.error("Error fetching pet data:", error);
-        }
-      };
-
-      fetchPetData();
-    }
-  }, [petId, location.state]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -90,13 +71,12 @@ const UpdatePet = ({ onPetUpdated }) => {
     }
 
     try {
-      
-      const response = await axios.post(
-        `/pets/updatePets/${petData.petID}`,
-        formData
-      );
+      const response = await axios.post(`/pets/updatePets/${petData.petID}`, {
+        ...formData,
+        petID: petData.petID,
+      });
       console.log("Response:", response.data);
-      alert(response.data.message);
+      toast.success(response.data.message);
       onPetUpdated();
       navigate("/petlist");
     } catch (error) {
@@ -104,7 +84,7 @@ const UpdatePet = ({ onPetUpdated }) => {
         "Error updating pet:",
         error.response ? error.response.data : error.message
       );
-      alert("Failed to update pet. Please try again.");
+      toast.error("Failed to update pet. Please try again.");
     }
   };
 

@@ -1,124 +1,98 @@
+// src/styles/petHealthRecord.scss
+
 .pet-health-records {
-  margin: 20px 0;
+  font-family: Arial, sans-serif; // Use a clean font
   padding: 20px;
-  border-radius: 8px;
-
-  h2 {
-    color: #333;
-    margin-bottom: 20px;
-  }
-
-  .add-record-btn {
-    background-color: burlywood;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-bottom: 20px;
-
-    &:hover {
-      background-color: bisque;
-    }
-  }
-
-  .add-record-form {
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    max-width: 400px;
-
-    input,
-    textarea {
-      padding: 8px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-    }
-
-    button {
-      padding: 10px;
-      background-color: burlywood;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-
-      &:hover {
-        background-color: #218838;
-      }
-    }
-  }
-
-  .health-record-table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: white;
-
-    th,
-    td {
-      padding: 12px;
-      text-align: left;
-      border-bottom: 1px solid #ddd;
-    }
-
-    th {
-      background-color: #f2f2f2;
-      font-weight: bold;
-      color: #333;
-    }
-
-    tr:hover {
-      background-color: #f5f5f5;
-    }
-
-    .edit-btn,
-    .delete-btn,
-    .save-btn,
-    .cancel-btn {
-      padding: 5px 10px;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      margin-right: 5px;
-    }
-
-    .edit-btn {
-      background-color: #007bff;
-      &:hover {
-        background-color: #0056b3;
-      }
-    }
-
-    .delete-btn {
-      background-color: #dc3545;
-      &:hover {
-        background-color: #c82333;
-      }
-    }
-
-    .save-btn {
-      background-color: #28a745;
-      &:hover {
-        background-color: #218838;
-      }
-    }
-
-    .cancel-btn {
-      background-color: #6c757d;
-      &:hover {
-        background-color: #5a6268;
-      }
-    }
-  }
+  margin: 70px 0px;
 }
 
-.error-message {
-  color: #721c24;
-  background-color: #f8d7da;
-  border: 1px solid #f5c6cb;
-  border-radius: 4px;
-  padding: 10px;
-  margin-top: 10px;
+h2 {
+  font-size: 1.5rem; // Smaller heading size
+  margin-bottom: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse; // Remove space between table cells
+}
+
+th,
+td {
+  padding: 8px; // Add padding for better spacing
+  text-align: left; // Align text to the left
+  font-size: 0.9rem; // Smaller font size for table text
+  border-bottom: 1px solid #ddd; // Add a bottom border for separation
+}
+
+th {
+  background-color: #f2f2f2; // Light gray background for headers
+  font-weight: bold; // Bold text for headers
+}
+
+input[type="text"],
+input[type="date"],
+input[type="number"] {
+  width: 100%; // Full width for input fields
+  padding: 8px; // Padding for input fields
+  margin: 5px 0; // Margin for spacing
+  border: 1px solid #ccc; // Light border for input fields
+  border-radius: 4px; // Rounded corners
+}
+
+// src/styles/petHealthRecord.scss
+
+.table-actions {
+  display: flex;
+  gap: 15px; // Tăng khoảng cách giữa các nút
+}
+
+.action-button {
+  padding: 8px 12px; // Padding cho các nút
+  border-radius: 4px; // Bo góc cho các nút
+  cursor: pointer; // Con trỏ khi hover
+}
+
+// Có thể thêm các kiểu riêng cho từng nút nếu cần
+.save-button {
+  background-color: #e6bf33 !important;
+  color: black !important;
+}
+
+.cancel-button {
+  background-color: #e6bf33 !important;
+  color: black !important;
+}
+
+.edit-button2 {
+  background-color: #e6bf33 !important;
+  color: black !important;
+}
+
+.delete-button {
+  background-color: #e6bf33 !important;
+  color: black !important;
+}
+
+.controls {
+  margin-bottom: 20px; // Khoảng cách dưới nút "Add New Record"
+}
+
+.action-button {
+  padding: 8px 12px; // Padding cho các nút
+  border-radius: 4px; // Bo góc cho các nút
+  cursor: pointer; // Con trỏ khi hover
+}
+
+.add-new-record-button {
+  border-width: 5px !important;
+  font-size: 15px !important;
+  background-color: #e26060 !important; // Màu cho nút "Add New Record"
+  color: white !important;
+}
+
+.add-record-button {
+  border-width: 0;
+  background-color: #e26060; // Màu cho nút "Add Record"
+  color: white;
+  margin: 10px 0 30px 0; // Khoảng cách trên nút "Add Record"
 }

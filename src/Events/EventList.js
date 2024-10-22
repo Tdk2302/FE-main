@@ -13,6 +13,8 @@ import MenuButton from "@mui/joy/MenuButton";
 import MenuItem from "@mui/joy/MenuItem";
 import MoreVert from "@mui/icons-material/MoreVert";
 import DeleteDialog from "../components/DeleteDialog";
+import EventStatusDot from "../components/EventStatusDot";
+
 const EventList = () => {
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -27,6 +29,7 @@ const EventList = () => {
   const [deleteConfirmation, setDeleteConfirmation] = useState("");
 
   useEffect(() => {
+    console.log("Current roleID:", roleID); // Thêm dòng này
     fetchEvents();
   }, [roleID]);
 
@@ -39,7 +42,11 @@ const EventList = () => {
       } else {
         response = await api.get("/events/showEvents");
       }
-      setEvents(response.data.data);
+      if (response.data.status === 200) {  // Kiểm tra status
+        setEvents(response.data.data);
+      } else {
+        toast.error("Failed to fetch events");
+      }
     } catch (error) {
       console.error("Error fetching events:", error);
       toast.error("Failed to fetch events");
@@ -53,20 +60,21 @@ const EventList = () => {
   };
 
   const handleUpdateEvent = (eventID) => {
-    navigate(`/events/update/${eventID}`);
+    console.log("Updating event with ID:", eventID); // Thêm dòng này
+    if (eventID) {
+      navigate(`/events/update/${eventID}`);
+    } else {
+      toast.error("Không thể cập nhật sự kiện. ID sự kiện không hợp lệ.");
+    }
   };
 
   const handleDeleteEvent = async (eventID) => {
-    if (window.confirm("Are you sure you want to delete this event?")) {
-      try {
-        await api.delete(`/events/${eventID}/deleteEvents`);
-        fetchEvents();
-        toast.success("Event deleted successfully");
-      } catch (error) {
-        console.error("Error deleting event:", error);
-        toast.error("Failed to delete event");
-      }
+    if (!eventID) {
+      toast.error("Không thể xóa sự kiện. ID sự kiện không hợp lệ.");
+      return;
     }
+    setEventToDelete(eventID);
+    setOpenDeleteDialog(true);
   };
 
   const handleMenuOpen = (event, eventId) => {
@@ -95,9 +103,18 @@ const EventList = () => {
 
   const deleteEvent = async (eventID) => {
     try {
-      await api.delete(`/events/${eventID}/deleteEvents`);
-      fetchEvents();
-      toast.success("Event deleted successfully");
+      const response = await api.delete(`/events/${eventID}/deleteEvents`);
+      if (response.data.status === 200) {  // Kiểm tra status thay vì success
+        if (response.data.data) {
+          toast.success("Event status changed to Ending");
+        } else {
+          toast.success("Event deleted successfully");
+        }
+        fetchEvents();  // Cập nhật danh sách sự kiện
+        setCurrentPage(1);  // Reset về trang đầu tiên
+      } else {
+        toast.error(response.data.message || "Failed to delete event");
+      }
     } catch (error) {
       console.error("Error deleting event:", error);
       if (error.response && error.response.status === 409) {
@@ -105,7 +122,7 @@ const EventList = () => {
           "Cannot delete the event. It may be referenced by other data."
         );
       } else {
-        toast.error("Failed to delete event. Please try again.");
+        toast.error(error.response?.data?.message || "Failed to delete event. Please try again.");
       }
     }
     handleCloseDeleteDialog();
@@ -128,10 +145,13 @@ const EventList = () => {
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+  const getEventStatus = (event) => {
+    return event.status; // Trả về trạng thái trực tiếp từ dữ liệu sự kiện
+  };
+
   if (isLoading) {
     return <Spinner />;
   }
-
   return (
     <div className="event-list-container">
       <h1 className="mb-4">Events List</h1>
@@ -151,6 +171,7 @@ const EventList = () => {
                     slotProps={{
                       root: { variant: "outlined", color: "neutral" },
                     }}
+                    onClick={(e) => handleMenuOpen(e, event.eventID)}
                   >
                     <MoreVert />
                   </MenuButton>
@@ -169,7 +190,10 @@ const EventList = () => {
             )}
             <Card.Img variant="top" src={event.img_url} alt={event.title} />
             <Card.Body>
-              <Card.Title>{event.event_name}</Card.Title>
+              <Card.Title>
+                {event.event_name}
+                <EventStatusDot status={getEventStatus(event)} />
+              </Card.Title>
               <Card.Subtitle className="mb-2 text-muted">
                 {event.title}
               </Card.Subtitle>
@@ -182,6 +206,10 @@ const EventList = () => {
               <br />
               <small className="text-muted">
                 End Date: {new Date(event.end_date).toLocaleDateString()}
+              </small>
+              <br />
+              <small className={`text-${event.status === 'Ending' ? 'danger' : 'success'}`}>
+                Status: {event.status}
               </small>
             </Card.Footer>
           </Card>

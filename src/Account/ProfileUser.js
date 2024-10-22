@@ -33,6 +33,7 @@ import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import Spinner from "../components/Spinner"; // Import Spinner component
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import HomeIcon from '@mui/icons-material/Home';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),
@@ -54,10 +55,11 @@ const ProfileUser = () => {
     accountID: "",
     name: "",
     sex: "",
-    birthday: "",
+    birthdate: "",
     phone: "",
+    address: "",
     total_donation: 0,
-    newPassword: "",
+    // Không cần trường password ở đây nữa
   });
   const [currentPassword, setCurrentPassword] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
@@ -66,6 +68,9 @@ const ProfileUser = () => {
   const navigate = useNavigate();
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+
+  // Thêm state mới cho newPassword
+  const [newPassword, setNewPassword] = useState("");
 
   useEffect(() => {
     fetchUserInfo();
@@ -89,10 +94,10 @@ const ProfileUser = () => {
         accountID: "",
         name: "",
         sex: "",
-        birthday: "",
+        birthdate: "",
         phone: "",
+        address: "",
         total_donation: 0,
-        newPassword: "",
       });
     } catch (error) {
       toast.error("Failed to fetch user information");
@@ -103,7 +108,11 @@ const ProfileUser = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setUserInfo(prevState => ({ ...prevState, [name]: value }));
+    if (name === "newPassword") {
+      setNewPassword(value);
+    } else {
+      setUserInfo(prevState => ({ ...prevState, [name]: value }));
+    }
   };
 
   const handleOpenDialog = (e) => {
@@ -122,20 +131,18 @@ const ProfileUser = () => {
       return;
     }
     try {
-      const { newPassword, ...userInfoToUpdate } = userInfo;
-
-      if (newPassword && newPassword.trim() !== "") {
+      const userInfoToUpdate = { ...userInfo };
+      // Only update password if a new one is provided
+      if (newPassword.trim() !== "") {
         userInfoToUpdate.password = newPassword;
       }
-
+      // If newPassword is empty, the existing password will be kept unchanged
       const response = await api.put(`accounts/update/${currentPassword}`, userInfoToUpdate);
       console.log("Update response:", response);
       toast.success("User information updated successfully!");
       handleCloseDialog();
       setIsEditing(false);
       fetchUserInfo();
-
-      setUserInfo(prevState => ({ ...prevState, newPassword: "" }));
     } catch (error) {
       console.error("Error updating user info:", error.response?.data || error.message);
       if (error.response?.status === 400) {
@@ -153,6 +160,10 @@ const ProfileUser = () => {
 
   const toggleEdit = () => {
     setIsEditing(!isEditing);
+    if (!isEditing) {
+      // Reset newPassword when entering edit mode
+      setNewPassword("");
+    }
   };
 
   const formatCurrency = (amount) => {
@@ -231,10 +242,10 @@ const ProfileUser = () => {
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="Birthday"
-                name="birthday"
+                label="Birthdate"
+                name="birthdate"
                 type="date"
-                value={userInfo.birthday || ""}
+                value={userInfo.birthdate || ""}
                 onChange={handleChange}
                 InputLabelProps={{ shrink: true }}
                 InputProps={{ 
@@ -271,6 +282,20 @@ const ProfileUser = () => {
                 variant="outlined"
               />
             </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Address"
+                name="address"
+                value={userInfo.address || ""}
+                onChange={handleChange}
+                InputProps={{ 
+                  readOnly: !isEditing,
+                  startAdornment: <HomeIcon sx={{ mr: 1, color: '#757575' }} />
+                }}
+                variant="outlined"
+              />
+            </Grid>
             {isEditing && (
               <Grid item xs={12}>
                 <TextField
@@ -278,7 +303,7 @@ const ProfileUser = () => {
                   label="New Password (Optional)"
                   name="newPassword"
                   type={showNewPassword ? "text" : "password"}
-                  value={userInfo.newPassword || ""}
+                  value={newPassword}
                   onChange={handleChange}
                   variant="outlined"
                   InputProps={{
@@ -322,7 +347,7 @@ const ProfileUser = () => {
         <DialogContent>
           <DialogContentText>
             Please enter your current password to update your profile.
-            {userInfo.newPassword && " Your password will be updated."}
+            {newPassword && " Your password will be updated."}
           </DialogContentText>
           <form onSubmit={(e) => { e.preventDefault(); handleUpdate(); }}>
             <TextField

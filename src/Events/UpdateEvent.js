@@ -20,20 +20,35 @@ const UpdateEvent = () => {
   const [imagePreview, setImagePreview] = useState(null);
 
   useEffect(() => {
+    if (!eventID) {
+      toast.error("ID sự kiện không hợp lệ");
+      navigate("/events");
+      return;
+    }
+
     const fetchEventData = async () => {
       try {
-        const response = await api.get(`/events/${eventID}`);
-        setEventData(response.data.data);
-        setImagePreview(response.data.data.img_url);
-        setIsLoading(false);
+        console.log("Fetching event data for ID:", eventID);
+        const response = await api.get(`/events/${eventID}/getEventById`, {
+          params: { eventId: eventID }
+        });
+        console.log("API response:", response.data);
+        if (response.data.status === 200) {
+          setEventData(response.data.data);
+          setImagePreview(response.data.data.img_url);
+        } else {
+          throw new Error(response.data.message || "Không thể tải dữ liệu sự kiện");
+        }
       } catch (error) {
-        console.error("Error fetching event data:", error);
-        toast.error("Failed to fetch event data");
+        console.error("Lỗi khi tải dữ liệu sự kiện:", error);
+        toast.error(error.message || "Không thể tải dữ liệu sự kiện");
+        navigate("/events");
+      } finally {
         setIsLoading(false);
       }
     };
     fetchEventData();
-  }, [eventID]);
+  }, [eventID, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -68,16 +83,21 @@ const UpdateEvent = () => {
     }
 
     try {
-      await api.put(`/events/${eventID}/updateEvents`, formData, {
+      const response = await api.post(`/events/${eventID}/updateEvents`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-      toast.success("Event updated successfully");
-      navigate("/events");
+      
+      if (response.data.status === 200) {
+        toast.success(response.data.message || "Sự kiện đã được cập nhật thành công");
+        navigate("/events"); // Chuyển hướng về trang events
+      } else {
+        throw new Error(response.data.message || "Không thể cập nhật sự kiện");
+      }
     } catch (error) {
-      console.error("Error updating event:", error);
-      toast.error("Failed to update event");
+      console.error("Lỗi khi cập nhật sự kiện:", error);
+      toast.error(error.response?.data?.message || error.message || "Không thể cập nhật sự kiện");
     } finally {
       setIsLoading(false);
     }

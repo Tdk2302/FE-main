@@ -31,6 +31,8 @@ import CakeIcon from '@mui/icons-material/Cake';
 import PhoneIcon from '@mui/icons-material/Phone';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import Spinner from "../components/Spinner"; // Import Spinner component
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),
@@ -55,12 +57,15 @@ const ProfileUser = () => {
     birthday: "",
     phone: "",
     total_donation: 0,
+    newPassword: "",
   });
   const [currentPassword, setCurrentPassword] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
 
   useEffect(() => {
     fetchUserInfo();
@@ -87,6 +92,7 @@ const ProfileUser = () => {
         birthday: "",
         phone: "",
         total_donation: 0,
+        newPassword: "",
       });
     } catch (error) {
       toast.error("Failed to fetch user information");
@@ -116,12 +122,20 @@ const ProfileUser = () => {
       return;
     }
     try {
-      const response = await api.put(`accounts/update/${currentPassword}`, userInfo);
+      const { newPassword, ...userInfoToUpdate } = userInfo;
+
+      if (newPassword && newPassword.trim() !== "") {
+        userInfoToUpdate.password = newPassword;
+      }
+
+      const response = await api.put(`accounts/update/${currentPassword}`, userInfoToUpdate);
       console.log("Update response:", response);
       toast.success("User information updated successfully!");
       handleCloseDialog();
       setIsEditing(false);
       fetchUserInfo();
+
+      setUserInfo(prevState => ({ ...prevState, newPassword: "" }));
     } catch (error) {
       console.error("Error updating user info:", error.response?.data || error.message);
       if (error.response?.status === 400) {
@@ -148,6 +162,14 @@ const ProfileUser = () => {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     }).format(amount);
+  };
+
+  const toggleNewPasswordVisibility = () => {
+    setShowNewPassword(!showNewPassword);
+  };
+
+  const toggleCurrentPasswordVisibility = () => {
+    setShowCurrentPassword(!showCurrentPassword);
   };
 
   if (isLoading) {
@@ -249,6 +271,29 @@ const ProfileUser = () => {
                 variant="outlined"
               />
             </Grid>
+            {isEditing && (
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="New Password (Optional)"
+                  name="newPassword"
+                  type={showNewPassword ? "text" : "password"}
+                  value={userInfo.newPassword || ""}
+                  onChange={handleChange}
+                  variant="outlined"
+                  InputProps={{
+                    endAdornment: (
+                      <IconButton
+                        onClick={toggleNewPasswordVisibility}
+                        edge="end"
+                      >
+                        {showNewPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                      </IconButton>
+                    ),
+                  }}
+                />
+              </Grid>
+            )}
           </Grid>
           {isEditing && (
             <Button
@@ -277,17 +322,28 @@ const ProfileUser = () => {
         <DialogContent>
           <DialogContentText>
             Please enter your current password to update your profile.
+            {userInfo.newPassword && " Your password will be updated."}
           </DialogContentText>
           <form onSubmit={(e) => { e.preventDefault(); handleUpdate(); }}>
             <TextField
               autoFocus
               margin="dense"
               label="Current Password"
-              type="password"
+              type={showCurrentPassword ? "text" : "password"}
               fullWidth
               variant="outlined"
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
+              InputProps={{
+                endAdornment: (
+                  <IconButton
+                    onClick={toggleCurrentPasswordVisibility}
+                    edge="end"
+                  >
+                    {showCurrentPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                  </IconButton>
+                ),
+              }}
             />
           </form>
         </DialogContent>

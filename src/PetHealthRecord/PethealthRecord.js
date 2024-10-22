@@ -232,7 +232,7 @@ const PetHealthRecord = ({ petID }) => {
                 <td>
                   {editedRows[row.recordID] ? (
                     <input
-                      type="text"
+                      type="text-edit"
                       value={editedRows[row.recordID].veterinarian_name}
                       onChange={(e) =>
                         setEditedRows((prev) => ({
@@ -251,7 +251,7 @@ const PetHealthRecord = ({ petID }) => {
                 <td>
                   {editedRows[row.recordID] ? (
                     <input
-                      type="date"
+                      type="date-edit"
                       value={
                         new Date(editedRows[row.recordID].check_in_date)
                           .toISOString()
@@ -274,7 +274,7 @@ const PetHealthRecord = ({ petID }) => {
                 <td>
                   {editedRows[row.recordID] ? (
                     <input
-                      type="date"
+                      type="date-edit"
                       value={
                         new Date(editedRows[row.recordID].check_out_date)
                           .toISOString()
@@ -297,7 +297,7 @@ const PetHealthRecord = ({ petID }) => {
                 <td>
                   {editedRows[row.recordID] ? (
                     <input
-                      type="text"
+                      type="text-edit"
                       value={editedRows[row.recordID].illness_name}
                       onChange={(e) =>
                         setEditedRows((prev) => ({

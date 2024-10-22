@@ -46,7 +46,7 @@ const Login = () => {
         localStorage.setItem("name", username);
         localStorage.setItem("accountID", decodedToken.sub);
         localStorage.setItem("isLoggedIn", true);
-        toast.success("Đăng nhập thành công!");
+        toast.success("Login successfully!");
         console.log("Name:", username);
 
         console.log("Role:", role); // Thêm log để kiểm tra
@@ -62,12 +62,12 @@ const Login = () => {
           navigate("/", { replace: true });
         }
       } else {
-        toast.error("Tên đăng nhập hoặc mật khẩu không hợp lệ");
+        toast.error("Invalid username or password");
       }
     } catch (error) {
-      console.error("Lỗi đăng nhập:", error.response || error);
+      console.error("Login error:", error.response || error);
       toast.error(
-        error.response?.data?.message || "Đăng nhập thất bại. Vui lòng thử lại."
+        error.response?.data?.message || "Login failed. Please try again."
       );
     } finally {
       setIsLoading(false);

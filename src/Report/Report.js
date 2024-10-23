@@ -36,7 +36,7 @@ const Report = () => {
       formData.append("videoFile", blob, "recorded-video.webm");
 
       axios
-        .post(`${BASE_URL}pets/${petID}/report`, formData, {
+        .post(`${BASE_URL}pets/report/${petID}`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },

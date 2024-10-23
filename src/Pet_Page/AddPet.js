@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "../services/axios";
 import "../styles/addpet.scss";
 import Spinner from "../components/Spinner";
+import { toast } from "react-toastify";
 
 const AddPet = ({ onPetAdded = () => {} }) => {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ const AddPet = ({ onPetAdded = () => {} }) => {
     rabies_vaccinated: false,
     origin: "",
     img_url: null,
-    categoryID: null,
+    categoryID: 0,
     description: "",
   });
 
@@ -69,12 +70,8 @@ const AddPet = ({ onPetAdded = () => {} }) => {
     }
 
     try {
-      await axios.post("pets/addPets", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      alert("Pet added successfully!");
+      const res = await axios.post("pets/addPets", formData);
+      toast.success(res.data.message);
       onPetAdded();
       navigate("/petlist");
     } catch (error) {
@@ -82,7 +79,7 @@ const AddPet = ({ onPetAdded = () => {} }) => {
         "Error adding pet:",
         error.response ? error.response.data : error.message
       );
-      alert("Failed to add pet. Please try again.");
+      toast.error(error.response.data.message);
     } finally {
       setIsLoading(false);
     }

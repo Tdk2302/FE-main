@@ -4,6 +4,7 @@ import "../styles/register.scss";
 import { toast } from "react-toastify";
 import api from "../services/axios";
 import Spinner from "../components/Spinner";
+import { format } from 'date-fns';
 
 const Register = () => {
   const [fullName, setFullName] = useState("");
@@ -68,9 +69,10 @@ const Register = () => {
     }
     setIsLoading(true);
     try {
+      const formattedBirthday = format(new Date(birthday), 'MM/dd/yyyy');
       const userData = {
         name: fullName,
-        birthdate: birthday,
+        birthdate: formattedBirthday,
         sex,
         address,
         phone: phoneNumber,
@@ -95,7 +97,12 @@ const Register = () => {
       }
       navigate("/login");
     } catch (error) {
-      toast.error("Registration failed. Please try again.");
+      console.error("Registration error:", error);
+      if (error.response && error.response.data) {
+        toast.error(`Registration failed: ${error.response.data.message || 'Please try again.'}`);
+      } else {
+        toast.error("Registration failed. Please try again.");
+      }
     } finally {
       setIsLoading(false);
     }

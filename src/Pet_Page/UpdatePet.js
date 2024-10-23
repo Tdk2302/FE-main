@@ -199,7 +199,68 @@ const UpdatePet = ({ onPetUpdated }) => {
             onChange={handleChange}
           />
           {/*Checkboxes*/}
-
+          <div className="col-md-3">
+            <div className="form-check mb-3">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                name="potty_trained"
+                checked={petData.potty_trained}
+                onChange={handleChange}
+              />
+              <label className="form-check-label">Potty Trained</label>
+            </div>
+            <div className="form-check mb-3">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                name="spayed"
+                checked={petData.spayed}
+                onChange={handleChange}
+              />
+              <label className="form-check-label">Spayed</label>
+            </div>
+            <div className="form-check mb-3">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                name="vaccinated"
+                checked={petData.vaccinated}
+                onChange={handleChange}
+              />
+              <label className="form-check-label">Vaccinated</label>
+            </div>
+            <div className="form-check mb-3">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                name="socialized"
+                checked={petData.socialized}
+                onChange={handleChange}
+              />
+              <label className="form-check-label">Socialized</label>
+            </div>
+            <div className="form-check mb-3">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                name="rabies_vaccinated"
+                checked={petData.rabies_vaccinated}
+                onChange={handleChange}
+              />
+              <label className="form-check-label">Rabies Vaccinated</label>
+            </div>
+            <div className="form-check mb-3">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                name="dietary_requirements"
+                checked={petData.dietary_requirements}
+                onChange={handleChange}
+              />
+              <label className="form-check-label">Dietary Requirements</label>
+            </div>
+          </div>
           {/* Remaining form controls as in your original code */}
           <button
             onClick={handleSubmit}

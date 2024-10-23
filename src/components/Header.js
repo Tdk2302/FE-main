@@ -162,6 +162,9 @@ const Header = () => {
               >
                 <NavDropdown.Item as={NavLink} to="/profile">
                   Profile
+                </NavDropdown.Item>{" "}
+                <NavDropdown.Item as={NavLink} to="/historyadoption">
+                  History Adoption
                 </NavDropdown.Item>
                 <NavDropdown.Item onClick={handleLogout}>
                   Logout

@@ -154,7 +154,7 @@ const PetHealthRecord = ({ petID }) => {
             required
           />
           <input
-            type="date"
+            type="date date"
             name="check_in_date"
             value={newRecord.check_in_date}
             onChange={(e) =>
@@ -163,7 +163,7 @@ const PetHealthRecord = ({ petID }) => {
             required
           />
           <input
-            type="date"
+            type="date date"
             name="check_out_date"
             value={newRecord.check_out_date}
             onChange={(e) =>
@@ -217,7 +217,7 @@ const PetHealthRecord = ({ petID }) => {
               <th>Illness</th>
               <th>Veterinary Fee</th>
               <th>Notes</th>
-              <th>Actions</th>
+              {roleID === "2" && <th>Actions</th>}
             </tr>
           </thead>
           <tbody>
@@ -351,47 +351,49 @@ const PetHealthRecord = ({ petID }) => {
                     row.note
                   )}
                 </td>
-                <td>
-                  {editedRows[row.recordID] ? (
-                    <div className="table-actions">
-                      <Button
-                        className="action-button save-button"
-                        variant="contained"
-                        color="primary"
-                        onClick={() => handleSaveEdit(row.recordID)}
-                      >
-                        Save
-                      </Button>
-                      <Button
-                        className="action-button cancel-button"
-                        variant="contained"
-                        color="secondary"
-                        onClick={() => handleCancelEdit(row.recordID)}
-                      >
-                        Cancel
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="table-actions">
-                      <Button
-                        className="action-button edit-button2"
-                        variant="contained"
-                        color="secondary"
-                        onClick={() => handleEditRow(row)}
-                      >
-                        Edit
-                      </Button>
-                      <Button
-                        className="action-button delete-button"
-                        variant="contained"
-                        color="error"
-                        onClick={() => handleDeleteRow(row.recordID)}
-                      >
-                        Delete
-                      </Button>
-                    </div>
-                  )}
-                </td>
+                {roleID === "2" && (
+                  <td>
+                    {editedRows[row.recordID] ? (
+                      <div className="table-actions">
+                        <Button
+                          className="action-button save-button"
+                          variant="contained"
+                          color="primary"
+                          onClick={() => handleSaveEdit(row.recordID)}
+                        >
+                          Save
+                        </Button>
+                        <Button
+                          className="action-button cancel-button"
+                          variant="contained"
+                          color="secondary"
+                          onClick={() => handleCancelEdit(row.recordID)}
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="table-actions">
+                        <Button
+                          className="action-button edit-button2"
+                          variant="contained"
+                          color="secondary"
+                          onClick={() => handleEditRow(row)}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          className="action-button delete-button"
+                          variant="contained"
+                          color="error"
+                          onClick={() => handleDeleteRow(row.recordID)}
+                        >
+                          Delete
+                        </Button>
+                      </div>
+                    )}
+                  </td>
+                )}
               </tr>
             ))}
             {emptyRows > 0 && (

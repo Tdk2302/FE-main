@@ -14,22 +14,6 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   const token = localStorage.getItem("token");
-  //   const roleID = localStorage.getItem("roleID");
-  //   if (token && roleID) {
-  //     console.log("Token found in localStorage:", token);
-  //     console.log("RoleID found in localStorage:", roleID);
-  //     if (roleID === "1" || roleID === 1) {
-  //       navigate("/petlistadmin", { replace: true });
-  //     } else if (roleID === "2" || roleID === 2) {
-  //       navigate("/appointment", { replace: true });
-  //     } else {
-  //       navigate("/", { replace: true });
-  //     }
-  //   }
-  // }, [navigate]);
-
   const handleLogin = async (event) => {
     event.preventDefault();
     setIsLoading(true);
@@ -46,7 +30,7 @@ const Login = () => {
         localStorage.setItem("name", username);
         localStorage.setItem("accountID", decodedToken.sub);
         localStorage.setItem("isLoggedIn", true);
-        toast.success("Đăng nhập thành công!");
+        toast.success("Login successfully!");
         console.log("Name:", username);
 
         console.log("Role:", role); // Thêm log để kiểm tra
@@ -62,12 +46,12 @@ const Login = () => {
           navigate("/", { replace: true });
         }
       } else {
-        toast.error("Tên đăng nhập hoặc mật khẩu không hợp lệ");
+        toast.error("Invalid username or password");
       }
     } catch (error) {
-      console.error("Lỗi đăng nhập:", error.response || error);
+      console.error("Login error:", error.response || error);
       toast.error(
-        error.response?.data?.message || "Đăng nhập thất bại. Vui lòng thử lại."
+        error.response?.data?.message || "Login failed. Please try again."
       );
     } finally {
       setIsLoading(false);

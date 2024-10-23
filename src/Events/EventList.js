@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import api, { BASE_URL } from "../services/axios";
 import "../styles/events.scss";
 import { toast } from "react-toastify";
@@ -28,16 +28,26 @@ const EventList = () => {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [eventToDelete, setEventToDelete] = useState(null);
   const [deleteConfirmation, setDeleteConfirmation] = useState("");
+  const location = useLocation();
 
   useEffect(() => {
     console.log("Current roleID:", roleID); // Thêm dòng này
     fetchEvents();
   }, [roleID]);
 
+  useEffect(() => {
+    const state = location.state;
+    if (state && state.updated) {
+      fetchEvents();
+      // Clear the state after fetching
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location]);
+
   const getImageUrl = (imgUrl) => {
     if (!imgUrl) return "/path/to/default/image.jpg";
     if (imgUrl.startsWith("http")) return imgUrl;
-    return `${BASE_URL}${imgUrl}`;
+    return `${BASE_URL}${imgUrl}`; // Thêm dấu '/' trước imgUrl
   };
 
   const fetchEvents = async () => {
@@ -68,7 +78,7 @@ const EventList = () => {
   };
 
   const handleUpdateEvent = (eventID) => {
-    console.log("Updating event with ID:", eventID); // Thêm dòng này
+    
     if (eventID) {
       navigate(`/events/update/${eventID}`);
     } else {

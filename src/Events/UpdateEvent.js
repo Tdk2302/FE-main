@@ -67,21 +67,11 @@ const UpdateEvent = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      console.log("File được chọn:", file.name, "Kích thước:", file.size, "bytes");
-      setEventData((prev) => ({
+      setEventData(prev => ({
         ...prev,
-        img_url: file,
+        img_url: file
       }));
-
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        console.log("Đã đọc file, độ dài dữ liệu:", reader.result.length);
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
-    } else {
-      console.log("Không có file nào được chọn");
-      setImagePreview(null);
+      setImagePreview(URL.createObjectURL(file));
     }
   };
 
@@ -89,25 +79,34 @@ const UpdateEvent = () => {
     e.preventDefault();
     setIsLoading(true);
     const formData = new FormData();
-    for (const key in eventData) {
-      formData.append(key, eventData[key]);
-      console.log(`Đang thêm ${key} vào FormData:`, eventData[key]);
+    
+    // Thêm các trường dữ liệu vào formData
+    formData.append('event_name', eventData.event_name);
+    formData.append('description', eventData.description);
+    formData.append('start_date', eventData.start_date);
+    formData.append('end_date', eventData.end_date);
+    formData.append('status', eventData.status);
+    
+    // Thêm file hình ảnh nếu có
+    if (eventData.img_url instanceof File) {
+      formData.append('image', eventData.img_url);
+    }
+
+    console.log('FormData content:');
+    for (let pair of formData.entries()) {
+      console.log(pair[0] + ': ' + pair[1]);
     }
 
     try {
-      console.log("Đang gửi yêu cầu cập nhật sự kiện...");
       const response = await api.post(`/events/${eventID}/updateEvents`, formData, {
         headers: {
-          "Content-Type": "multipart/form-data",
+          'Content-Type': 'multipart/form-data',
         },
       });
       
-      console.log("Toàn bộ response từ server:", response);
+      console.log("Response from server:", response.data);
+      
       if (response.data.status === 200) {
-        console.log("Cập nhật thành công, dữ liệu trả về:", response.data);
-        if (response.data.data && response.data.data.img_url) {
-          console.log("URL hình ảnh mới:", response.data.data.img_url);
-        }
         toast.success(response.data.message || "Sự kiện đã được cập nhật thành công");
         navigate("/events", { state: { updated: true } });
       } else {
@@ -115,7 +114,6 @@ const UpdateEvent = () => {
       }
     } catch (error) {
       console.error("Lỗi khi cập nhật sự kiện:", error);
-      console.error("Chi tiết lỗi:", error.response?.data);
       toast.error(error.response?.data?.message || error.message || "Không thể cập nhật sự kiện");
     } finally {
       setIsLoading(false);

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate, NavLink } from "react-router-dom";
 import { BASE_URL } from "../services/axios";
 import "../styles/petListAdmin.scss";
@@ -138,12 +138,11 @@ const PetListAdmin = () => {
     }
   };
 
-  const getImageUrl = (imgUrl) => {
+  const getImageUrl = useCallback((imgUrl) => {
     if (!imgUrl) return "/path/to/default/image.jpg";
-    if (imgUrl.startsWith("images\\"))
-      return `${BASE_URL}${imgUrl.replace("\\", "/")}`;
-    return imgUrl;
-  };
+    if (imgUrl.startsWith("http")) return imgUrl;
+    return `${BASE_URL}${imgUrl}`;
+  }, []);
 
   const indexOfLastPet = currentPage * petsPerPage;
   const indexOfFirstPet = indexOfLastPet - petsPerPage;

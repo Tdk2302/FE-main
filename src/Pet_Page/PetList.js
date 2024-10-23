@@ -107,9 +107,8 @@ const PetsList = () => {
 
   const getImageUrl = useCallback((imgUrl) => {
     if (!imgUrl) return "/path/to/default/image.jpg";
-    if (imgUrl.startsWith("images\\"))
-      return `${BASE_URL}${imgUrl.replace("\\", "/")}`;
-    return imgUrl;
+    if (imgUrl.startsWith("http")) return imgUrl;
+    return `${BASE_URL}${imgUrl}`;
   }, []);
 
   const indexOfLastPet = currentPage * petsPerPage;

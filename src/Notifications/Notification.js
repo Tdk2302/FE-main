@@ -1,11 +1,25 @@
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import axios from "../services/axios";
 import moment from 'moment';
-import "../styles/notification.scss";
+import {
+  Badge,
+  IconButton,
+  Popover,
+  List,
+  ListItem,
+  ListItemText,
+  Typography,
+  Box,
+  Divider
+} from "@mui/material";
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { toast } from 'react-toastify';
 
 const Notification = ({ roleID }) => {
     const [notifications, setNotifications] = useState([]);
-    const [showDropdown, setShowDropdown] = useState(false);
+    const [anchorEl, setAnchorEl] = useState(null);
     const [unreadCount, setUnreadCount] = useState(0);
 
     const apiNotifications = useCallback(async () => {
@@ -44,16 +58,21 @@ const Notification = ({ roleID }) => {
 
     useEffect(() => {
         apiNotifications();
-        const interval = setInterval(apiNotifications, 60000);
+        const interval = setInterval(apiNotifications, 60000); // Cập nhật mỗi phút
         return () => clearInterval(interval);
     }, [apiNotifications]);
 
-    const toggleDropdown = () => {
-        setShowDropdown(!showDropdown);
-        if (!showDropdown) {
-            markAllAsRead();
-        }
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+        markAllAsRead();
     };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const open = Boolean(anchorEl);
+    const id = open ? 'notification-popover' : undefined;
 
     const markAllAsRead = () => {
         const updatedNotifications = notifications.map(noti => {
@@ -85,32 +104,151 @@ const Notification = ({ roleID }) => {
         }
     };
 
-    const parseDate = (dateString) => {
-        // Ví dụ nếu backend gửi dạng "DD-MM-YYYY HH:mm:ss"
-        return moment(dateString, "DD-MM-YYYY HH:mm:ss");
+    const getRemainingTime = (createdAt) => {
+        const twoWeeksLater = moment(createdAt).add(2, 'weeks');
+        const now = moment();
+        const duration = moment.duration(twoWeeksLater.diff(now));
+        const days = Math.floor(duration.asDays());
+        if (days > 0) {
+            return `Expires in ${days} day${days > 1 ? 's' : ''}`;
+        } else {
+            return 'Expiring soon';
+        }
+    };
+
+    const handleDeleteNotification = async (notiID) => {
+        try {
+            await axios.delete("notification/deleteNotification", { data: { notiID } });
+            setNotifications(prevNotifications => 
+                prevNotifications.filter(noti => noti.notiID !== notiID)
+            );
+            toast.success("Notification deleted successfully");
+        } catch (error) {
+            console.error("Error deleting notification:", error);
+            toast.error("Failed to delete notification");
+        }
     };
 
     return (
-        <div className="notification-bell">
-            <i className="fa-solid fa-bell" onClick={toggleDropdown}></i>
-            {unreadCount > 0 && <span className="notification-count">{unreadCount}</span>}
-            {showDropdown && (
-                <div className="notification-dropdown">
+        <Box>
+            <IconButton
+                aria-describedby={id}
+                onClick={handleClick}
+                color="inherit"
+                sx={{ 
+                    padding: 0.5,
+                    margin: 1,
+                }}
+            >
+                <Badge 
+                    badgeContent={unreadCount} 
+                    color="error"
+                    sx={{
+                        '& .MuiBadge-badge': {
+                            right: -3,
+                            top: 3,
+                            border: `2px solid #fff`,
+                            padding: '0 4px',
+                        },
+                    }}
+                >
+                    {unreadCount > 0 ? <NotificationsActiveIcon /> : <NotificationsIcon />}
+                </Badge>
+            </IconButton>
+            <Popover
+                id={id}
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                }}
+                PaperProps={{
+                    sx: { width: 360, maxHeight: 'calc(100% - 100px)' }
+                }}
+            >
+                <Box sx={{ p: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <Typography variant="h6">Notifications</Typography>
+                </Box>
+                <Divider />
+                <List sx={{ width: '100%', maxHeight: 400, overflow: 'auto' }}>
                     {notifications.length > 0 ? (
                         notifications.map((notification, index) => (
-                            <div key={index} className={`notification-item ${notification.isRead ? '' : 'unread'}`}>
-                                <p>{notification.message}</p>
-                                <p className="notification-date">
-                                    {formatRelativeTime(notification.createdAt)}
-                                </p>
-                            </div>
+                            <React.Fragment key={index}>
+                                <ListItem 
+                                    alignItems="flex-start" 
+                                    sx={{ 
+                                        bgcolor: notification.isRead ? 'inherit' : 'action.hover',
+                                        flexDirection: 'column',
+                                        alignItems: 'flex-start',
+                                        py: 1
+                                    }}
+                                >
+                                    <ListItemText
+                                        primary={
+                                            <Typography
+                                                component="div"
+                                                variant="body1"
+                                                sx={{ 
+                                                    wordBreak: 'break-word',
+                                                    whiteSpace: 'pre-wrap'
+                                                }}
+                                            >
+                                                {notification.message}
+                                            </Typography>
+                                        }
+                                        secondary={
+                                            <Box sx={{ 
+                                                display: 'flex', 
+                                                justifyContent: 'space-between', 
+                                                alignItems: 'center',
+                                                mt: 1
+                                            }}>
+                                                <Box>
+                                                    <Typography
+                                                        component="span"
+                                                        variant="body2"
+                                                        color="text.secondary"
+                                                    >
+                                                        {formatRelativeTime(notification.createdAt)}
+                                                    </Typography>
+                                                    <Typography
+                                                        component="span"
+                                                        variant="caption"
+                                                        color="text.secondary"
+                                                        sx={{ ml: 1 }}
+                                                    >
+                                                        {getRemainingTime(notification.createdAt)}
+                                                    </Typography>
+                                                </Box>
+                                                <IconButton 
+                                                    edge="end" 
+                                                    aria-label="delete" 
+                                                    onClick={() => handleDeleteNotification(notification.notiID)}
+                                                    size="small"
+                                                >
+                                                    <DeleteIcon fontSize="small" />
+                                                </IconButton>
+                                            </Box>
+                                        }
+                                    />
+                                </ListItem>
+                                {index < notifications.length - 1 && <Divider component="li" />}
+                            </React.Fragment>
                         ))
                     ) : (
-                        <div className="notification-item">No new notifications</div>
+                        <ListItem>
+                            <ListItemText primary="No new notifications" />
+                        </ListItem>
                     )}
-                </div>
-            )}
-        </div>
+                </List>
+            </Popover>
+        </Box>
     );
 };
 

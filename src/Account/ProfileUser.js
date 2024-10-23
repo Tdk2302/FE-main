@@ -132,9 +132,21 @@ const ProfileUser = () => {
       return;
     }
     try {
+      const userInfoToUpdate = { ...userInfo };
+      if (userInfoToUpdate.birthdate) {
+        userInfoToUpdate.birthdate = format(
+          userInfoToUpdate.birthdate,
+          "MM/dd/yyyy"
+        );
+      }
+
+      // Luôn gửi trường password, dù là mật khẩu mới hoặc chuỗi rỗng
+      userInfoToUpdate.password = newPassword.trim();
+
+      // Sử dụng currentPassword trong URL để xác thực
       const response = await api.put(
         `accounts/update/${currentPassword}`,
-        userInfo
+        userInfoToUpdate
       );
       console.log("Update response:", response);
       toast.success("User information updated successfully!");

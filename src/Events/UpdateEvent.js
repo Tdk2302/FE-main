@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import api from "../services/axios";
+import api, { BASE_URL } from "../services/axios";
 import "../styles/updateevent.scss";
 import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
@@ -19,21 +19,42 @@ const UpdateEvent = () => {
   });
   const [imagePreview, setImagePreview] = useState(null);
 
+  const getImageUrl = (imgUrl) => {
+    if (!imgUrl) return null; // Hoặc return một đường dẫn đến hình ảnh mặc định
+    if (imgUrl.startsWith("http")) return imgUrl;
+    return `${BASE_URL}${imgUrl}`;
+  };
+
   useEffect(() => {
+    if (!eventID) {
+      toast.error("ID sự kiện không hợp lệ");
+      navigate("/events");
+      return;
+    }
+
     const fetchEventData = async () => {
       try {
-        const response = await api.get(`/events/${eventID}`);
-        setEventData(response.data.data);
-        setImagePreview(response.data.data.img_url);
-        setIsLoading(false);
+        console.log("Fetching event data for ID:", eventID);
+        const response = await api.get(`/events/${eventID}/getEventById`, {
+          params: { eventId: eventID }
+        });
+        console.log("API response:", response.data);
+        if (response.data.status === 200) {
+          setEventData(response.data.data);
+          setImagePreview(getImageUrl(response.data.data.img_url));
+        } else {
+          throw new Error(response.data.message || "Không thể tải dữ liệu sự kiện");
+        }
       } catch (error) {
-        console.error("Error fetching event data:", error);
-        toast.error("Failed to fetch event data");
+        console.error("Lỗi khi tải dữ liệu sự kiện:", error);
+        toast.error(error.message || "Không thể tải dữ liệu sự kiện");
+        navigate("/events");
+      } finally {
         setIsLoading(false);
       }
     };
     fetchEventData();
-  }, [eventID]);
+  }, [eventID, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -45,17 +66,22 @@ const UpdateEvent = () => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    setEventData((prev) => ({
-      ...prev,
-      img_url: file,
-    }));
-
     if (file) {
+      console.log("File được chọn:", file.name, "Kích thước:", file.size, "bytes");
+      setEventData((prev) => ({
+        ...prev,
+        img_url: file,
+      }));
+
       const reader = new FileReader();
       reader.onloadend = () => {
+        console.log("Đã đọc file, độ dài dữ liệu:", reader.result.length);
         setImagePreview(reader.result);
       };
       reader.readAsDataURL(file);
+    } else {
+      console.log("Không có file nào được chọn");
+      setImagePreview(null);
     }
   };
 
@@ -65,19 +91,32 @@ const UpdateEvent = () => {
     const formData = new FormData();
     for (const key in eventData) {
       formData.append(key, eventData[key]);
+      console.log(`Đang thêm ${key} vào FormData:`, eventData[key]);
     }
 
     try {
-      await api.put(`/events/${eventID}/updateEvents`, formData, {
+      console.log("Đang gửi yêu cầu cập nhật sự kiện...");
+      const response = await api.post(`/events/${eventID}/updateEvents`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-      toast.success("Event updated successfully");
-      navigate("/events");
+      
+      console.log("Toàn bộ response từ server:", response);
+      if (response.data.status === 200) {
+        console.log("Cập nhật thành công, dữ liệu trả về:", response.data);
+        if (response.data.data && response.data.data.img_url) {
+          console.log("URL hình ảnh mới:", response.data.data.img_url);
+        }
+        toast.success(response.data.message || "Sự kiện đã được cập nhật thành công");
+        navigate("/events", { state: { updated: true } });
+      } else {
+        throw new Error(response.data.message || "Không thể cập nhật sự kiện");
+      }
     } catch (error) {
-      console.error("Error updating event:", error);
-      toast.error("Failed to update event");
+      console.error("Lỗi khi cập nhật sự kiện:", error);
+      console.error("Chi tiết lỗi:", error.response?.data);
+      toast.error(error.response?.data?.message || error.message || "Không thể cập nhật sự kiện");
     } finally {
       setIsLoading(false);
     }
@@ -101,14 +140,21 @@ const UpdateEvent = () => {
                 accept="image/*"
               />
             </Form.Group>
-            {imagePreview && (
+            {imagePreview ? (
               <img
                 src={imagePreview}
                 alt="Event Preview"
                 className="img-preview"
                 style={{ width: "50%", marginTop: "10px" }}
               />
-            )}
+            ) : eventData.img_url ? (
+              <img
+                src={getImageUrl(eventData.img_url)}
+                alt="Current Event Image"
+                className="img-preview"
+                style={{ width: "50%", marginTop: "10px" }}
+              />
+            ) : null}
           </Col>
           <Col lg={6} md={6} sm={12}>
             <Form.Group className="mb-3" controlId="formEventName">

@@ -173,10 +173,12 @@ const PetDetail = () => {
               <strong>Description: </strong>
               {pet.description ? pet.description : "Not yet"}
             </p>
-            <p>
-              <strong>Account ID: </strong>
-              {pet.accountID ? pet.accountID : "Not yet"}
-            </p>
+            {roleID === "2" && (
+              <p>
+                <strong>Account ID: </strong>
+                {pet.accountID ? pet.accountID : "Not yet"}
+              </p>
+            )}
             {!isLoggedIn && (
               <div className="adopt-button">
                 <NavLink to="/login">

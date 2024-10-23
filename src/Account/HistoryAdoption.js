@@ -1,19 +1,19 @@
-import React, { useEffect, useState, useNavigate } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import api from "../services/axios";
 import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
 
 const HistoryAdoption = () => {
-  const { accountID } = useParams();
   const [adoptedPets, setAdoptedPets] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
+  const navigate = useNavigate();
+  const accountID = localStorage.getItem("accountID");
   useEffect(() => {
     const fetchAdoptedPets = async () => {
       setIsLoading(true);
       try {
-        const response = await api.get(`/historyAdopt/${accountID}`);
+        const response = await api.get(`/pets/historyAdopt/${accountID}`);
         setAdoptedPets(response.data.data);
       } catch (error) {
         toast.error("Error fetching adopted pets");
@@ -27,7 +27,7 @@ const HistoryAdoption = () => {
 
   const handleReportVideo = (pet) => {
     if (pet.petID) {
-      navigate(`/pets/report/${pet.petID}`, { state: { pet } });
+      navigate(`/report/${pet.petID}`, { state: { pet } });
     } else {
       console.error("Pet ID is undefined");
     }

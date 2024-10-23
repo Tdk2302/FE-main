@@ -3,7 +3,8 @@ import { useNavigate, useParams, useLocation } from "react-router-dom";
 import axios from "../services/axios";
 import { toast } from "react-toastify";
 import "../styles/addpet.scss";
-const UpdatePet = ({ onPetUpdated }) => {
+
+const UpdatePet = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -71,14 +72,14 @@ const UpdatePet = ({ onPetUpdated }) => {
     }
 
     try {
-      const response = await axios.post(`/pets/updatePets/${petData.petID}`, {
+      const response = await axios.post(`/pets/${petData.petID}/updatePets`, {
         ...formData,
         petID: petData.petID,
       });
       console.log("Response:", response.data);
       toast.success(response.data.message);
-      onPetUpdated();
-      navigate("/petlist");
+      // onPetUpdated();
+      navigate("/petlistadmin");
     } catch (error) {
       console.error(
         "Error updating pet:",

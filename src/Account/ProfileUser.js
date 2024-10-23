@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../services/axios";
+import api, { BASE_URL } from "../services/axios";
 import { toast } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
 import {
@@ -31,6 +31,10 @@ import CakeIcon from "@mui/icons-material/Cake";
 import PhoneIcon from "@mui/icons-material/Phone";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import Spinner from "../components/Spinner"; // Import Spinner component
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import HomeIcon from "@mui/icons-material/Home";
+import { format } from "date-fns";
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),
@@ -54,6 +58,7 @@ const ProfileUser = () => {
     sex: "",
     birthdate: "",
     phone: "",
+    address: "",
     total_donation: 0,
   });
   const [currentPassword, setCurrentPassword] = useState("");
@@ -61,6 +66,15 @@ const ProfileUser = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+
+  const getImageUrl = (imgUrl) => {
+    if (!imgUrl) return "/path/to/default/image.jpg";
+    if (imgUrl.startsWith("http")) return imgUrl;
+    return `${BASE_URL}${imgUrl}`;
+  };
 
   useEffect(() => {
     fetchUserInfo();
@@ -85,7 +99,7 @@ const ProfileUser = () => {
           accountID: "",
           name: "",
           sex: "",
-          birthdate: "",
+          birthday: "",
           phone: "",
           total_donation: 0,
         }
@@ -126,6 +140,7 @@ const ProfileUser = () => {
       toast.success("User information updated successfully!");
       handleCloseDialog();
       setIsEditing(false);
+      setNewPassword(""); // Reset newPassword sau khi cập nhật
       fetchUserInfo();
     } catch (error) {
       console.error(
@@ -133,7 +148,7 @@ const ProfileUser = () => {
         error.response?.data || error.message
       );
       if (error.response?.status === 400) {
-        toast.error("Wrong password. Please try again.");
+        toast.error("Wrong current password. Please try again.");
       } else if (error.response?.status === 403) {
         toast.error("You don't have permission to update this profile.");
       } else if (error.response?.status === 404) {
@@ -149,6 +164,10 @@ const ProfileUser = () => {
 
   const toggleEdit = () => {
     setIsEditing(!isEditing);
+    if (!isEditing) {
+      // Reset newPassword when entering edit mode
+      setNewPassword("");
+    }
   };
 
   const formatCurrency = (amount) => {
@@ -158,6 +177,14 @@ const ProfileUser = () => {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(amount);
+  };
+
+  const toggleNewPasswordVisibility = () => {
+    setShowNewPassword(!showNewPassword);
+  };
+
+  const toggleCurrentPasswordVisibility = () => {
+    setShowCurrentPassword(!showCurrentPassword);
   };
 
   if (isLoading) {
@@ -237,9 +264,9 @@ const ProfileUser = () => {
               <TextField
                 fullWidth
                 label="Birthday"
-                name="birthdate"
+                name="birthday"
                 type="date"
-                value={userInfo.birthdate || ""}
+                value={userInfo.birthday || ""}
                 onChange={handleChange}
                 InputLabelProps={{ shrink: true }}
                 InputProps={{
@@ -280,6 +307,47 @@ const ProfileUser = () => {
                 variant="outlined"
               />
             </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Address"
+                name="address"
+                value={userInfo.address || ""}
+                onChange={handleChange}
+                InputProps={{
+                  readOnly: !isEditing,
+                  startAdornment: <HomeIcon sx={{ mr: 1, color: "#757575" }} />,
+                }}
+                variant="outlined"
+              />
+            </Grid>
+            {isEditing && (
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="New Password (Optional)"
+                  name="newPassword"
+                  type={showNewPassword ? "text" : "password"}
+                  value={newPassword}
+                  onChange={handleChange}
+                  variant="outlined"
+                  InputProps={{
+                    endAdornment: (
+                      <IconButton
+                        onClick={toggleNewPasswordVisibility}
+                        edge="end"
+                      >
+                        {showNewPassword ? (
+                          <VisibilityOffIcon />
+                        ) : (
+                          <VisibilityIcon />
+                        )}
+                      </IconButton>
+                    ),
+                  }}
+                />
+              </Grid>
+            )}
           </Grid>
           {isEditing && (
             <Button
@@ -308,6 +376,7 @@ const ProfileUser = () => {
         <DialogContent>
           <DialogContentText>
             Please enter your current password to update your profile.
+            {newPassword && " Your password will be updated."}
           </DialogContentText>
           <form
             onSubmit={(e) => {
@@ -319,11 +388,25 @@ const ProfileUser = () => {
               autoFocus
               margin="dense"
               label="Current Password"
-              type="password"
+              type={showCurrentPassword ? "text" : "password"}
               fullWidth
               variant="outlined"
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
+              InputProps={{
+                endAdornment: (
+                  <IconButton
+                    onClick={toggleCurrentPasswordVisibility}
+                    edge="end"
+                  >
+                    {showCurrentPassword ? (
+                      <VisibilityOffIcon />
+                    ) : (
+                      <VisibilityIcon />
+                    )}
+                  </IconButton>
+                ),
+              }}
             />
           </form>
         </DialogContent>

@@ -29,6 +29,7 @@ import AddEvent from "./Events/AddEvent";
 import UpdateEvent from "./Events/UpdateEvent";
 import Profile from "./Account/ProfileUser";
 import HistoryAdoption from "./Account/HistoryAdoption";
+import Report from "./Report/Report";
 function App() {
   const roleID = localStorage.getItem("roleID")
     ? Number(localStorage.getItem("roleID"))
@@ -50,6 +51,8 @@ function App() {
               <Route path="/petlist" element={<PetsList />} />
               <Route path="/petdetail/:petID" element={<PetDetail />} />
               <Route path="/adoptprocess/:petID" element={<AdoptProcess />} />
+              <Route path="/report/:petID" element={<Report />} />
+
               <Route
                 path="/admin"
                 element={

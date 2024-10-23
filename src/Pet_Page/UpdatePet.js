@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
-import axios from "../services/axios";
+import axios, { BASE_URL } from "../services/axios";
 import { toast } from "react-toastify";
 import "../styles/addpet.scss";
 
@@ -32,6 +32,31 @@ const UpdatePet = () => {
   const [petData, setPetData] = useState(initialPetData);
   const [imagePreview, setImagePreview] = useState(initialPetData.img_url); // Hiển thị ảnh từ dữ liệu ban đầu
 
+  const getImageUrl = (imgUrl) => {
+    if (!imgUrl) return null; // Hoặc return một đường dẫn đến hình ảnh mặc đ��nh
+    if (imgUrl.startsWith("http")) return imgUrl;
+    return `${BASE_URL}${imgUrl}`;
+  };
+
+  useEffect(() => {
+    if (!location.state?.pet) {
+      fetchPetData();
+    }
+  }, []);
+
+  const fetchPetData = async () => {
+    try {
+      const response = await axios.get(`/pets/getByID/${petData.petID}`);
+      if (response.data.status === 200) {
+        setPetData(response.data.data);
+        setImagePreview(getImageUrl(response.data.data.img_url));
+      }
+    } catch (error) {
+      console.error("Error fetching pet data:", error);
+      toast.error("Failed to fetch pet data");
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setPetData((prev) => ({
@@ -50,17 +75,12 @@ const UpdatePet = () => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    setPetData((prev) => ({
-      ...prev,
-      img_url: file,
-    }));
-
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
+      setPetData(prev => ({
+        ...prev,
+        img_url: file
+      }));
+      setImagePreview(URL.createObjectURL(file));
     }
   };
 
@@ -71,10 +91,14 @@ const UpdatePet = () => {
       formData.append(key, petData[key]);
     }
 
+    if (petData.img_url instanceof File) {
+      formData.append('img_url', petData.img_url);
+    }
     try {
-      const response = await axios.post(`/pets/${petData.petID}/updatePets`, {
-        ...formData,
-        petID: petData.petID,
+      const response = await axios.post(`/pets/${petData.petID}/updatePets`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
       console.log("Response:", response.data);
       toast.success(response.data.message);
@@ -101,9 +125,9 @@ const UpdatePet = () => {
             accept="image/*"
             onChange={handleImageChange}
           />
-          {imagePreview && (
+          {(imagePreview || petData.img_url) && (
             <img
-              src={imagePreview}
+              src={imagePreview || getImageUrl(petData.img_url)}
               alt="Pet Preview"
               className="img-preview"
               style={{ width: "50%", marginTop: "10px" }}

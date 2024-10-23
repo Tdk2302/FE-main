@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../services/axios";
+import api, { BASE_URL } from "../services/axios";
 import "../styles/events.scss";
 import { toast } from "react-toastify";
 import { Card, Button, CardGroup } from "react-bootstrap";
@@ -32,6 +32,12 @@ const EventList = () => {
     console.log("Current roleID:", roleID); // Thêm dòng này
     fetchEvents();
   }, [roleID]);
+
+  const getImageUrl = (imgUrl) => {
+    if (!imgUrl) return "/path/to/default/image.jpg";
+    if (imgUrl.startsWith("http")) return imgUrl;
+    return `${BASE_URL}${imgUrl}`;
+  };
 
   const fetchEvents = async () => {
     setIsLoading(true);
@@ -188,7 +194,7 @@ const EventList = () => {
                 </Dropdown>
               </div>
             )}
-            <Card.Img variant="top" src={event.img_url} alt={event.title} />
+            <Card.Img variant="top" src={getImageUrl(event.img_url)} alt={event.title} />
             <Card.Body>
               <Card.Title>
                 {event.event_name}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../services/axios";
+import api, { BASE_URL } from "../services/axios";
 import { toast } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
 import { 
@@ -34,6 +34,7 @@ import Spinner from "../components/Spinner"; // Import Spinner component
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import HomeIcon from '@mui/icons-material/Home';
+import { format } from 'date-fns';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),
@@ -59,7 +60,6 @@ const ProfileUser = () => {
     phone: "",
     address: "",
     total_donation: 0,
-    // Không cần trường password ở đây nữa
   });
   const [currentPassword, setCurrentPassword] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
@@ -68,9 +68,14 @@ const ProfileUser = () => {
   const navigate = useNavigate();
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
-
-  // Thêm state mới cho newPassword
   const [newPassword, setNewPassword] = useState("");
+
+  const getImageUrl = (imgUrl) => {
+    if (!imgUrl) return "/path/to/default/image.jpg";
+    if (imgUrl.startsWith("http")) return imgUrl;
+    return `${BASE_URL}${imgUrl}`;
+  };
+
 
   useEffect(() => {
     fetchUserInfo();
@@ -90,7 +95,7 @@ const ProfileUser = () => {
       const accountID = decodedToken.sub;
 
       const response = await api.get(`accounts/search/${accountID}`);
-      setUserInfo(response.data || {
+      const userData = response.data || {
         accountID: "",
         name: "",
         sex: "",
@@ -98,7 +103,13 @@ const ProfileUser = () => {
         phone: "",
         address: "",
         total_donation: 0,
-      });
+      };
+      
+      if (userData.birthdate) {
+        userData.birthdate = new Date(userData.birthdate);
+      }
+      
+      setUserInfo(userData);
     } catch (error) {
       toast.error("Failed to fetch user information");
     } finally {
@@ -110,6 +121,9 @@ const ProfileUser = () => {
     const { name, value } = e.target;
     if (name === "newPassword") {
       setNewPassword(value);
+    } else if (name === "birthdate") {
+      const dateValue = new Date(value);
+      setUserInfo(prevState => ({ ...prevState, [name]: dateValue }));
     } else {
       setUserInfo(prevState => ({ ...prevState, [name]: value }));
     }
@@ -132,21 +146,25 @@ const ProfileUser = () => {
     }
     try {
       const userInfoToUpdate = { ...userInfo };
-      // Only update password if a new one is provided
+      if (userInfoToUpdate.birthdate) {
+        userInfoToUpdate.birthdate = format(userInfoToUpdate.birthdate, 'MM/dd/yyyy');
+      }
+      // Chỉ thêm newPassword vào request nếu người dùng đã nhập
       if (newPassword.trim() !== "") {
         userInfoToUpdate.password = newPassword;
       }
-      // If newPassword is empty, the existing password will be kept unchanged
+      // currentPassword được sử dụng trong URL để xác thực
       const response = await api.put(`accounts/update/${currentPassword}`, userInfoToUpdate);
       console.log("Update response:", response);
       toast.success("User information updated successfully!");
       handleCloseDialog();
       setIsEditing(false);
+      setNewPassword(""); // Reset newPassword sau khi cập nhật
       fetchUserInfo();
     } catch (error) {
       console.error("Error updating user info:", error.response?.data || error.message);
       if (error.response?.status === 400) {
-        toast.error("Wrong password. Please try again.");
+        toast.error("Wrong current password. Please try again.");
       } else if (error.response?.status === 403) {
         toast.error("You don't have permission to update this profile.");
       } else if (error.response?.status === 404) {
@@ -191,8 +209,8 @@ const ProfileUser = () => {
     <Container component="main" maxWidth="sm" sx={{ my: 5 }}>
       <StyledPaper elevation={3}>
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 4 }}>
-          <ProfileAvatar>
-            {userInfo.name ? userInfo.name[0].toUpperCase() : 'U'}
+        <ProfileAvatar src={getImageUrl(userInfo.avatarUrl)}>
+            {!userInfo.avatarUrl && (userInfo.name ? userInfo.name[0].toUpperCase() : 'U')}
           </ProfileAvatar>
           <Typography component="h1" variant="h4" sx={{ mt: 2, fontWeight: 'bold', color: '#333333' }}>
             {userInfo.name || "User Profile"}
@@ -245,7 +263,7 @@ const ProfileUser = () => {
                 label="Birthdate"
                 name="birthdate"
                 type="date"
-                value={userInfo.birthdate || ""}
+                value={userInfo.birthdate ? format(userInfo.birthdate, 'yyyy-MM-dd') : ''}
                 onChange={handleChange}
                 InputLabelProps={{ shrink: true }}
                 InputProps={{ 

@@ -34,7 +34,7 @@ const Donate = () => {
     content = `Donate FurryFriendFund`;
   }
 
-  const imageURL = `https://api.vietqr.io/image/970422-1319102004913-wjc5eta.jpg?accountName=TRUONG%20PHUC%20LOC&amount=0&addInfo=${content}`;
+  const imageURL = `https://api.vietqr.io/image/970422-1319102004913-wjc5eta.jpg?accountName=TRUONG%20PHUC%20LOC&amount=0&addInfo=${content.replaceAll(" ","%20")}`;
 
   // Fetch donators on component mount
   useEffect(() => {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import api from "../services/axios";
+import api, { BASE_URL } from "../services/axios";
 import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
 import "../styles/adminpage.scss"; // Thêm import cho style
@@ -8,8 +8,15 @@ import "../styles/adminpage.scss"; // Thêm import cho style
 const HistoryAdoption = () => {
   const [adoptedPets, setAdoptedPets] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [imagePreview, setImagePreview] = useState(null);
   const navigate = useNavigate();
   const accountID = localStorage.getItem("accountID");
+
+  const getImageUrl = (imgUrl) => {
+    if (!imgUrl) return null; // Hoặc return một đường dẫn đến hình ảnh mặc đnh
+    if (imgUrl.startsWith("http")) return imgUrl;
+    return `${BASE_URL}/${imgUrl.replace(/\\/g, "/")}`;
+  };
 
   useEffect(() => {
     const fetchAdoptedPets = async () => {
@@ -17,6 +24,8 @@ const HistoryAdoption = () => {
       try {
         const response = await api.get(`/pets/historyAdopt/${accountID}`);
         setAdoptedPets(response.data.data);
+        console.log(response.data.data);
+        // setImagePreview(getImageUrl(response.data.data.img_url));
       } catch (error) {
         toast.error("Error fetching adopted pets");
         console.error(error);
@@ -49,6 +58,14 @@ const HistoryAdoption = () => {
           <ul className="notification-list">
             {adoptedPets.map((pet) => (
               <li key={pet.petID} className="notification-item">
+                <div className="pet-image-history">
+                  <img
+                    src={getImageUrl(pet.img_url)}
+                    alt="Pet Preview"
+                    className="img-preview"
+                    style={{ width: "50%", marginTop: "10px" }}
+                  />
+                </div>
                 <div className="pet-info-history">
                   <h2>{pet.name}</h2>
                   <p>Breed: {pet.breed}</p>

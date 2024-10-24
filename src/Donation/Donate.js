@@ -191,7 +191,7 @@ const Donate = () => {
           <img
             src={imageURL}
             alt="Sample"
-            style={{ width: "300px", height: "300px" }}
+            style={{ width: "500px", height: "500px" }}
           />
         </div>
       </div>

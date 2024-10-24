@@ -50,6 +50,7 @@ const UpdatePet = () => {
         params: { petID: petData.petID },
       });
       if (response.data.status === 200) {
+        console.log(response.data.data);  
         setPetData(response.data.data);
         setImagePreview(getImageUrl(response.data.data.img_url));
       }

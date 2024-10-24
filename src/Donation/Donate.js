@@ -34,7 +34,10 @@ const Donate = () => {
     content = `Donate FurryFriendFund`;
   }
 
-  const imageURL = `https://api.vietqr.io/image/970422-1319102004913-wjc5eta.jpg?accountName=TRUONG%20PHUC%20LOC&amount=0&addInfo=${content.replaceAll(" ","%20")}`;
+  const imageURL = `https://api.vietqr.io/image/970422-1319102004913-wjc5eta.jpg?accountName=TRUONG%20PHUC%20LOC&amount=0&addInfo=${content.replaceAll(
+    " ",
+    "%20"
+  )}`;
 
   // Fetch donators on component mount
   useEffect(() => {
@@ -135,11 +138,14 @@ const Donate = () => {
               <Table stickyHeader aria-label="sticky table">
                 <TableHead>
                   <TableRow>
-                    <TableCell align="center" colSpan={2}>
+                    <TableCell align="center" colSpan={6}>
                       <h1>Donators</h1>
                     </TableCell>
                   </TableRow>
                   <TableRow>
+                    <TableCell>
+                      <h2>Account ID</h2>
+                    </TableCell>
                     <TableCell>
                       <h2>Name</h2>
                     </TableCell>
@@ -158,7 +164,9 @@ const Donate = () => {
                         tabIndex={-1}
                         key={donator.id}
                       >
+                        <TableCell>{donator.accountID}</TableCell>
                         <TableCell>{donator.name}</TableCell>
+
                         <TableCell align="right">
                           ${donator.total_donation}
                         </TableCell>
@@ -168,6 +176,7 @@ const Donate = () => {
               </Table>
             </TableContainer>
             <TablePagination
+              className="root-table"
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
               count={donators.length}

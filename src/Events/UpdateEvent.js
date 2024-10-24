@@ -34,16 +34,16 @@ const UpdateEvent = () => {
 
     const fetchEventData = async () => {
       try {
-        console.log("Fetching event data for ID:", eventID);
         const response = await api.get(`/events/${eventID}/getEventById`, {
-          params: { eventId: eventID }
+          params: { eventId: eventID },
         });
-        console.log("API response:", response.data);
         if (response.data.status === 200) {
           setEventData(response.data.data);
           setImagePreview(getImageUrl(response.data.data.img_url));
         } else {
-          throw new Error(response.data.message || "Không thể tải dữ liệu sự kiện");
+          throw new Error(
+            response.data.message || "Không thể tải dữ liệu sự kiện"
+          );
         }
       } catch (error) {
         console.error("Lỗi khi tải dữ liệu sự kiện:", error);
@@ -67,9 +67,9 @@ const UpdateEvent = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setEventData(prev => ({
+      setEventData((prev) => ({
         ...prev,
-        img_url: file
+        img_url: file,
       }));
       setImagePreview(URL.createObjectURL(file));
     }
@@ -79,42 +79,52 @@ const UpdateEvent = () => {
     e.preventDefault();
     setIsLoading(true);
     const formData = new FormData();
-    
+
     // Thêm các trường dữ liệu vào formData
-    formData.append('event_name', eventData.event_name);
-    formData.append('description', eventData.description);
-    formData.append('start_date', eventData.start_date);
-    formData.append('end_date', eventData.end_date);
-    formData.append('status', eventData.status);
-    
+    formData.append("event_name", eventData.event_name);
+    formData.append("description", eventData.description);
+    formData.append("start_date", eventData.start_date);
+    formData.append("end_date", eventData.end_date);
+    formData.append("status", eventData.status);
+
     // Thêm file hình ảnh nếu có
     if (eventData.img_url instanceof File) {
-      formData.append('image', eventData.img_url);
+      formData.append("image", eventData.img_url);
     }
 
-    console.log('FormData content:');
+    console.log("FormData content:");
     for (let pair of formData.entries()) {
-      console.log(pair[0] + ': ' + pair[1]);
+      console.log(pair[0] + ": " + pair[1]);
     }
 
     try {
-      const response = await api.post(`/events/${eventID}/updateEvents`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      
+      const response = await api.post(
+        `/events/${eventID}/updateEvents`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
       console.log("Response from server:", response.data);
-      
+
       if (response.data.status === 200) {
-        toast.success(response.data.message || "Sự kiện đã được cập nhật thành công");
+        toast.success(
+          response.data.message || "Sự kiện đã được cập nhật thành công"
+        );
         navigate("/events", { state: { updated: true } });
       } else {
         throw new Error(response.data.message || "Không thể cập nhật sự kiện");
       }
     } catch (error) {
       console.error("Lỗi khi cập nhật sự kiện:", error);
-      toast.error(error.response?.data?.message || error.message || "Không thể cập nhật sự kiện");
+      toast.error(
+        error.response?.data?.message ||
+          error.message ||
+          "Không thể cập nhật sự kiện"
+      );
     } finally {
       setIsLoading(false);
     }

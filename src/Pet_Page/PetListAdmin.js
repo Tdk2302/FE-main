@@ -69,7 +69,6 @@ const PetListAdmin = () => {
           console.error("Status is missing in response.");
         }
         console.error("Error response data:", error.response.data);
-        console.error("Error response headers:", error.response.headers);
       } else if (error.request) {
         console.error("No response received:", error.request);
       } else {
@@ -114,7 +113,6 @@ const PetListAdmin = () => {
       setPets([]);
     }
   };
-
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -211,15 +209,17 @@ const PetListAdmin = () => {
               <option value="male">Male</option>
               <option value="female">Female</option>
             </select>
-            <div className="add-update-button">
-              <NavLink
-                to="/addpet"
-                className="nav-link-add-pet"
-                onClick={() => setShowAddPet(true)}
-              >
-                <h3>Create Pet</h3>
-              </NavLink>
-            </div>
+            {roleID === 2 && (
+              <div className="add-update-button">
+                <NavLink
+                  to="/addpet"
+                  className="nav-link-add-pet"
+                  onClick={() => setShowAddPet(true)}
+                >
+                  <h3>Create Pet</h3>
+                </NavLink>
+              </div>
+            )}
           </div>
         </form>
       </div>

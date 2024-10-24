@@ -46,7 +46,9 @@ const UpdatePet = () => {
 
   const fetchPetData = async () => {
     try {
-      const response = await axios.get(`/pets/getByID/${petData.petID}`);
+      const response = await axios.get(`/pets/${petData.petID}/getByID`, {
+        params: { petID: petData.petID },
+      });
       if (response.data.status === 200) {
         setPetData(response.data.data);
         setImagePreview(getImageUrl(response.data.data.img_url));

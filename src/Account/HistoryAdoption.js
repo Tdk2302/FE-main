@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React, { useEffect, useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import api, { BASE_URL } from "../services/axios";
 import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
-import "../styles/adminpage.scss"; // Thêm import cho style
+import "../styles/adminpage.scss";
 
 const HistoryAdoption = () => {
   const [adoptedPets, setAdoptedPets] = useState([]);
@@ -12,11 +12,12 @@ const HistoryAdoption = () => {
   const navigate = useNavigate();
   const accountID = localStorage.getItem("accountID");
 
-  const getImageUrl = (imgUrl) => {
-    if (!imgUrl) return null; // Hoặc return một đường dẫn đến hình ảnh mặc đnh
-    if (imgUrl.startsWith("http")) return imgUrl;
-    return `${BASE_URL}/${imgUrl.replace(/\\/g, "/")}`;
-  };
+  const getImageUrl = useCallback((img_url) => {
+    if (!img_url) return "/path/to/default/image.jpg";
+    if (img_url.startsWith("http")) return img_url;
+    // Chỉnh sửa ở đây để tạo URL đúng định dạng
+    return `http://localhost:8081/${img_url.replace(/\\/g, "/")}`;
+  }, []);
 
   useEffect(() => {
     const fetchAdoptedPets = async () => {
@@ -25,7 +26,7 @@ const HistoryAdoption = () => {
         const response = await api.get(`/pets/historyAdopt/${accountID}`);
         setAdoptedPets(response.data.data);
         console.log(response.data.data);
-        // setImagePreview(getImageUrl(response.data.data.img_url));
+        setImagePreview(getImageUrl(response.data.data.img_url));
       } catch (error) {
         toast.error("Error fetching adopted pets");
         console.error(error);
@@ -61,9 +62,9 @@ const HistoryAdoption = () => {
                 <div className="pet-image-history">
                   <img
                     src={getImageUrl(pet.img_url)}
-                    alt="Pet Preview"
+                    alt={pet.name}
                     className="img-preview"
-                    style={{ width: "50%", marginTop: "10px" }}
+                    style={{ width: "50%", height: "50%" }}
                   />
                 </div>
                 <div className="pet-info-history">
@@ -76,7 +77,7 @@ const HistoryAdoption = () => {
                   onClick={() => handleReportVideo(pet)}
                 >
                   Report
-                </button>{" "}
+                </button>
               </li>
             ))}
           </ul>

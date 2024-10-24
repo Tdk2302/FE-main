@@ -40,7 +40,7 @@ const Donate = () => {
   useEffect(() => {
     const fetchDonators = async () => {
       const response = await axios.get(`${BASE_URL}accounts/showDonators`);
-      setDonators(response.data.data); // Assuming the response structure
+      setDonators(response.data.data);
     };
     fetchDonators();
   }, []);

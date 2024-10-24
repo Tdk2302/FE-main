@@ -17,15 +17,15 @@ const UpdatePet = () => {
     weight: "",
     note: "",
     size: "",
-    potty_trained: false,
-    dietary_requirements: false,
-    spayed: false,
-    vaccinated: false,
-    socialized: false,
-    rabies_vaccinated: false,
+    potty_trained: "false",
+    dietary_requirements: "false",
+    spayed: "false",
+    vaccinated: "false",
+    socialized: "false",
+    rabies_vaccinated: "false",
     origin: "",
     img_url: "",
-    categoryID: "",
+    categoryID: 0,
     description: "",
   };
 
@@ -33,7 +33,7 @@ const UpdatePet = () => {
   const [imagePreview, setImagePreview] = useState(initialPetData.img_url); // Hiển thị ảnh từ dữ liệu ban đầu
 
   const getImageUrl = (imgUrl) => {
-    if (!imgUrl) return null; // Hoặc return một đường dẫn đến hình ảnh mặc đ��nh
+    if (!imgUrl) return null; // Hoặc return một đường dẫn đến hình ảnh mặc đnh
     if (imgUrl.startsWith("http")) return imgUrl;
     return `${BASE_URL}${imgUrl}`;
   };
@@ -86,34 +86,27 @@ const UpdatePet = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const formData = new FormData();
-
-    // Thêm tất cả các trường dữ liệu vào FormData
-    Object.keys(petData).forEach((key) => {
-      if (key === "img_url" && petData[key] instanceof File) {
-        formData.append("img_url", petData[key]);
-      } else if (typeof petData[key] === "boolean") {
-        formData.append(key, petData[key].toString());
-      } else {
-        formData.append(key, petData[key]);
-      }
-    });
-
-    console.log("FormData being sent:");
-    for (let [key, value] of formData.entries()) {
-      console.log(key, value);
+    for (const key in petData) {
+      formData.append(key, petData[key]);
     }
 
     if (petData.img_url instanceof File) {
       formData.append("img_url", petData.img_url);
     }
     try {
-      const response = await axios.post(`/pets/${petData.petID}/updatePets`, {
-        ...formData,
-      });
-      console.log("Response from server:", response.data);
+      const response = await axios.post(
+        `/pets/${petData.petID}/updatePets`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log("Response:", response.data);
       toast.success(response.data.message);
+      // onPetUpdated();
       navigate("/petlistadmin");
     } catch (error) {
       console.error(
@@ -123,7 +116,6 @@ const UpdatePet = () => {
       toast.error("Failed to update pet. Please try again.");
     }
   };
-
   return (
     <div className="container pets-container">
       <h1 className="add-pet__title">UPDATE PET</h1>

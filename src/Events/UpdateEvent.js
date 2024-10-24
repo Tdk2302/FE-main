@@ -4,7 +4,7 @@ import api, { BASE_URL } from "../services/axios";
 import "../styles/updateevent.scss";
 import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
-import { Form, Button, Container, Row, Col } from "react-bootstrap";
+import { Form, Button, Container, Row, Col, Alert } from "react-bootstrap";
 
 const UpdateEvent = () => {
   const { eventID } = useParams();
@@ -18,16 +18,19 @@ const UpdateEvent = () => {
     img_url: "",
   });
   const [imagePreview, setImagePreview] = useState(null);
+  const [minDate, setMinDate] = useState("");
+  const [canUpdate, setCanUpdate] = useState(true);
+  const [errors, setErrors] = useState({});
 
   const getImageUrl = (imgUrl) => {
-    if (!imgUrl) return null; // Hoặc return một đường dẫn đến hình ảnh mặc định
+    if (!imgUrl) return null;
     if (imgUrl.startsWith("http")) return imgUrl;
     return `${BASE_URL}${imgUrl}`;
   };
 
   useEffect(() => {
     if (!eventID) {
-      toast.error("ID sự kiện không hợp lệ");
+      toast.error("Invalid event ID");
       navigate("/events");
       return;
     }
@@ -40,28 +43,56 @@ const UpdateEvent = () => {
         if (response.data.status === 200) {
           setEventData(response.data.data);
           setImagePreview(getImageUrl(response.data.data.img_url));
+          // Kiểm tra trạng thái sự kiện
+          const status = response.data.data.status;
+          if (status !== "Waiting" && status !== "Updating") {
+            setCanUpdate(false);
+          }
         } else {
           throw new Error(
-            response.data.message || "Không thể tải dữ liệu sự kiện"
+            response.data.message || "Cannot load event data"
           );
         }
       } catch (error) {
-        console.error("Lỗi khi tải dữ liệu sự kiện:", error);
-        toast.error(error.message || "Không thể tải dữ liệu sự kiện");
+        console.error("Error loading event data:", error);
+        toast.error(error.message || "Cannot load event data");
         navigate("/events");
       } finally {
         setIsLoading(false);
       }
     };
     fetchEventData();
+
+    const today = new Date();
+    const formattedDate = today.toISOString().split('T')[0];
+    setMinDate(formattedDate);
   }, [eventID, navigate]);
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!eventData.event_name.trim()) newErrors.event_name = "Event name is required";
+    if (!eventData.description.trim()) newErrors.description = "Description is required";
+    if (!eventData.start_date) newErrors.start_date = "Start date is required";
+    if (!eventData.end_date) newErrors.end_date = "End date is required";
+    if (eventData.end_date < eventData.start_date) newErrors.end_date = "End date must be after start date";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setEventData((prevData) => ({
-      ...prevData,
-      [name]: value,
+    setEventData(prev => ({
+      ...prev,
+      [name]: value
     }));
+
+    if (name === 'start_date' && eventData.end_date && value > eventData.end_date) {
+      setEventData(prev => ({
+        ...prev,
+        end_date: value
+      }));
+    }
   };
 
   const handleImageChange = (e) => {
@@ -77,24 +108,20 @@ const UpdateEvent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateForm()) {
+      return;
+    }
     setIsLoading(true);
     const formData = new FormData();
 
-    // Thêm các trường dữ liệu vào formData
     formData.append("event_name", eventData.event_name);
     formData.append("description", eventData.description);
     formData.append("start_date", eventData.start_date);
     formData.append("end_date", eventData.end_date);
     formData.append("status", eventData.status);
 
-    // Thêm file hình ảnh nếu có
     if (eventData.img_url instanceof File) {
       formData.append("image", eventData.img_url);
-    }
-
-    console.log("FormData content:");
-    for (let pair of formData.entries()) {
-      console.log(pair[0] + ": " + pair[1]);
     }
 
     try {
@@ -108,22 +135,20 @@ const UpdateEvent = () => {
         }
       );
 
-      console.log("Response from server:", response.data);
-
       if (response.data.status === 200) {
         toast.success(
-          response.data.message || "Sự kiện đã được cập nhật thành công"
+          response.data.message || "Update event successfully"
         );
         navigate("/events", { state: { updated: true } });
       } else {
-        throw new Error(response.data.message || "Không thể cập nhật sự kiện");
+        throw new Error(response.data.message || "Cannot update event");
       }
     } catch (error) {
-      console.error("Lỗi khi cập nhật sự kiện:", error);
+      console.error("Error updating event:", error);
       toast.error(
         error.response?.data?.message ||
           error.message ||
-          "Không thể cập nhật sự kiện"
+          "Cannot update event"
       );
     } finally {
       setIsLoading(false);
@@ -137,6 +162,11 @@ const UpdateEvent = () => {
   return (
     <Container className="update-event-container">
       <h1 className="update-event__title">UPDATE EVENT</h1>
+      {!canUpdate && (
+        <Alert variant="warning">
+          This event cannot be updated because the current status is Ended.
+        </Alert>
+      )}
       <Form onSubmit={handleSubmit}>
         <Row>
           <Col lg={6} md={6} sm={12} className="text-center">
@@ -173,8 +203,11 @@ const UpdateEvent = () => {
                 name="event_name"
                 value={eventData.event_name}
                 onChange={handleChange}
-                required
+                isInvalid={!!errors.event_name}
               />
+              <Form.Control.Feedback type="invalid">
+                {errors.event_name}
+              </Form.Control.Feedback>
             </Form.Group>
             <Form.Group className="mb-3" controlId="formDescription">
               <Form.Label>Description</Form.Label>
@@ -185,8 +218,11 @@ const UpdateEvent = () => {
                 name="description"
                 value={eventData.description}
                 onChange={handleChange}
-                required
+                isInvalid={!!errors.description}
               />
+              <Form.Control.Feedback type="invalid">
+                {errors.description}
+              </Form.Control.Feedback>
             </Form.Group>
             <Form.Group className="mb-3" controlId="formStartDate">
               <Form.Label>Start Date</Form.Label>
@@ -195,8 +231,12 @@ const UpdateEvent = () => {
                 name="start_date"
                 value={eventData.start_date}
                 onChange={handleChange}
-                required
+                min={minDate}
+                isInvalid={!!errors.start_date}
               />
+              <Form.Control.Feedback type="invalid">
+                {errors.start_date}
+              </Form.Control.Feedback>
             </Form.Group>
             <Form.Group className="mb-3" controlId="formEndDate">
               <Form.Label>End Date</Form.Label>
@@ -205,10 +245,19 @@ const UpdateEvent = () => {
                 name="end_date"
                 value={eventData.end_date}
                 onChange={handleChange}
-                required
+                min={eventData.start_date || minDate}
+                isInvalid={!!errors.end_date}
               />
+              <Form.Control.Feedback type="invalid">
+                {errors.end_date}
+              </Form.Control.Feedback>
             </Form.Group>
-            <Button variant="primary" type="submit" className="update-button">
+            <Button 
+              variant="primary" 
+              type="submit" 
+              className="update-button"
+              disabled={!canUpdate}
+            >
               Update Event
             </Button>
           </Col>

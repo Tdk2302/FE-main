@@ -15,6 +15,7 @@ import MoreVert from "@mui/icons-material/MoreVert";
 import DeleteDialog from "../components/DeleteDialog";
 
 import EventStatusDot from "../components/EventStatusDot";
+import moment from 'moment'; // Đảm bảo bạn đã import moment
 
 const EventList = () => {
   const [events, setEvents] = useState([]);
@@ -168,7 +169,28 @@ const EventList = () => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const getEventStatus = (event) => {
-    return event.status; // Trả về trạng thái trực tiếp từ dữ liệu sự kiện
+    return event.status;
+  };
+
+  const getEventTimeInfo = (event) => {
+    const now = moment();
+    const startDate = moment(event.start_date);
+    const endDate = moment(event.end_date);
+
+    if (now.isBefore(startDate)) {
+      const daysUntilStart = startDate.diff(now, 'days');
+      if (daysUntilStart === 0) {
+        const hoursUntilStart = startDate.diff(now, 'hours');
+        if (hoursUntilStart === 0) {
+          return `Event starts in ${startDate.diff(now, 'minutes')} minutes`;
+        }
+        return `Event starts in ${hoursUntilStart} hours`;
+      }
+      return `Event starts in ${daysUntilStart} day${daysUntilStart > 1 ? 's' : ''}`;
+    } else if (now.isBetween(startDate, endDate)) {
+      return "Event is ongoing";
+    }
+    return null; // Sự kiện đã kết thúc, không hiển thị gì
   };
 
   if (isLoading) {
@@ -224,6 +246,19 @@ const EventList = () => {
                 {event.title}
               </Card.Subtitle>
               <Card.Text>{event.description}</Card.Text>
+              {getEventTimeInfo(event) && (
+                <Card.Text className="event-time-info" style={{
+                  fontSize: "14px", 
+                  color: "green",   
+                  fontWeight: "bold",
+                  marginTop: "10px",
+                  padding: "5px",
+                  borderRadius: "4px",
+                   
+                }}>
+                  {getEventTimeInfo(event)}
+                </Card.Text>
+              )}
             </Card.Body>
             <Card.Footer>
               <small className="text-muted">

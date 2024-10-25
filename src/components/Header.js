@@ -119,6 +119,9 @@ const Header = () => {
                   Ban Request
                 </NavDropdown.Item>
               </NavDropdown>
+              <NavLink to="/admin/user-management" className="nav-link">
+                <h3>User Management</h3>
+              </NavLink>
             </>
           )}
         </>

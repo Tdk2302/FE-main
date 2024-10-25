@@ -14,8 +14,6 @@ import {
 } from "@mui/material";
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { toast } from 'react-toastify';
 
 const Notification = ({ roleID }) => {
     const [notifications, setNotifications] = useState([]);
@@ -116,19 +114,6 @@ const Notification = ({ roleID }) => {
         }
     };
 
-    const handleDeleteNotification = async (notiID) => {
-        try {
-            await axios.delete("notification/deleteNotification", { data: { notiID } });
-            setNotifications(prevNotifications => 
-                prevNotifications.filter(noti => noti.notiID !== notiID)
-            );
-            toast.success("Notification deleted successfully");
-        } catch (error) {
-            console.error("Error deleting notification:", error);
-            toast.error("Failed to delete notification");
-        }
-    };
-
     return (
         <Box>
             <IconButton
@@ -203,37 +188,22 @@ const Notification = ({ roleID }) => {
                                             </Typography>
                                         }
                                         secondary={
-                                            <Box sx={{ 
-                                                display: 'flex', 
-                                                justifyContent: 'space-between', 
-                                                alignItems: 'center',
-                                                mt: 1
-                                            }}>
-                                                <Box>
-                                                    <Typography
-                                                        component="span"
-                                                        variant="body2"
-                                                        color="text.secondary"
-                                                    >
-                                                        {formatRelativeTime(notification.createdAt)}
-                                                    </Typography>
-                                                    <Typography
-                                                        component="span"
-                                                        variant="caption"
-                                                        color="text.secondary"
-                                                        sx={{ ml: 1 }}
-                                                    >
-                                                        {getRemainingTime(notification.createdAt)}
-                                                    </Typography>
-                                                </Box>
-                                                <IconButton 
-                                                    edge="end" 
-                                                    aria-label="delete" 
-                                                    onClick={() => handleDeleteNotification(notification.notiID)}
-                                                    size="small"
+                                            <Box sx={{ mt: 1 }}>
+                                                <Typography
+                                                    component="span"
+                                                    variant="body2"
+                                                    color="text.secondary"
                                                 >
-                                                    <DeleteIcon fontSize="small" />
-                                                </IconButton>
+                                                    {formatRelativeTime(notification.createdAt)}
+                                                </Typography>
+                                                <Typography
+                                                    component="span"
+                                                    variant="caption"
+                                                    color="text.secondary"
+                                                    sx={{ ml: 1 }}
+                                                >
+                                                    {getRemainingTime(notification.createdAt)}
+                                                </Typography>
                                             </Box>
                                         }
                                     />

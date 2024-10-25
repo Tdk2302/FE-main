@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import api, { BASE_URL } from "../services/axios";
 import "../styles/events.scss";
 import { toast } from "react-toastify";
@@ -16,6 +16,7 @@ import DeleteDialog from "../components/DeleteDialog";
 import EventStatusDot from "../components/EventStatusDot";
 
 const EventList = () => {
+  const location = useLocation();
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
@@ -29,9 +30,18 @@ const EventList = () => {
   const [deleteConfirmation, setDeleteConfirmation] = useState("");
 
   useEffect(() => {
-    console.log("Current roleID:", roleID); // Thêm dòng này
+    console.log("Current roleID:", roleID); // Thêm dòng này  
     fetchEvents();
   }, [roleID]);
+
+  useEffect(() => {
+    const state = location.state;
+    if (state && state.updated) {
+      fetchEvents();
+      // Clear the state after fetching
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location]);
 
   const getImageUrl = (imgUrl) => {
     if (!imgUrl) return "/path/to/default/image.jpg";

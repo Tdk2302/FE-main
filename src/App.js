@@ -29,6 +29,7 @@ import EventList from './Events/EventList';
 import AddEvent from './Events/AddEvent';
 import UpdateEvent from './Events/UpdateEvent';
 import Profile from './Account/ProfileUser';
+import UserManagement from './Admin/UserManagement';
 
 function App() {
   const roleID = localStorage.getItem("roleID")
@@ -140,6 +141,14 @@ function App() {
                 }
               />
               <Route path="/profile" element={<Profile />} />
+              <Route 
+                path="/admin/user-management" 
+                element={
+                  <ProtectedRoute roleID={1}>
+                    <UserManagement />
+                  </ProtectedRoute>
+                } 
+              />
             </Routes>
           </Container>
         </div>

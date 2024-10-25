@@ -1,0 +1,78 @@
+.donate-container {
+  display: flex;
+  flex-direction: column; // Stack elements vertically
+  padding: 20px;
+  border-radius: 10px; // Rounded corners
+}
+
+.donate-content {
+  margin-bottom: 20px; // Space between content and image
+  background-color: #ffffff; // White background for content
+  padding: 20px; // Padding inside content
+  border-radius: 8px; // Rounded corners
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); // Shadow for content
+}
+
+.donate-image {
+  display: flex;
+  justify-content: center; // Center the image
+  align-items: center; // Center vertically
+  margin-bottom: 20px; // Space below the image
+}
+
+.donators-table {
+  margin-top: 20px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  background-color: #f9f9f9;
+  width: 100%; // Full width
+  max-width: 600px; // Set a maximum width for the table
+  border-radius: 8px; // Rounded corners
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); // Shadow for table
+}
+
+.donators-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.donators-table th,
+.donators-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.donators-table th {
+  background-color: #e0e0e0; // Light gray for header
+  font-weight: bold; // Bold text for header
+}
+
+.donation-notes {
+  margin-bottom: 20px; // Space below the notes
+  color: #000000; // Darker color for notes
+}
+
+h4,
+h6 {
+  color: #000000; // Dark text color for headings
+}
+
+button.edit-button {
+  background-color: #3bd4eb; // Green background for button
+  color: white; // White text
+  border: none; // No border
+  border-radius: 5px; // Rounded corners
+  padding: 10px 15px; // Padding for button
+  cursor: pointer; // Pointer cursor on hover
+  transition: background-color 0.3s; // Smooth transition
+
+  &:hover {
+    background-color: #19b9d1; // Darker green on hover
+  }
+}
+.root-table {
+  p {
+    margin-top: 14px;
+  }
+}

@@ -173,10 +173,12 @@ const PetDetail = () => {
               <strong>Description: </strong>
               {pet.description ? pet.description : "Not yet"}
             </p>
-            <p>
-              <strong>Account ID: </strong>
-              {pet.accountID ? pet.accountID : "Not yet"}
-            </p>
+            {roleID === "2" && (
+              <p>
+                <strong>Account ID: </strong>
+                {pet.accountID ? pet.accountID : "Not yet"}
+              </p>
+            )}
             {!isLoggedIn && (
               <div className="adopt-button">
                 <NavLink to="/login">
@@ -331,77 +333,76 @@ const PetDetail = () => {
       </div>
 
       {/*Donate banner */}
-      {roleID === "3" && (
-        <>
-          <div className="support-banner-wrapper">
-            <section className="support-banner-bg bg-fixed overlay">
-              <div className="support-banner">
-                <div className="container">
-                  <div className="row align-items-center">
-                    <div className="col">
-                      <h2 className="support-text">
-                        Have you already supported us?
-                      </h2>
-                    </div>
-                    <div className="col-auto">
-                      <NavLink to="/donate" className="nav-link">
-                        <button className="support-button">DONATE NOW</button>
-                      </NavLink>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
-          </div>
 
-          <section className="pets">
-            <h2>Other Pets</h2>
-            <Carousel
-              responsive={responsive}
-              infinite={true}
-              removeArrowOnDeviceType={["tablet", "mobile"]}
-            >
-              {otherPets.map((otherPet, index) => (
-                <div key={index} className="pet-card">
-                  <NavLink
-                    to={`/petdetail/${otherPet.petID}`}
-                    className="nav-link"
-                  >
-                    <img src={otherPet.img_url} alt={otherPet.name} />
-                    <h3>{otherPet.name}</h3>
-                    <p>Sex: {otherPet.sex}</p>
-                    <p>Age: {otherPet.age}</p>
-                    <p>Vaccinated: {otherPet.vaccinated ? "Yes" : "No"}</p>
-                  </NavLink>
-                </div>
-              ))}
-            </Carousel>
-            <NavLink to="/petlist" className="nav-link">
-              <button className="adopt-button">ADOPT</button>
-            </NavLink>
-          </section>
-          <div className="contact-banner-wrapper">
-            <section className="support-banner-bg contact-bg overlay">
-              <div className="support-banner">
-                <div className="container">
-                  <div className="row align-items-center">
-                    <div className="col">
-                      <h2 className="support-text">
-                        You can contact us for more details!
-                      </h2>
-                    </div>
-                    <div className="col-auto">
-                      <NavLink to="/contact" className="nav-link">
-                        <button className="support-button">CONTACT</button>
-                      </NavLink>
-                    </div>
+      <>
+        <div className="support-banner-wrapper">
+          <section className="support-banner-bg bg-fixed overlay">
+            <div className="support-banner">
+              <div className="container">
+                <div className="row align-items-center">
+                  <div className="col">
+                    <h2 className="support-text">
+                      Have you already supported us?
+                    </h2>
+                  </div>
+                  <div className="col-auto">
+                    <NavLink to="/donate" className="nav-link">
+                      <button className="support-button">DONATE NOW</button>
+                    </NavLink>
                   </div>
                 </div>
               </div>
-            </section>
-          </div>
-        </>
-      )}
+            </div>
+          </section>
+        </div>
+
+        <section className="pets">
+          <h2>Other Pets</h2>
+          <Carousel
+            responsive={responsive}
+            infinite={true}
+            removeArrowOnDeviceType={["tablet", "mobile"]}
+          >
+            {otherPets.map((otherPet, index) => (
+              <div key={index} className="pet-card">
+                <NavLink
+                  to={`/petdetail/${otherPet.petID}`}
+                  className="nav-link"
+                >
+                  <img src={otherPet.img_url} alt={otherPet.name} />
+                  <h3>{otherPet.name}</h3>
+                  <p>Sex: {otherPet.sex}</p>
+                  <p>Age: {otherPet.age}</p>
+                  <p>Vaccinated: {otherPet.vaccinated ? "Yes" : "No"}</p>
+                </NavLink>
+              </div>
+            ))}
+          </Carousel>
+          <NavLink to="/petlist" className="nav-link">
+            <button className="adopt-button">ADOPT</button>
+          </NavLink>
+        </section>
+        <div className="contact-banner-wrapper">
+          <section className="support-banner-bg contact-bg overlay">
+            <div className="support-banner">
+              <div className="container">
+                <div className="row align-items-center">
+                  <div className="col">
+                    <h2 className="support-text">
+                      You can contact us for more details!
+                    </h2>
+                  </div>
+                  <div className="col-auto">
+                    <NavLink to="/contact" className="nav-link">
+                      <button className="support-button">CONTACT</button>
+                    </NavLink>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </>
     </div>
   );
 };

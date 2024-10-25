@@ -22,7 +22,8 @@ import {
   FormControl,
   IconButton,
   Avatar,
-  Chip
+  Chip,
+  FormHelperText
 } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import EditIcon from '@mui/icons-material/Edit';
@@ -69,6 +70,7 @@ const ProfileUser = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [newPassword, setNewPassword] = useState("");
+  const [errors, setErrors] = useState({});
 
   const getImageUrl = (imgUrl) => {
     if (!imgUrl) return "/path/to/default/image.jpg";
@@ -77,6 +79,7 @@ const ProfileUser = () => {
   };
 
 
+  
   useEffect(() => {
     fetchUserInfo();
   }, [navigate]);
@@ -131,7 +134,9 @@ const ProfileUser = () => {
 
   const handleOpenDialog = (e) => {
     e.preventDefault();
-    setOpenDialog(true);
+    if (validateForm()) {
+      setOpenDialog(true);
+    } 
   };
 
   const handleCloseDialog = () => {
@@ -139,7 +144,36 @@ const ProfileUser = () => {
     setCurrentPassword("");
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+    const currentDate = new Date();
+    const tenYearsAgo = new Date();
+    tenYearsAgo.setFullYear(currentDate.getFullYear() - 10);
+    
+    if (!userInfo.name.trim()) newErrors.name = "Full name is required";
+    if (!userInfo.birthdate) {
+      newErrors.birthdate = "Birthday is required";
+    } else if (new Date(userInfo.birthdate) > tenYearsAgo) {
+      newErrors.birthdate = "You must be at least 10 years old";
+    }
+    if (!userInfo.sex) newErrors.sex = "Sex is required";
+    if (!userInfo.address.trim()) newErrors.address = "Address is required";
+    if (!userInfo.phone) newErrors.phone = "Phone number is required";
+    else if (!/^0\d{9,10}$/.test(userInfo.phone))
+      newErrors.phone = "Invalid phone number! Must start with 0 and be 9-10 digits.";
+
+    if (newPassword && newPassword.length < 6) {
+      newErrors.newPassword = "Password must be at least 6 characters long";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleUpdate = async () => {
+    if (!validateForm()) {
+      return;
+    }
     if (!currentPassword) {
       toast.error("Please enter your current password to update");
       return;
@@ -147,19 +181,17 @@ const ProfileUser = () => {
     try {
       const userInfoToUpdate = { ...userInfo };
       if (userInfoToUpdate.birthdate) {
-        userInfoToUpdate.birthdate = format(userInfoToUpdate.birthdate, 'MM/dd/yyyy');
+        userInfoToUpdate.birthdate = format(new Date(userInfoToUpdate.birthdate), 'MM/dd/yyyy');
       }
       
-      // Luôn gửi trường password, dù là mật khẩu mới hoặc chuỗi rỗng
       userInfoToUpdate.password = newPassword.trim();
 
-      // Sử dụng currentPassword trong URL để xác thực
       const response = await api.put(`accounts/update/${currentPassword}`, userInfoToUpdate);
       console.log("Update response:", response);
       toast.success("User information updated successfully!");
       handleCloseDialog();
       setIsEditing(false);
-      setNewPassword(""); // Reset newPassword sau khi cập nhật
+      setNewPassword("");
       fetchUserInfo();
     } catch (error) {
       console.error("Error updating user info:", error.response?.data || error.message);
@@ -236,12 +268,14 @@ const ProfileUser = () => {
                   readOnly: !isEditing,
                   startAdornment: <PersonIcon sx={{ mr: 1, color: '#757575' }} />
                 }}
-                required
+             
                 variant="outlined"
+                error={!!errors.name}
+                helperText={errors.name}
               />
             </Grid>
             <Grid item xs={12}>
-              <FormControl fullWidth variant="outlined">
+              <FormControl fullWidth variant="outlined" error={!!errors.sex}>
                 <InputLabel id="sex-label">Sex</InputLabel>
                 <Select
                   labelId="sex-label"
@@ -255,6 +289,7 @@ const ProfileUser = () => {
                   <MenuItem value="Male">Male</MenuItem>
                   <MenuItem value="Female">Female</MenuItem>
                 </Select>
+                {errors.sex && <FormHelperText>{errors.sex}</FormHelperText>}
               </FormControl>
             </Grid>
             <Grid item xs={12}>
@@ -263,7 +298,7 @@ const ProfileUser = () => {
                 label="Birthdate"
                 name="birthdate"
                 type="date"
-                value={userInfo.birthdate ? format(userInfo.birthdate, 'yyyy-MM-dd') : ''}
+                value={userInfo.birthdate ? format(new Date(userInfo.birthdate), 'yyyy-MM-dd') : ''}
                 onChange={handleChange}
                 InputLabelProps={{ shrink: true }}
                 InputProps={{ 
@@ -271,6 +306,8 @@ const ProfileUser = () => {
                   startAdornment: <CakeIcon sx={{ mr: 1, color: '#757575' }} />
                 }}
                 variant="outlined"
+                error={!!errors.birthdate}
+                helperText={errors.birthdate}
               />
             </Grid>
             <Grid item xs={12}>
@@ -285,6 +322,8 @@ const ProfileUser = () => {
                   startAdornment: <PhoneIcon sx={{ mr: 1, color: '#757575' }} />
                 }}
                 variant="outlined"
+                error={!!errors.phone}
+                helperText={errors.phone}
               />
             </Grid>
             <Grid item xs={12}>
@@ -324,6 +363,8 @@ const ProfileUser = () => {
                   value={newPassword}
                   onChange={handleChange}
                   variant="outlined"
+                  error={!!errors.newPassword}
+                  helperText={errors.newPassword}
                   InputProps={{
                     endAdornment: (
                       <IconButton

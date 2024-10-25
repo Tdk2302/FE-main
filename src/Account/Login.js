@@ -14,22 +14,6 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   const token = localStorage.getItem("token");
-  //   const roleID = localStorage.getItem("roleID");
-  //   if (token && roleID) {
-  //     console.log("Token found in localStorage:", token);
-  //     console.log("RoleID found in localStorage:", roleID);
-  //     if (roleID === "1" || roleID === 1) {
-  //       navigate("/petlistadmin", { replace: true });
-  //     } else if (roleID === "2" || roleID === 2) {
-  //       navigate("/appointment", { replace: true });
-  //     } else {
-  //       navigate("/", { replace: true });
-  //     }
-  //   }
-  // }, [navigate]);
-
   const handleLogin = async (event) => {
     event.preventDefault();
     setIsLoading(true);

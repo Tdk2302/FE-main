@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate, NavLink } from "react-router-dom";
 import { BASE_URL } from "../services/axios";
 import "../styles/petListAdmin.scss";
@@ -69,7 +69,6 @@ const PetListAdmin = () => {
           console.error("Status is missing in response.");
         }
         console.error("Error response data:", error.response.data);
-        console.error("Error response headers:", error.response.headers);
       } else if (error.request) {
         console.error("No response received:", error.request);
       } else {
@@ -115,7 +114,6 @@ const PetListAdmin = () => {
     }
   };
 
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     if (name === "age") {
@@ -138,12 +136,11 @@ const PetListAdmin = () => {
     }
   };
 
-  const getImageUrl = (imgUrl) => {
+  const getImageUrl = useCallback((imgUrl) => {
     if (!imgUrl) return "/path/to/default/image.jpg";
-    if (imgUrl.startsWith("images\\"))
-      return `${BASE_URL}${imgUrl.replace("\\", "/")}`;
-    return imgUrl;
-  };
+    if (imgUrl.startsWith("http")) return imgUrl;
+    return `${BASE_URL}${imgUrl}`;
+  }, []);
 
   const indexOfLastPet = currentPage * petsPerPage;
   const indexOfFirstPet = indexOfLastPet - petsPerPage;
@@ -212,15 +209,17 @@ const PetListAdmin = () => {
               <option value="male">Male</option>
               <option value="female">Female</option>
             </select>
-            <div className="add-update-button">
-              <NavLink
-                to="/addpet"
-                className="nav-link-add-pet"
-                onClick={() => setShowAddPet(true)}
-              >
-                <h3>Create Pet</h3>
-              </NavLink>
-            </div>
+            {roleID === 2 && (
+              <div className="add-update-button">
+                <NavLink
+                  to="/addpet"
+                  className="nav-link-add-pet"
+                  onClick={() => setShowAddPet(true)}
+                >
+                  <h3>Create Pet</h3>
+                </NavLink>
+              </div>
+            )}
           </div>
         </form>
       </div>

@@ -13,7 +13,9 @@ import MenuButton from "@mui/joy/MenuButton";
 import MenuItem from "@mui/joy/MenuItem";
 import MoreVert from "@mui/icons-material/MoreVert";
 import DeleteDialog from "../components/DeleteDialog";
+
 import EventStatusDot from "../components/EventStatusDot";
+import moment from 'moment'; // Đảm bảo bạn đã import moment
 
 const EventList = () => {
   const location = useLocation();
@@ -46,7 +48,7 @@ const EventList = () => {
   const getImageUrl = (imgUrl) => {
     if (!imgUrl) return "/path/to/default/image.jpg";
     if (imgUrl.startsWith("http")) return imgUrl;
-    return `${BASE_URL}${imgUrl}`;
+    return `${BASE_URL}${imgUrl}`; // Thêm dấu '/' trước imgUrl
   };
 
   const fetchEvents = async () => {
@@ -58,7 +60,8 @@ const EventList = () => {
       } else {
         response = await api.get("/events/showEvents");
       }
-      if (response.data.status === 200) {  // Kiểm tra status
+      if (response.data.status === 200) {
+        // Kiểm tra status
         setEvents(response.data.data);
       } else {
         toast.error("Failed to fetch events");
@@ -76,7 +79,7 @@ const EventList = () => {
   };
 
   const handleUpdateEvent = (eventID) => {
-    console.log("Updating event with ID:", eventID); // Thêm dòng này
+    
     if (eventID) {
       navigate(`/events/update/${eventID}`);
     } else {
@@ -120,14 +123,15 @@ const EventList = () => {
   const deleteEvent = async (eventID) => {
     try {
       const response = await api.delete(`/events/${eventID}/deleteEvents`);
-      if (response.data.status === 200) {  // Kiểm tra status thay vì success
+      if (response.data.status === 200) {
+        // Kiểm tra status thay vì success
         if (response.data.data) {
           toast.success("Event status changed to Ending");
         } else {
           toast.success("Event deleted successfully");
         }
-        fetchEvents();  // Cập nhật danh sách sự kiện
-        setCurrentPage(1);  // Reset về trang đầu tiên
+        fetchEvents(); // Cập nhật danh sách sự kiện
+        setCurrentPage(1); // Reset về trang đầu tiên
       } else {
         toast.error(response.data.message || "Failed to delete event");
       }
@@ -138,7 +142,10 @@ const EventList = () => {
           "Cannot delete the event. It may be referenced by other data."
         );
       } else {
-        toast.error(error.response?.data?.message || "Failed to delete event. Please try again.");
+        toast.error(
+          error.response?.data?.message ||
+            "Failed to delete event. Please try again."
+        );
       }
     }
     handleCloseDeleteDialog();
@@ -162,7 +169,28 @@ const EventList = () => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const getEventStatus = (event) => {
-    return event.status; // Trả về trạng thái trực tiếp từ dữ liệu sự kiện
+    return event.status;
+  };
+
+  const getEventTimeInfo = (event) => {
+    const now = moment();
+    const startDate = moment(event.start_date);
+    const endDate = moment(event.end_date);
+
+    if (now.isBefore(startDate)) {
+      const daysUntilStart = startDate.diff(now, 'days');
+      if (daysUntilStart === 0) {
+        const hoursUntilStart = startDate.diff(now, 'hours');
+        if (hoursUntilStart === 0) {
+          return `Event starts in ${startDate.diff(now, 'minutes')} minutes`;
+        }
+        return `Event starts in ${hoursUntilStart} hours`;
+      }
+      return `Event starts in ${daysUntilStart} day${daysUntilStart > 1 ? 's' : ''}`;
+    } else if (now.isBetween(startDate, endDate)) {
+      return "Event is ongoing";
+    }
+    return null; // Sự kiện đã kết thúc, không hiển thị gì
   };
 
   if (isLoading) {
@@ -204,7 +232,11 @@ const EventList = () => {
                 </Dropdown>
               </div>
             )}
-            <Card.Img variant="top" src={getImageUrl(event.img_url)} alt={event.title} />
+            <Card.Img
+              variant="top"
+              src={getImageUrl(event.img_url)}
+              alt={event.title}
+            />
             <Card.Body>
               <Card.Title>
                 {event.event_name}
@@ -214,6 +246,19 @@ const EventList = () => {
                 {event.title}
               </Card.Subtitle>
               <Card.Text>{event.description}</Card.Text>
+              {getEventTimeInfo(event) && (
+                <Card.Text className="event-time-info" style={{
+                  fontSize: "14px", 
+                  color: "green",   
+                  fontWeight: "bold",
+                  marginTop: "10px",
+                  padding: "5px",
+                  borderRadius: "4px",
+                   
+                }}>
+                  {getEventTimeInfo(event)}
+                </Card.Text>
+              )}
             </Card.Body>
             <Card.Footer>
               <small className="text-muted">
@@ -224,7 +269,11 @@ const EventList = () => {
                 End Date: {new Date(event.end_date).toLocaleDateString()}
               </small>
               <br />
-              <small className={`text-${event.status === 'Ending' ? 'danger' : 'success'}`}>
+              <small
+                className={`text-${
+                  event.status === "Ending" ? "danger" : "success"
+                }`}
+              >
                 Status: {event.status}
               </small>
             </Card.Footer>

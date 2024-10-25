@@ -25,7 +25,6 @@ const Header = () => {
     setIsLoggedIn(loggedIn);
     setRoleID(role);
     setIsLoading(false);
-    console.log("isLoggedIn:", loggedIn, "roleID:", role); // Debugging line
   }, [name, loggedIn]);
 
   const handleLogout = () => {
@@ -40,12 +39,6 @@ const Header = () => {
     return <Spinner />;
   }
   const renderNavLinks = () => {
-    console.log(
-      "Rendering nav links. isLoggedIn:",
-      isLoggedIn,
-      "roleID:",
-      roleID
-    ); // Debugging line
     return (
       <>
         {(!isLoggedIn || roleID === 3) && (
@@ -166,6 +159,11 @@ const Header = () => {
                 <NavDropdown.Item as={NavLink} to="/profile">
                   Profile
                 </NavDropdown.Item>
+                {roleID === 3 && (
+                  <NavDropdown.Item as={NavLink} to="/historyadoption">
+                    History Adoption
+                  </NavDropdown.Item>
+                )}
                 <NavDropdown.Item onClick={handleLogout}>
                   Logout
                 </NavDropdown.Item>

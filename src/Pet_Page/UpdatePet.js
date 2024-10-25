@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
-import axios from "../services/axios";
+import axios, { BASE_URL } from "../services/axios";
 import { toast } from "react-toastify";
 import "../styles/addpet.scss";
-const UpdatePet = ({ onPetUpdated }) => {
+
+const UpdatePet = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -16,20 +17,48 @@ const UpdatePet = ({ onPetUpdated }) => {
     weight: "",
     note: "",
     size: "",
-    potty_trained: false,
-    dietary_requirements: false,
-    spayed: false,
-    vaccinated: false,
-    socialized: false,
-    rabies_vaccinated: false,
+    potty_trained: "false",
+    dietary_requirements: "false",
+    spayed: "false",
+    vaccinated: "false",
+    socialized: "false",
+    rabies_vaccinated: "false",
     origin: "",
-    img_url: null,
-    categoryID: null,
+    img_url: "",
+    categoryID: 0,
     description: "",
   };
 
   const [petData, setPetData] = useState(initialPetData);
   const [imagePreview, setImagePreview] = useState(initialPetData.img_url); // Hiển thị ảnh từ dữ liệu ban đầu
+
+  const getImageUrl = (imgUrl) => {
+    if (!imgUrl) return null; // Hoặc return một đường dẫn đến hình ảnh mặc đnh
+    if (imgUrl.startsWith("http")) return imgUrl;
+    return `${BASE_URL}${imgUrl}`;
+  };
+
+  useEffect(() => {
+    if (!location.state?.pet) {
+      fetchPetData();
+    }
+  }, []);
+
+  const fetchPetData = async () => {
+    try {
+      const response = await axios.get(`/pets/${petData.petID}/getByID`, {
+        params: { petID: petData.petID },
+      });
+      if (response.data.status === 200) {
+        console.log(response.data.data);  
+        setPetData(response.data.data);
+        setImagePreview(getImageUrl(response.data.data.img_url));
+      }
+    } catch (error) {
+      console.error("Error fetching pet data:", error);
+      toast.error("Failed to fetch pet data");
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -49,17 +78,12 @@ const UpdatePet = ({ onPetUpdated }) => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    setPetData((prev) => ({
-      ...prev,
-      img_url: file,
-    }));
-
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
+      setPetData((prev) => ({
+        ...prev,
+        img_url: file,
+      }));
+      setImagePreview(URL.createObjectURL(file));
     }
   };
 
@@ -70,15 +94,23 @@ const UpdatePet = ({ onPetUpdated }) => {
       formData.append(key, petData[key]);
     }
 
+    if (petData.img_url instanceof File) {
+      formData.append("img_url", petData.img_url);
+    }
     try {
-      const response = await axios.post(`/pets/updatePets/${petData.petID}`, {
-        ...formData,
-        petID: petData.petID,
-      });
+      const response = await axios.post(
+        `/pets/${petData.petID}/updatePets`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       console.log("Response:", response.data);
       toast.success(response.data.message);
-      onPetUpdated();
-      navigate("/petlist");
+      // onPetUpdated();
+      navigate("/petlistadmin");
     } catch (error) {
       console.error(
         "Error updating pet:",
@@ -87,7 +119,6 @@ const UpdatePet = ({ onPetUpdated }) => {
       toast.error("Failed to update pet. Please try again.");
     }
   };
-
   return (
     <div className="container pets-container">
       <h1 className="add-pet__title">UPDATE PET</h1>
@@ -199,7 +230,68 @@ const UpdatePet = ({ onPetUpdated }) => {
             onChange={handleChange}
           />
           {/*Checkboxes*/}
-
+          <div className="col-md-3">
+            <div className="form-check mb-3">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                name="potty_trained"
+                checked={petData.potty_trained}
+                onChange={handleChange}
+              />
+              <label className="form-check-label">Potty Trained</label>
+            </div>
+            <div className="form-check mb-3">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                name="spayed"
+                checked={petData.spayed}
+                onChange={handleChange}
+              />
+              <label className="form-check-label">Spayed</label>
+            </div>
+            <div className="form-check mb-3">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                name="vaccinated"
+                checked={petData.vaccinated}
+                onChange={handleChange}
+              />
+              <label className="form-check-label">Vaccinated</label>
+            </div>
+            <div className="form-check mb-3">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                name="socialized"
+                checked={petData.socialized}
+                onChange={handleChange}
+              />
+              <label className="form-check-label">Socialized</label>
+            </div>
+            <div className="form-check mb-3">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                name="rabies_vaccinated"
+                checked={petData.rabies_vaccinated}
+                onChange={handleChange}
+              />
+              <label className="form-check-label">Rabies Vaccinated</label>
+            </div>
+            <div className="form-check mb-3">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                name="dietary_requirements"
+                checked={petData.dietary_requirements}
+                onChange={handleChange}
+              />
+              <label className="form-check-label">Dietary Requirements</label>
+            </div>
+          </div>
           {/* Remaining form controls as in your original code */}
           <button
             onClick={handleSubmit}

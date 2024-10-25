@@ -47,11 +47,13 @@ const Register = () => {
     if (!sex) newErrors.sex = "Sex is required";
     if (!address.trim()) newErrors.address = "Address is required";
     if (!phoneNumber) newErrors.phoneNumber = "Phone number is required";
-    else if (!isPhoneNumberValid(phoneNumber))
+    else if (!/^0\d{9,10}$/.test(phoneNumber))
       newErrors.phoneNumber = "Invalid phone number! Must start with 0 and be 9-10 digits.";
 
     if (!username.trim()) newErrors.username = "Username is required";
     else if (username.length < 3) newErrors.username = "Username must be at least 3 characters";
+    else if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{3,}$/.test(username))
+      newErrors.username = "Username must contain both letters and numbers";
     if (!password) newErrors.password = "Password is required";
     if (!confirmPassword)
       newErrors.confirmPassword = "Confirm password is required";

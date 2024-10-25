@@ -61,7 +61,7 @@
     overflow-y: auto;
     background-color: #ffffff;
     h2 {
-      font-size: 16px;
+      font-size: 18px;
       color: #333;
       margin-bottom: 20px;
     }
@@ -71,6 +71,9 @@
       padding: 0;
 
       .notification-item {
+        display: flex; // Sử dụng flexbox để căn chỉnh
+        justify-content: space-between; // Đưa nút sang bên phải
+        align-items: center; // Căn giữa theo chiều dọc
         background-color: #fff;
         border-radius: 8px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -135,7 +138,75 @@
           white-space: pre-wrap;
           word-wrap: break-word;
         }
+
+        .report-button {
+          background-color: #eec214;
+          color: white;
+          border: none;
+          padding: 10px 15px;
+          border-radius: 5px;
+          cursor: pointer;
+          transition: background-color 0.3s;
+          margin-right: 20px;
+          font-size: 18px;
+          &:hover {
+            background-color: #c89b08; // Màu khi hover
+          }
+        }
+      }
+    }
+    .pet-info-history {
+      width: 32%;
+      h2 {
+        font-size: 20px;
       }
     }
   }
+}
+
+.donate-container {
+  display: flex;
+  flex-direction: column; // Stack elements vertically
+  padding: 20px;
+}
+
+.donate-content {
+  margin-bottom: 20px; // Space between content and image
+}
+
+.donate-image {
+  display: flex;
+  justify-content: center; // Center the image
+  align-items: center; // Center vertically
+  margin-bottom: 20px; // Space below the image
+}
+
+.donators-table {
+  border: 1px solid #ccc;
+  padding: 10px;
+  background-color: #f9f9f9;
+  width: 100%; // Full width
+  max-width: 600px; // Set a maximum width for the table
+  margin-left: auto; // Center the table
+  margin-right: auto; // Center the table
+}
+
+.donators-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.donators-table th,
+.donators-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.donation-notes {
+  margin-bottom: 20px; // Space below the notes
+}
+
+.pet-image-history {
+  width: 30%;
 }

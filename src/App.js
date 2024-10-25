@@ -15,7 +15,6 @@ import Header from "./components/Header";
 import HomePage from "./components/HomePage";
 import Contact from "./Contact/Contact";
 import Donate from "./Donation/Donate";
-
 import AddPetNotifications from "./Notifications/AddPetNotifications";
 import BanRequestNotifications from "./Notifications/BanRequestNotifications";
 import RequestRegisterNotifications from "./Notifications/RequestRegisterNotifications";
@@ -25,11 +24,13 @@ import PetsList from "./Pet_Page/PetList";
 import PetListAdmin from "./Pet_Page/PetListAdmin";
 import PetUpdate from "./Pet_Page/UpdatePet";
 import ProtectedRoute from "./Routes/ProtectRoute";
-import EventList from './Events/EventList';
-import AddEvent from './Events/AddEvent';
-import UpdateEvent from './Events/UpdateEvent';
-import Profile from './Account/ProfileUser';
-import UserManagement from './Admin/UserManagement';
+import EventList from "./Events/EventList";
+import AddEvent from "./Events/AddEvent";
+import UpdateEvent from "./Events/UpdateEvent";
+import Profile from "./Account/ProfileUser";
+import HistoryAdoption from "./Account/HistoryAdoption";
+import Report from "./Report/Report";
+import UserManagement from "./Admin/UserManagement";
 
 function App() {
   const roleID = localStorage.getItem("roleID")
@@ -52,6 +53,8 @@ function App() {
               <Route path="/petlist" element={<PetsList />} />
               <Route path="/petdetail/:petID" element={<PetDetail />} />
               <Route path="/adoptprocess/:petID" element={<AdoptProcess />} />
+              <Route path="/report/:petID" element={<Report />} />
+
               <Route
                 path="/admin"
                 element={
@@ -65,6 +68,14 @@ function App() {
                 element={
                   <ProtectedRoute roleID={3}>
                     <AdoptProcess />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/historyadoption"
+                element={
+                  <ProtectedRoute roleID={3}>
+                    <HistoryAdoption />
                   </ProtectedRoute>
                 }
               />
@@ -135,7 +146,7 @@ function App() {
               <Route
                 path="/events/update/:eventID"
                 element={
-                  <ProtectedRoute roleID={2}> 
+                  <ProtectedRoute roleID={2}>
                     <UpdateEvent />
                   </ProtectedRoute>
                 }

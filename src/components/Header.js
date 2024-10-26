@@ -84,6 +84,9 @@ const Header = () => {
               <NavLink to="/events" className="nav-link">
                 <h3>Events</h3>
               </NavLink>
+              <NavLink to="/admin/user-management" className="nav-link">
+                <h3>User Management</h3>
+              </NavLink>
               <NavDropdown
                 title={
                   <span className="nav-dropdown-title">
@@ -118,9 +121,6 @@ const Header = () => {
                   Event Requests
                 </NavDropdown.Item>
               </NavDropdown>
-              <NavLink to="/admin/user-management" className="nav-link">
-                <h3>User Management</h3>
-              </NavLink>
             </>
           )}
         </>

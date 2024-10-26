@@ -59,17 +59,12 @@ const AddEvent = () => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    setEventData((prev) => ({
-      ...prev,
-      img_url: file,
-    }));
-
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
+      setEventData((prev) => ({
+        ...prev,
+        img_url: file,
+      }));
+      setImagePreview(URL.createObjectURL(file));
     }
   };
 
@@ -80,24 +75,35 @@ const AddEvent = () => {
     }
     setIsLoading(true);
     const formData = new FormData();
-    for (const key in eventData) {
-      formData.append(key, eventData[key]);
+    
+    // Thêm các trường dữ liệu vào formData
+    formData.append('event_name', eventData.event_name);
+    formData.append('description', eventData.description);
+    formData.append('start_date', eventData.start_date);
+    formData.append('end_date', eventData.end_date);
+    formData.append('status', eventData.status);
+    
+    // Chỉ thêm hình ảnh nếu có
+    if (eventData.img_url) {
+      formData.append('image', eventData.img_url);
     }
 
     try {
-      await api.post("/events/addEvents", formData, {
+      const response = await api.post("/events/addEvents", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-      toast.success("Event added successfully!");
-      navigate("/events");
+      
+      if (response.data.status === 200) {
+        toast.success("Event added successfully!");
+        navigate("/events");
+      } else {
+        throw new Error(response.data.message || "Failed to add event");
+      }
     } catch (error) {
-      console.error(
-        "Error adding event:",
-        error.response ? error.response.data : error.message
-      );
-      toast.error("Failed to add event. Please try again.");
+      console.error("Error adding event:", error);
+      toast.error(error.message || "Failed to add event. Please try again.");
     } finally {
       setIsLoading(false);
     }

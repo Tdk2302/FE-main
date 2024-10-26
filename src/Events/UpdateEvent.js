@@ -100,7 +100,7 @@ const UpdateEvent = () => {
     if (file) {
       setEventData((prev) => ({
         ...prev,
-        img_url: file,
+        img_url: file,  // Lưu file hình ảnh, không phải URL
       }));
       setImagePreview(URL.createObjectURL(file));
     }
@@ -120,13 +120,9 @@ const UpdateEvent = () => {
     formData.append('end_date', eventData.end_date);
     formData.append('status', eventData.status);
 
-    if(eventData.img_url instanceof File){
+    // Chỉ gửi hình ảnh nếu người dùng đã chọn một hình ảnh mới
+    if (eventData.img_url instanceof File) {
       formData.append('image', eventData.img_url);
-    }
-
-    console.log('FormData content:');
-    for (let pair of formData.entries()) {
-      console.log(pair[0] + ': ' + pair[1]);
     }
 
     try {

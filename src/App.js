@@ -31,6 +31,8 @@ import Profile from "./Account/ProfileUser";
 import HistoryAdoption from "./Account/HistoryAdoption";
 import Report from "./Report/Report";
 import UserManagement from "./Admin/UserManagement";
+import RequestEventNotifications from "./Notifications/RequestEventNotifications";
+import EventDetail from './Events/EventDetail';
 
 function App() {
   const roleID = localStorage.getItem("roleID")
@@ -136,6 +138,14 @@ function App() {
                 }
               />
               <Route
+                path="/admin-notifications/event-requests"
+                element={
+                  <ProtectedRoute roleID={1}>
+                    <RequestEventNotifications />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path="/events/add"
                 element={
                   <ProtectedRoute roleID={2}>
@@ -160,12 +170,13 @@ function App() {
                   </ProtectedRoute>
                 } 
               />
+              <Route path="/events/:eventId" element={<EventDetail />} />
             </Routes>
           </Container>
         </div>
         <Footer />
       </div>
-      <ToastContainer />
+      <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
     </>
   );
 }

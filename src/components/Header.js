@@ -111,6 +111,12 @@ const Header = () => {
                 >
                   Ban Request
                 </NavDropdown.Item>
+                <NavDropdown.Item
+                  as={NavLink}
+                  to="/admin-notifications/event-requests"
+                >
+                  Event Requests
+                </NavDropdown.Item>
               </NavDropdown>
               <NavLink to="/admin/user-management" className="nav-link">
                 <h3>User Management</h3>

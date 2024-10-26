@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import api, { BASE_URL } from "../services/axios";
 import "../styles/events.scss";
 import { toast } from "react-toastify";
@@ -193,6 +193,14 @@ const EventList = () => {
     return null; // Sự kiện đã kết thúc, không hiển thị gì
   };
 
+  const handleEventClick = (event) => {
+    if (event.eventID) {
+      navigate(`/events/${event.eventID}`);
+    } else {
+      console.error("Event ID is undefined");
+    }
+  };
+
   if (isLoading) {
     return <Spinner />;
   }
@@ -206,7 +214,7 @@ const EventList = () => {
       )}
       <CardGroup>
         {currentEvents.map((event) => (
-          <Card key={event.eventID} className="mb-4">
+          <Card key={event.eventID} className="mb-4" onClick={() => handleEventClick(event)}>
             {(roleID === "1" || roleID === "2") && (
               <div className="dropdown-wrapper">
                 <Dropdown>
@@ -254,7 +262,6 @@ const EventList = () => {
                   marginTop: "10px",
                   padding: "5px",
                   borderRadius: "4px",
-                   
                 }}>
                   {getEventTimeInfo(event)}
                 </Card.Text>

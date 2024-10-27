@@ -12,7 +12,7 @@ const BannerDonate = () => {
               <div className="col">
                 <h2 className="support-text">Have you already supported us?</h2>
               </div>
-              <div className="col-auto">
+              <div className="col-auto ">
                 <NavLink to="/donate" className="nav-link">
                   <button className="support-button">DONATE NOW</button>
                 </NavLink>

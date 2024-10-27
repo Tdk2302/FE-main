@@ -13,10 +13,13 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TablePagination from "@mui/material/TablePagination";
+import OtherSupportMethods from "../components/OtherSupportMethods";
+import ContactBanner from "../components/ContactBanner";
 
 const Donate = () => {
   const [donations, setDonation] = useState([]);
   const [donators, setDonators] = useState([]); // State for donators
+  const [anonymousDonators, setAnonymousDonators] = useState([]); // State for anonymous donators
   const api_donate =
     "https://script.google.com/macros/s/AKfycbyQxSQp5kQd_tzarGa2l61fY2BKAVqC3jIhEhaqGOHOhraucs1P3c87XX4dsAqKRNjUvg/exec";
   const accountID = sessionStorage.getItem("accountID");
@@ -39,11 +42,20 @@ const Donate = () => {
     "%20"
   )}`;
 
-  // Fetch donators on component mount
+  // Fetch donators and anonymous donators on component mount
   useEffect(() => {
     const fetchDonators = async () => {
-      const response = await axios.get(`${BASE_URL}accounts/showDonators`);
-      setDonators(response.data.data);
+      try {
+        const [donatorsResponse, anonymousResponse] = await Promise.all([
+          axios.get(`${BASE_URL}accounts/showDonators`),
+          axios.get(`${BASE_URL}donation/getAnonymousDonator`),
+        ]);
+        console.log(anonymousResponse.data.data);
+        setDonators(donatorsResponse.data.data);
+        setAnonymousDonators(anonymousResponse.data.data);
+      } catch (error) {
+        toast.error(error.response.data.message);
+      }
     };
     fetchDonators();
   }, []);
@@ -98,8 +110,9 @@ const Donate = () => {
   return (
     <div className="donate-container">
       <div className="row">
-        <div className="col-sm-8 col-md-8 col-lg-8 donation-notes">
-          <h2>I Want to Support</h2>
+        <div className="col-sm-7 col-md-7 col-lg-7 donation-notes">
+          <h1>I Want to Support</h1>
+          <hr class="small-divider left" />
           <p>
             All activities of the FurryFriendFund group are entirely based on
             community contributions. The monthly expenses of the group include
@@ -121,36 +134,48 @@ const Donate = () => {
           </p>
 
           <h4>Scan the QR code above and check the information:</h4>
-          <h6>Bank: MB Bank</h6>
-          <h6>Account Number: 1319102004913</h6>
-          <h6>Account Name: TRUONG PHUC LOC</h6>
-          <h6>Content: {content}</h6>
-          <h6>
+          <p>
+            <strong>Bank:</strong> MB Bank
+          </p>
+          <p>
+            <strong>Account Number:</strong> 1319102004913
+          </p>
+          <p>
+            <strong>Account Name:</strong> TRUONG PHUC LOC
+          </p>
+          <p>
+            <strong>Content:</strong> {content}
+          </p>
+          <p>
             After a successful donation, click
             <Button className="edit-button" onClick={handleAddDonate}>
               Here
             </Button>{" "}
             to check the transaction history and save your donation.
-          </h6>
+          </p>
 
           <Paper sx={{ width: "100%", overflow: "hidden" }}>
             <TableContainer sx={{ maxHeight: 440 }}>
               <Table stickyHeader aria-label="sticky table">
                 <TableHead>
                   <TableRow>
-                    <TableCell align="center" colSpan={6}>
-                      <h1>Donators</h1>
+                    <TableCell
+                      align="center"
+                      colSpan={6}
+                      className="title-donate"
+                    >
+                      <h2>Donators</h2>
                     </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>
-                      <h2>Account ID</h2>
+                      <h4>Account ID</h4>
                     </TableCell>
                     <TableCell>
-                      <h2>Name</h2>
+                      <h4>Name</h4>
                     </TableCell>
                     <TableCell align="right">
-                      <h2>Total Donation</h2>
+                      <h4>Total Donation</h4>
                     </TableCell>
                   </TableRow>
                 </TableHead>
@@ -187,14 +212,72 @@ const Donate = () => {
             />
           </Paper>
         </div>
-        <div className="col-sm-4 col-md-4 col-lg-4 res-margin donate-image">
+        <div className="col-sm-5 col-md-5 col-lg-5 res-margin donate-image-">
           <img
             src={imageURL}
             alt="Sample"
             style={{ width: "500px", height: "500px" }}
           />
+          <Paper
+            sx={{ width: "100%", overflow: "hidden" }}
+            className="anonymous-donate"
+          >
+            <TableContainer sx={{ maxHeight: 440 }}>
+              <Table stickyHeader aria-label="sticky table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell
+                      align="center"
+                      colSpan={2}
+                      className="title-donate"
+                    >
+                      <h2>Anonymous Donators</h2>
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>
+                      <h4>Date</h4>
+                    </TableCell>
+                    <TableCell align="right">
+                      <h4>Total Donation</h4>
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {anonymousDonators
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((donator) => (
+                      <TableRow
+                        hover
+                        role="checkbox"
+                        tabIndex={-1}
+                        key={donator.id}
+                      >
+                        <TableCell>
+                          {new Date(donator.date_time).toLocaleDateString(
+                            "vi-VN"
+                          )}
+                        </TableCell>
+                        <TableCell align="right">${donator.amount}</TableCell>
+                      </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TablePagination
+              className="root-table"
+              rowsPerPageOptions={[5, 10, 25]}
+              component="div"
+              count={anonymousDonators.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </Paper>
         </div>
       </div>
+      <OtherSupportMethods />
     </div>
   );
 };

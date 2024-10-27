@@ -4,7 +4,7 @@ import api from "../services/axios";
 import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
 import "../styles/Eventdetail.scss";
-
+import BannerDonate from "../components/BannerDonate";
 const EventDetail = () => {
   const { eventId } = useParams();
   const [event, setEvent] = useState(null);
@@ -48,7 +48,7 @@ const EventDetail = () => {
       <p>Start Date: {new Date(event.start_date).toLocaleDateString()}</p>
       <p>End Date: {new Date(event.end_date).toLocaleDateString()}</p>
       <p>Status: {event.status}</p>
-      {/* Thêm các thông tin khác của sự kiện tại đây */}
+      <BannerDonate />
     </div>
   );
 };

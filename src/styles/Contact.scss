@@ -49,33 +49,3 @@
   font-size: 30px; // Kích thước chữ
   font-weight: bold; // Đậm chữ
 }
-
-.banner-donate {
-  margin: 30px;
-  width: 100vw;
-  position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
-}
-
-.serviceBox2 {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-
-  .service-icon {
-    img {
-      margin-left: 100px;
-      width: 30%;
-      height: 30%;
-    }
-  }
-  .service-content {
-    .text-capitalize {
-      margin-top: 5px;
-      margin-right: 10px;
-    }
-  }
-}

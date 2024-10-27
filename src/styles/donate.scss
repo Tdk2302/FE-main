@@ -15,6 +15,7 @@
 
 .donate-image {
   display: flex;
+  flex-direction: column;
   justify-content: center; // Center the image
   align-items: center; // Center vertically
   margin-bottom: 20px; // Space below the image
@@ -51,6 +52,16 @@
 .donation-notes {
   margin-bottom: 20px; // Space below the notes
   color: #000000; // Darker color for notes
+}
+
+.anonymous-donate {
+  margin-top: 105px;
+}
+
+.title-donate {
+  h2 {
+    font-size: 30px;
+  }
 }
 
 h4,

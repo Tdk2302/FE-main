@@ -44,9 +44,15 @@ const UserManagement = () => {
     setActionLoading(prev => ({ ...prev, [accountID]: action }));
     try {
       const response = await axios.put(`/accounts/${accountID}/${action}`);
-      toast.success(response.data.message);
-      // Tải lại toàn bộ trang
-      window.location.reload();
+      
+      // Hiển thị thông báo thành công với thời gian tùy chỉnh
+      toast.success(response.data.message, {
+        autoClose: 3000, // Thời gian hiển thị là 3 giây (3000ms)
+        onClose: () => {
+          // Sau khi thông báo đóng, refresh trang
+          window.location.reload();
+        }
+      });
     } catch (error) {
       console.error(`Error ${action} user:`, error);
       toast.error(`Failed to ${action} user. Please try again.`);

@@ -201,6 +201,10 @@ const EventList = () => {
     }
   };
 
+  const handleDropdownClick = (e) => {
+    e.stopPropagation(); // Ngăn chặn sự kiện click lan truyền lên Card
+  };
+
   if (isLoading) {
     return <Spinner />;
   }
@@ -216,24 +220,33 @@ const EventList = () => {
         {currentEvents.map((event) => (
           <Card key={event.eventID} className="mb-4" onClick={() => handleEventClick(event)}>
             {(roleID === "1" || roleID === "2") && (
-              <div className="dropdown-wrapper">
+              <div className="dropdown-wrapper" onClick={handleDropdownClick}>
                 <Dropdown>
                   <MenuButton
                     slots={{ root: IconButton }}
                     slotProps={{
                       root: { variant: "outlined", color: "neutral" },
                     }}
-                    onClick={(e) => handleMenuOpen(e, event.eventID)}
+                    onClick={(e) => {
+                      e.stopPropagation(); // Ngăn chặn sự kiện click lan truyền
+                      handleMenuOpen(e, event.eventID);
+                    }}
                   >
                     <MoreVert />
                   </MenuButton>
                   <Menu>
                     {roleID === "2" && (
-                      <MenuItem onClick={() => handleMenuAction("update")}>
+                      <MenuItem onClick={(e) => {
+                        e.stopPropagation(); // Ngăn chặn sự kiện click lan truyền
+                        handleMenuAction("update");
+                      }}>
                         Update
                       </MenuItem>
                     )}
-                    <MenuItem onClick={() => handleMenuAction("delete")}>
+                    <MenuItem onClick={(e) => {
+                      e.stopPropagation(); // Ngăn chặn sự kiện click lan truyền
+                      handleMenuAction("delete");
+                    }}>
                       Delete
                     </MenuItem>
                   </Menu>

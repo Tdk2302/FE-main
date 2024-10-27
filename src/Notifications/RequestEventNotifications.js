@@ -10,6 +10,7 @@ const RequestEventNotifications = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [newNotificationsCount, setNewNotificationsCount] = useState(0);
+    const [isUpdating, setIsUpdating] = useState(false);
 
     const fetchEventNotifications = useCallback(async () => {
         setIsLoading(true);
@@ -34,7 +35,7 @@ const RequestEventNotifications = () => {
             }
         } catch (error) {
             console.error('Error fetching event notifications:', error);
-            setError('An error occurred while fetching event notifications. Please try again later.');
+            setError('No notifications found');
         } finally {
             setIsLoading(false);
         }
@@ -46,12 +47,12 @@ const RequestEventNotifications = () => {
 
     const handleStatusUpdate = async (noti, status) => {
         const eventID = extractEventID(noti.message);
-        console.log('Updating status for eventID:', eventID, 'Status:', status);
         if (!eventID) {
             console.error('EventID is undefined');
             toast.error('Cannot update event status: Invalid event ID');
             return;
         }
+        setIsUpdating(true);
         try {
             const response = await axios.put(`/events/${eventID}/status?status=${status}`);
             console.log('Status update response:', response);
@@ -60,15 +61,15 @@ const RequestEventNotifications = () => {
                 const message = status ? 'Event accepted successfully' : 'Event rejected successfully';
                 toast.success(message);
                 localStorage.setItem(`event_noti_${noti.notiID}_read`, 'true');
-                setNotifications(prevNotifications => 
-                    prevNotifications.filter(n => n.notiID !== noti.notiID)
-                );
+                await fetchEventNotifications(); // Gọi lại API để cập nhật danh sách
             } else {
                 throw new Error(response.data.message || 'Failed to update event status');
             }
         } catch (error) {
             console.error('Error updating event status:', error);
             toast.error(error.response?.data?.message || error.message || 'Failed to update event status');
+        } finally {
+            setIsUpdating(false);
         }
     };
 
@@ -110,7 +111,7 @@ const RequestEventNotifications = () => {
         return match ? match[1] : null;
     };
 
-    if (isLoading) {
+    if (isLoading || isUpdating) {
         return <Spinner />;
     }
 
@@ -122,29 +123,24 @@ const RequestEventNotifications = () => {
                     <p className="error-message">{error}</p>
                 ) : notifications.length > 0 ? (
                     <ul className="notification-list">
-                        {notifications.map((noti) => {
-                            console.log('Rendering notification:', noti); // Thêm log này
-                            return (
-                                <li key={noti.notiID} className={`notification-item ${noti.isNew ? 'new' : ''}`}>
-                                    {formatMessage(noti.message)}
-                                    <p className="notification-date">
-                                        {formatRelativeTime(noti.createdAt)}
-                                    </p>
-                                    {noti.button_status && (
-                                        <div className="notification-actions">
-                                            <button onClick={() => {
-                                                console.log('Accept button clicked for notification:', noti);
-                                                handleStatusUpdate(noti, true);
-                                            }}>Accept</button>
-                                            <button onClick={() => {
-                                                console.log('Deny button clicked for notification:', noti);
-                                                handleStatusUpdate(noti, false);
-                                            }}>Deny</button>
-                                        </div>
-                                    )}
-                                </li>
-                            );
-                        })}
+                        {notifications.map((noti) => (
+                            <li key={noti.notiID} className={`notification-item ${noti.isNew ? 'new' : ''}`}>
+                                {formatMessage(noti.message)}
+                                <p className="notification-date">
+                                    {formatRelativeTime(noti.createdAt)}
+                                </p>
+                                {noti.button_status && (
+                                    <div className="notification-actions">
+                                        <button onClick={() => handleStatusUpdate(noti, true)} disabled={isUpdating}>
+                                            Accept
+                                        </button>
+                                        <button onClick={() => handleStatusUpdate(noti, false)} disabled={isUpdating}>
+                                            Deny
+                                        </button>
+                                    </div>
+                                )}
+                            </li>
+                        ))}
                     </ul>
                 ) : (
                     <p>No event notifications found</p>

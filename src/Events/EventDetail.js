@@ -10,7 +10,7 @@ const EventDetail = () => {
   const { eventId } = useParams();
   const [event, setEvent] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const navigate = useNavigate;
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchEventDetail = async () => {
@@ -31,14 +31,12 @@ const EventDetail = () => {
       }
     };
 
-
     fetchEventDetail();
-
-    
   }, [eventId]);
 
-  const handleAdopt = () => {
+  const handleDonate = () => {
     navigate(`/donate`);
+    localStorage.setItem("eventID", event.eventID);
   };
 
   if (isLoading) {
@@ -57,8 +55,9 @@ const EventDetail = () => {
       <p>Start Date: {new Date(event.start_date).toLocaleDateString()}</p>
       <p>End Date: {new Date(event.end_date).toLocaleDateString()}</p>
       <p>Status: {event.status}</p>
-      <button onClick={handleAdopt}>Adopt</button>
-      <BannerDonate />
+      <button className="donate-button" onClick={handleDonate}>
+        Donate now
+      </button>
     </div>
   );
 };

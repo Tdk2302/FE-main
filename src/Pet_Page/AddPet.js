@@ -24,17 +24,13 @@ const AddPet = ({ onPetAdded = () => {} }) => {
     socialized: false,
     rabies_vaccinated: false,
     origin: "",
-    image: null,
+    img_url: "",
     categoryID: 0,
     description: "",
   });
 
   const [imagePreview, setImagePreview] = useState(null);
   const roleID = localStorage.getItem("roleID");
-
-  if (roleID === "3") {
-    return <h1>Access Denied</h1>;
-  }
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -49,7 +45,7 @@ const AddPet = ({ onPetAdded = () => {} }) => {
     if (file) {
       setPetData((prev) => ({
         ...prev,
-        image: file,
+        img_url: file, // Lưu file vào img_url thay vì tạo thuộc tính image mới
       }));
       setImagePreview(URL.createObjectURL(file));
     }
@@ -59,11 +55,27 @@ const AddPet = ({ onPetAdded = () => {} }) => {
     e.preventDefault();
     setIsLoading(true);
     const formData = new FormData();
+
+    // Lặp qua tất cả các trường dữ liệu
     for (const key in petData) {
-      if (key === 'image' && petData[key] instanceof File) {
-        formData.append(key, petData[key]);
+      if (key === "img_url" && petData[key]) {
+        formData.append("img_url", petData[key]); // Gửi file với key là img_url
       } else {
         formData.append(key, petData[key]);
+      }
+    }
+
+    // Log để kiểm tra dữ liệu
+    console.log("Pet Data being sent:");
+    for (const [key, value] of formData.entries()) {
+      if (key === "img_url") {
+        console.log("img_url:", {
+          name: value.name,
+          size: value.size,
+          type: value.type,
+        });
+      } else {
+        console.log(`${key}:`, value);
       }
     }
 
@@ -73,7 +85,7 @@ const AddPet = ({ onPetAdded = () => {} }) => {
           "Content-Type": "multipart/form-data",
         },
       });
-      toast.success(res.data.message);
+      toast.success("Added pet successfully");
       onPetAdded();
       navigate("/petlist");
     } catch (error) {
@@ -106,7 +118,7 @@ const AddPet = ({ onPetAdded = () => {} }) => {
         <div className="col-lg-6 col-md-6 col-sm-12 text-center">
           <input
             type="file"
-            name="image"
+            name="img_url" // Thay đổi name từ "image" thành "img_url"
             accept="image/*"
             onChange={handleImageChange}
             required
@@ -282,7 +294,11 @@ const AddPet = ({ onPetAdded = () => {} }) => {
               <label className="form-check-label">Dietary Requirements</label>
             </div>
           </div>
-          <button onClick={handleSubmit} className="create-button w-50" type="submit">
+          <button
+            onClick={handleSubmit}
+            className="create-button w-50"
+            type="submit"
+          >
             Create
           </button>
         </div>

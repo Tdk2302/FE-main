@@ -98,7 +98,6 @@ const PetsList = () => {
 
   const handlePetClick = (pet) => {
     if (pet.petID) {
-      console.log("Navigating to pet detail with ID:", pet.petID);
       navigate(`/petdetail/${pet.petID}`, { state: { pet } });
     } else {
       console.error("Pet ID is undefined");

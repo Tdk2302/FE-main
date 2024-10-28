@@ -209,7 +209,7 @@ const PetListAdmin = () => {
               <option value="male">Male</option>
               <option value="female">Female</option>
             </select>
-            {roleID === 2 && (
+            {roleID === "2" && (
               <div className="add-update-button">
                 <NavLink
                   to="/addpet"

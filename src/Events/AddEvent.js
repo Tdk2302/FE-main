@@ -5,7 +5,7 @@ import "../styles/addevent.scss";
 import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
-import { format } from 'date-fns';
+import { format } from "date-fns";
 
 const AddEvent = () => {
   const navigate = useNavigate();
@@ -20,21 +20,24 @@ const AddEvent = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [minDate, setMinDate] = useState("");
   const [errors, setErrors] = useState({});
-  const [currentDate, setCurrentDate] = useState('');
+  const [currentDate, setCurrentDate] = useState("");
 
   useEffect(() => {
     const today = new Date();
-    const formattedDate = today.toISOString().split('T')[0];
+    const formattedDate = today.toISOString().split("T")[0];
     setMinDate(formattedDate);
   }, []);
 
   const validateForm = () => {
     const newErrors = {};
-    if (!eventData.event_name.trim()) newErrors.event_name = "Event name is required";
-    if (!eventData.description.trim()) newErrors.description = "Description is required";
+    if (!eventData.event_name.trim())
+      newErrors.event_name = "Event name is required";
+    if (!eventData.description.trim())
+      newErrors.description = "Description is required";
     if (!eventData.start_date) newErrors.start_date = "Start date is required";
     if (!eventData.end_date) newErrors.end_date = "End date is required";
-    if (eventData.end_date < eventData.start_date) newErrors.end_date = "End date must be after start date";
+    if (eventData.end_date < eventData.start_date)
+      newErrors.end_date = "End date must be after start date";
     if (!eventData.img_url) newErrors.img_url = "Image is required";
 
     setErrors(newErrors);
@@ -43,16 +46,20 @@ const AddEvent = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setEventData(prev => ({
+    setEventData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
 
     // Nếu ngày kết thúc được chọn trước ngày bắt đầu, cập nhật ngày kết thúc
-    if (name === 'start_date' && eventData.end_date && value > eventData.end_date) {
-      setEventData(prev => ({
+    if (
+      name === "start_date" &&
+      eventData.end_date &&
+      value > eventData.end_date
+    ) {
+      setEventData((prev) => ({
         ...prev,
-        end_date: value
+        end_date: value,
       }));
     }
   };
@@ -75,17 +82,17 @@ const AddEvent = () => {
     }
     setIsLoading(true);
     const formData = new FormData();
-    
+
     // Thêm các trường dữ liệu vào formData
-    formData.append('event_name', eventData.event_name);
-    formData.append('description', eventData.description);
-    formData.append('start_date', eventData.start_date);
-    formData.append('end_date', eventData.end_date);
-    formData.append('status', eventData.status);
-    
+    formData.append("event_name", eventData.event_name);
+    formData.append("description", eventData.description);
+    formData.append("start_date", eventData.start_date);
+    formData.append("end_date", eventData.end_date);
+    formData.append("status", eventData.status);
+
     // Chỉ thêm hình ảnh nếu có
     if (eventData.img_url) {
-      formData.append('image', eventData.img_url);
+      formData.append("image", eventData.img_url);
     }
 
     try {
@@ -94,7 +101,7 @@ const AddEvent = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-      
+
       if (response.data.status === 200) {
         toast.success("Event added successfully!");
         navigate("/events");

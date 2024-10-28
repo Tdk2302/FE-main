@@ -60,7 +60,7 @@ const AddPet = ({ onPetAdded = () => {} }) => {
     setIsLoading(true);
     const formData = new FormData();
     for (const key in petData) {
-      if (key === 'image' && petData[key] instanceof File) {
+      if (key === 'img_url' && petData[key] instanceof File) {
         formData.append(key, petData[key]);
       } else {
         formData.append(key, petData[key]);

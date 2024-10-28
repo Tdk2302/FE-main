@@ -46,6 +46,11 @@ const BanRequestNotifications = () => {
 
     const handleStatusUpdate = async (notiID, status) => {
         try {
+            if (!notiID) {
+                toast.error('Invalid notification ID');
+                return;
+            }
+
             if (status) {
                 // Accept: Ban the account
                 const notification = notifications.find(noti => noti.notiID === notiID);
@@ -58,6 +63,7 @@ const BanRequestNotifications = () => {
                 } else {
                     toast.success('Account banned successfully');
                 }
+                
             } else {
                 // Deny: Delete the notification
                 const response = await axios.delete(`/notification/deleteNotification`, { data: { notiID } });
@@ -66,12 +72,39 @@ const BanRequestNotifications = () => {
                 } else {
                     toast.success('Notification deleted successfully');
                 }
+             
             }
+
+            // Cập nhật localStorage và UI
             localStorage.setItem(`noti_${notiID}_read`, 'true');
+            
+            // Cập nhật danh sách thông báo và đếm số thông báo mới
+            setNotifications(prev => {
+                const updatedNotifications = prev.map(noti => 
+                    noti.notiID === notiID 
+                        ? { ...noti, isNew: false, button_status: false }
+                        : noti
+                );
+                // Cập nhật số lượng thông báo mới
+                const newCount = updatedNotifications.filter(noti => noti.isNew).length;
+                setNewNotificationsCount(newCount);
+                return updatedNotifications;
+            });
             apiBanRequestNotifications();
+
         } catch (error) {
             console.error('Error updating notification status:', error);
             toast.error(error.response?.data?.message || 'Failed to update notification status');
+            
+            // Xử lý lỗi 404
+            if (error.response?.status === 404) {
+                setNotifications(prev => {
+                    const updatedNotifications = prev.filter(noti => noti.notiID !== notiID);
+                    const newCount = updatedNotifications.filter(noti => noti.isNew).length;
+                    setNewNotificationsCount(newCount);
+                    return updatedNotifications;
+                });
+            }
         }
     }
 

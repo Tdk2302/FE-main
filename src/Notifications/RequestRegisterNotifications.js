@@ -46,15 +46,49 @@ const RequestRegisterNotifications = () => {
 
     const HandleStatusUpdate = async (notiID, status) => {
         try {
+            if (!notiID) {
+                toast.error('Invalid notification ID');
+                return;
+            }
+
             const response = await axios.put(`notification/${notiID}/status?status=${status}`);
+            
             if (response.status === 200) {
-                toast.success(`Notification ${status ? 'Accepted' : 'Denied'} successfully`);
                 localStorage.setItem(`noti_${notiID}_read`, 'true');
+                
+                // Cập nhật danh sách thông báo và đếm số thông báo mới
+                setNotifications(prev => {
+                    const updatedNotifications = prev.map(noti => 
+                        noti.notiID === notiID 
+                            ? { ...noti, isNew: false, button_status: false }
+                            : noti
+                    );
+                    // Cập nhật số lượng thông báo mới
+                    const newCount = updatedNotifications.filter(noti => noti.isNew).length;
+                    setNewNotificationsCount(newCount);
+                    return updatedNotifications;
+                });
+                
+                toast.success(`Notification ${status ? 'Accepted' : 'Denied'} successfully`);
+                
+                // Refresh danh sách thông báo
                 apiRequestRegisterNotifications();
             }
         } catch (error) {
             console.error('Error updating notification status:', error);
-            toast.error('Failed to update notification status');
+            
+            const errorMessage = error.response?.data?.message || 'Failed to update notification status';
+            toast.error(errorMessage);
+            
+            if (error.response?.status === 404) {
+                // Cập nhật notifications và đếm số thông báo mới khi notification bị xóa
+                setNotifications(prev => {
+                    const updatedNotifications = prev.filter(noti => noti.notiID !== notiID);
+                    const newCount = updatedNotifications.filter(noti => noti.isNew).length;
+                    setNewNotificationsCount(newCount);
+                    return updatedNotifications;
+                });
+            }
         }
     }
 

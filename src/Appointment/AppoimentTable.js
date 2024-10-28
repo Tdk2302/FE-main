@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useCallback } from "react";
+  import React, { useState, useEffect, useCallback } from "react";
 import axios from "../services/axios";
 import "../styles/appoitment.scss";
 import moment from "moment";
 import { toast } from "react-toastify";
 import Spinner from "../components/Spinner"; // Thêm dòng này
 import api from "../services/axios";
+import { Link } from "react-router-dom";
 const AppointmentPage = () => {
   // Các state để lưu trữ và quản lý dữ liệu
   const [unprocessedAppointments, setUnprocessedAppointments] = useState([]);
@@ -255,7 +256,18 @@ const AppointmentPage = () => {
                         <tr key={appointment.appointID}>
                           <td>{formatDateTime(appointment.date_time)}</td>
                           <td>{appointment.accountID}</td>
-                          <td>{appointment.petID}</td>
+                          <td>
+                            <Link 
+                                to={`/petdetail/${appointment.petID}`}
+                                style={{
+                                    color: '#007bff',
+                                    textDecoration: 'underline',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                {appointment.petID}
+                            </Link>
+                          </td>
                           <td>{renderStatus(appointment.status)}</td>
                           <td>{renderAdoptStatus(appointment.adopt_status)}</td>
                           <td>
@@ -314,7 +326,18 @@ const AppointmentPage = () => {
                         <tr key={appointment.appointID}>
                           <td>{formatDateTime(appointment.date_time)}</td>
                           <td>{appointment.accountID}</td>
-                          <td>{appointment.petID}</td>
+                          <td>
+                            <Link 
+                                to={`/petdetail/${appointment.petID}`}
+                                style={{
+                                    color: '#007bff',
+                                    textDecoration: 'underline',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                {appointment.petID}
+                            </Link>
+                          </td>
                           <td>{appointment.staffID}</td>
                           <td>{renderStatus(appointment.status)}</td>
                           <td>{renderAdoptStatus(appointment.adopt_status)}</td>
@@ -372,7 +395,18 @@ const AppointmentPage = () => {
                         <tr key={appointment.appointID}>
                           <td>{formatDateTime(appointment.date_time)}</td>
                           <td>{appointment.accountID}</td>
-                          <td>{appointment.petID}</td>
+                          <td>
+                            <Link 
+                                to={`/petdetail/${appointment.petID}`}
+                                style={{
+                                    color: '#007bff',
+                                    textDecoration: 'underline',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                {appointment.petID}
+                            </Link>
+                          </td>
                           <td>{appointment.staffID}</td>
                           <td>{renderStatus(appointment.status)}</td>
                           <td>{renderAdoptStatus(appointment.adopt_status)}</td>

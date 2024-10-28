@@ -162,7 +162,7 @@ const HomePage = () => {
             </div>
           ))}
         </Carousel>
-        <NavLink to="/adopt" className="nav-link">
+        <NavLink to="/petlist" className="nav-link">
           <button className="adopt-button">ADOPT</button>
         </NavLink>
       </section>

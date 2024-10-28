@@ -1,12 +1,6 @@
 import React from "react";
 import "../styles/Contact.scss";
-import {
-  FaEnvelope,
-  FaPhone,
-  FaMapMarkerAlt,
-  FaDonate,
-  FaComments,
-} from "react-icons/fa";
+
 import { Container, Row, Col } from "react-bootstrap";
 import toyimg from "../assets/images/pet-toy.png";
 import clothesimg from "../assets/images/pet-clothes.png";

@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import api from "../services/axios";
 import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
 import "../styles/Eventdetail.scss";
 import BannerDonate from "../components/BannerDonate";
+import { NavLink } from "react-bootstrap";
 const EventDetail = () => {
   const { eventId } = useParams();
   const [event, setEvent] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchEventDetail = async () => {
@@ -32,6 +34,11 @@ const EventDetail = () => {
     fetchEventDetail();
   }, [eventId]);
 
+  const handleDonate = () => {
+    navigate(`/donate`);
+    localStorage.setItem("eventID", event.eventID);
+  };
+
   if (isLoading) {
     return <Spinner />;
   }
@@ -44,11 +51,13 @@ const EventDetail = () => {
     <div className="event-detail">
       <h1>{event.event_name}</h1>
       <img src={event.img_url} alt={event.event_name} />
-      <p className="description">{event.description}</p> // Hiển thị mô tả
+      <p className="description">{event.description}</p>
       <p>Start Date: {new Date(event.start_date).toLocaleDateString()}</p>
       <p>End Date: {new Date(event.end_date).toLocaleDateString()}</p>
       <p>Status: {event.status}</p>
-      <BannerDonate />
+      <button className="donate-button" onClick={handleDonate}>
+        Donate now
+      </button>
     </div>
   );
 };

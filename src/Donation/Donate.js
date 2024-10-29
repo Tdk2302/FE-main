@@ -114,7 +114,7 @@ const Donate = () => {
       <div className="row">
         <div className="col-sm-7 col-md-7 col-lg-7 donation-notes">
           <h1>I Want to Support</h1>
-          <hr class="small-divider left" />
+          <hr className="small-divider left donate-divider" />
           <p>
             All activities of the FurryFriendFund group are entirely based on
             community contributions. The monthly expenses of the group include

@@ -2,34 +2,45 @@ import React, { useState, useEffect } from "react";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import "../styles/homepage.scss";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import { NavLink } from "react-router-dom";
-import dog1 from "../assets/images/dog-1.jpg";
-import dog2 from "../assets/images/dog-2.jpg";
-import dog3 from "../assets/images/dog-3.jpg";
-import dog4 from "../assets/images/dog-4.jpg";
+import { NavLink, useNavigate } from "react-router-dom";
 import aboutUsImage from "../assets/images/logo.png"; // Đảm bảo bạn có hình ảnh này
 import Spinner from "./Spinner";
 import axios from "../services/axios";
 import BackToTop from "./BackToTop"; // Import component
 import BannerDonate from "./BannerDonate";
+import api, { BASE_URL } from "../services/axios";
 
 const HomePage = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [currentNewsIndex, setCurrentNewsIndex] = useState(0);
+  const [events, setEvents] = useState([]);
   const [otherPets, setOtherPets] = useState([]);
+  const navigate = useNavigate();
+
   useEffect(() => {
-    const fetchOtherPets = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get("/pets/showListOfPets");
-        setOtherPets(response.data); // Cập nhật danh sách otherPets vào state
+        // Fetch pets
+        const petsResponse = await axios.get("/pets/showListOfPets");
+        setOtherPets(petsResponse.data);
+
+        // Fetch events
+        const eventsResponse = await api.get("/events/showEvents");
+        if (eventsResponse.data.status === 200) {
+          setEvents(eventsResponse.data.data);
+        }
       } catch (error) {
-        console.error("Error fetching other pets:", error);
+        console.error("Error fetching data:", error);
       }
     };
-    fetchOtherPets();
+    fetchData();
   }, []);
-  const roleID = localStorage.getItem("roleID");
+
+  const getImageUrl = (imgUrl) => {
+    if (!imgUrl) return "/path/to/default/image.jpg";
+    if (imgUrl.startsWith("http")) return imgUrl;
+    return `${BASE_URL}${imgUrl}`;
+  };
+
   useEffect(() => {
     const accountID = localStorage.getItem("accountID");
     if (accountID) {
@@ -60,44 +71,8 @@ const HomePage = () => {
     },
   };
 
-  const newsItems = [
-    {
-      id: 1,
-      image: dog2,
-      title: "The Famous Shiba Inu Dog Around the World...",
-      description:
-        "In every group of friends, there's always someone who is an expert",
-    },
-    {
-      id: 2,
-      image: dog1,
-      title: '"The Saddest Dog in the World" Back Then...',
-      description: "A happy ending for the cat after just one year",
-    },
-    {
-      id: 3,
-      image: dog3,
-      title: "Meet the Dog Taking the Internet by Storm...",
-      description:
-        "Meet the Dog Taking the Internet by Storm with Its Mischievous Paw",
-    },
-    {
-      id: 4,
-      image: dog4,
-      title: "Meet the Dog Taking the Internet by Storm...",
-      description:
-        "Meet the Dog Taking the Internet by Storm with Its Mischievous Paw",
-    },
-  ];
-
-  const nextNews = () => {
-    setCurrentNewsIndex((prevIndex) => (prevIndex + 1) % newsItems.length);
-  };
-
-  const prevNews = () => {
-    setCurrentNewsIndex(
-      (prevIndex) => (prevIndex - 1 + newsItems.length) % newsItems.length
-    );
+  const handleEventClick = (eventID) => {
+    navigate(`/events/${eventID}`);
   };
 
   return (
@@ -152,7 +127,7 @@ const HomePage = () => {
           {otherPets.map((otherPet, index) => (
             <div key={index} className="pet-card">
               <NavLink to={`/petdetail/${otherPet.petID}`} className="nav-link">
-                <img src={otherPet.img_url} alt={otherPet.name} />
+                <img src={getImageUrl(otherPet.img_url)} alt={otherPet.name} />
                 <h3>{otherPet.name}</h3>
                 <p>Sex: {otherPet.sex}</p>
                 <p>Age: {otherPet.age}</p>
@@ -166,35 +141,50 @@ const HomePage = () => {
         </NavLink>
       </section>
 
-      {/* Tin tức */}
-      <section className="news">
-        <h2>News</h2>
-        <div className="news-slider">
-          <button onClick={prevNews} className="slider-button left">
-            <FaChevronLeft />
-          </button>
-          <div className="news-items">
-            {newsItems.map((item, index) => (
+      {/* Thay thế phần Events */}
+      <section className="events">
+        <h2>Events</h2>
+        {events && events.length > 0 ? (
+          <div className="events-container">
+            {events.slice(0, 4).map((event) => (
               <div
-                key={item.id}
-                className={`news-item ${
-                  index === currentNewsIndex ? "active" : ""
-                }`}
+                key={event.eventID}
+                className="event-card"
+                onClick={() => handleEventClick(event.eventID)}
               >
-                <img src={item.image} alt={item.title} />
-                <div className="news-content">
-                  <h3>{item.title}</h3>
-                  <p>{item.description}</p>
+                <img
+                  src={getImageUrl(event.img_url)}
+                  alt={event.event_name}
+                  className="event-image"
+                />
+                <div className="event-content">
+                  <h3>{event.event_name}</h3>
+                  <p>{event.title}</p>
+                  <div className="event-dates">
+                    <span>
+                      Start: {new Date(event.start_date).toLocaleDateString()}
+                    </span>
+                    <span>
+                      End: {new Date(event.end_date).toLocaleDateString()}
+                    </span>
+                  </div>
+                  <span
+                    className={`event-status ${event.status.toLowerCase()}`}
+                  >
+                    {event.status}
+                  </span>
                 </div>
               </div>
             ))}
           </div>
-          <button onClick={nextNews} className="slider-button right">
-            <FaChevronRight />
-          </button>
-        </div>
-        <button className="read-more">READ MORE</button>
+        ) : (
+          <p className="no-events">No events available</p>
+        )}
+        <NavLink to="/events" className="nav-link">
+          <button className="view-all-events">VIEW ALL EVENTS</button>
+        </NavLink>
       </section>
+
       <BannerDonate />
 
       <BackToTop />

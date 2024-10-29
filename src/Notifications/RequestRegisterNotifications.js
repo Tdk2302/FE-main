@@ -70,8 +70,6 @@ const RequestRegisterNotifications = () => {
                 });
                 
                 toast.success(`Notification ${status ? 'Accepted' : 'Denied'} successfully`);
-                
-                // Refresh danh sách thông báo
                 apiRequestRegisterNotifications();
             }
         } catch (error) {

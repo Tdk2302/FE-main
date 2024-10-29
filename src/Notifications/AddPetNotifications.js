@@ -70,8 +70,6 @@ const AddPetNotifications = () => {
                 });
                 
                 toast.success(`Notification ${status ? 'Accepted' : 'Denied'} successfully`);
-                
-                // Refresh danh sách thông báo
                 apiAddPetNotifications();
             }
         } catch (error) {

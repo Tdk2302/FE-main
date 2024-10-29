@@ -19,6 +19,8 @@ const Header = () => {
   const name = localStorage.getItem("name");
   const loggedIn = localStorage.getItem("isLoggedIn") === "true";
   const role = Number(localStorage.getItem("roleID"));
+  const accountID = localStorage.getItem("accountID");
+
   useEffect(() => {
     setIsLoading(true);
     setUserName(name);
@@ -162,7 +164,7 @@ const Header = () => {
                 title={<i className="fa-solid fa-gear"></i>}
                 id="basic-nav-dropdown"
               >
-                <NavDropdown.Item as={NavLink} to="/profile">
+                <NavDropdown.Item as={NavLink} to={`/profile/${accountID}`}>
                   Profile
                 </NavDropdown.Item>
                 {roleID === 3 && (

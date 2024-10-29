@@ -23,7 +23,7 @@ const Footer = () => {
 
         <div className="footer-about">
           <h4>About us</h4>
-          <hr className="small-divider left"></hr>
+          <hr className="small-dividers left"></hr>
           <p>
             FurryFriendsFund is a small pet shelter where we strive to provide
             the best living environment for our pets.
@@ -32,7 +32,7 @@ const Footer = () => {
 
         <div className="footer-bottom">
           <h4>Contact us</h4>
-          <hr className="small-divider"></hr>
+          <hr className="small-dividers"></hr>
           <p>
             <i className="fa fa-phone"></i> (+84)000000000
             <br />

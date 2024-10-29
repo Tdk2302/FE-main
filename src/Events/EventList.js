@@ -28,7 +28,7 @@ const EventList = () => {
   const [selectedEventId, setSelectedEventId] = useState(null);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [eventToDelete, setEventToDelete] = useState(null);
-  const [deleteConfirmation, setDeleteConfirmation] = useState("");
+
   useEffect(() => {
     fetchEvents();
   }, [roleID]);
@@ -79,7 +79,10 @@ const EventList = () => {
       toast.error("Invalid eventID");
       return;
     }
-
+    if (isEventPushlished(event)) {
+      toast.error("Cannot update event that has been published.");
+      return;
+    }
     if (isEventEnded(event)) {
       toast.error("Cannot update event that has ended.");
       return;
@@ -211,6 +214,12 @@ const EventList = () => {
     e.stopPropagation(); // Ngăn chặn sự kiện click lan truyền lên Card
   };
 
+  const isEventPushlished = (event) => {
+    if (event.status === "Published"){
+      return true;
+    }
+  }
+
   const isEventEnded = (event) => {
     // Kiểm tra nếu status là "Ending"
     if (event.status === "Ending") {
@@ -257,7 +266,7 @@ const EventList = () => {
                     <MoreVert />
                   </MenuButton>
                   <Menu>
-                    {roleID === "2" && !isEventEnded(event) && (
+                    {roleID === "2" && !isEventEnded(event) && !isEventPushlished(event) && (
                       <MenuItem onClick={(e) => {
                         e.stopPropagation(); // Ngăn chặn sự kiện click lan truyền
                         handleMenuAction("update");

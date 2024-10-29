@@ -46,11 +46,7 @@ const UpdateEvent = () => {
           // Kiểm tra trạng thái sự kiện
           const status = response.data.data.status;
           console.log(status);
-          if (
-            status !== "Waiting" &&
-            status !== "Updating" &&
-            status !== "Published"
-          ) {
+          if (status !== "Waiting" && status !== "Updating") {
             setCanUpdate(false);
           }
         } else {

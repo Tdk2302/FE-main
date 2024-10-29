@@ -125,23 +125,23 @@
     margin-top: 30px;
 
     button {
-        margin: 0 5px;
-        padding: 10px 20px;
-        background-color: #f3f3f3;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s, border-color 0.3s;
-  
-        &:hover {
-          background-color: #e2e2e2;
-          border-color: #ccc;
-        }
-  
-        &.active {
-          color: rgb(0, 0, 0);
-        }
+      margin: 0 5px;
+      padding: 10px 20px;
+      background-color: #f3f3f3;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s, border-color 0.3s;
+
+      &:hover {
+        background-color: #e2e2e2;
+        border-color: #ccc;
       }
+
+      &.active {
+        color: rgb(0, 0, 0);
+      }
+    }
   }
   .event-button {
     background-color: #f1cf7e;
@@ -151,7 +151,7 @@
     padding: 10px 20px;
     border-radius: 15px;
     transition: all 0.3s ease;
-   
+
     &:hover {
       background-color: #e6be6a;
       border-color: #e6be6a;
@@ -165,7 +165,7 @@
     background-color: rgba(255, 255, 255, 0.5);
     border: none;
     backdrop-filter: blur(5px);
-    
+
     &:hover {
       background-color: rgba(255, 255, 255, 0.7);
     }
@@ -182,15 +182,17 @@
     color: #333;
     padding: 10px 16px;
     font-size: 14px;
-    
+
     &:hover {
       background-color: rgba(0, 0, 0, 0.04);
     }
   }
 }
 
-
-
-
-
-
+.event-description {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 3;
+}

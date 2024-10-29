@@ -80,8 +80,6 @@ const PetDetail = () => {
     },
   };
 
-  // Hàm để lấy dữ liệu thú cưng khác
-
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
@@ -104,9 +102,7 @@ const PetDetail = () => {
   const fetchOtherPets = async () => {
     try {
       const response = await api.get("/pets/showListOfPets");
-      console.log("Fetched other pets:", response.data); // Kiểm tra dữ liệu otherPets
-      setOtherPets(response.data); // Cập nhật danh sách otherPets vào state
-      console.log("Updated other pets state:", response.data); // Kiểm tra state sau khi cập nhật
+      setOtherPets(response.data);
     } catch (error) {
       console.error("Error fetching other pets:", error);
     }

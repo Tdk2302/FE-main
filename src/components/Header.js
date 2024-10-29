@@ -142,7 +142,10 @@ const Header = () => {
             className="d-inline-block align-top"
             alt="FurryFriendsFund logo"
           />
-          <p>FurryFriendsFund</p>
+          {roleID === 3 && <p>FurryFriendsFund</p>}
+
+          {roleID === 2 && <p>Staff</p>}
+          {roleID === 1 && <p>Admin</p>}
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">

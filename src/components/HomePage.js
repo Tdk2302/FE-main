@@ -29,9 +29,8 @@ const HomePage = () => {
     };
     fetchOtherPets();
   }, []);
-
+  const roleID = localStorage.getItem("roleID");
   useEffect(() => {
-    // Simulate loading
     const accountID = localStorage.getItem("accountID");
     if (accountID) {
       sessionStorage.setItem("accountID", accountID);

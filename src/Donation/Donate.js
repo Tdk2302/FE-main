@@ -105,6 +105,14 @@ const Donate = () => {
     setPage(0);
   };
 
+  // Add this useEffect at the top of the component
+  useEffect(() => {
+    // Cleanup function that runs when component unmounts or before re-render
+    return () => {
+      sessionStorage.removeItem("eventID");
+    };
+  }, []); // Empty dependency array means this runs only on mount/unmount
+
   return (
     <div className="donate-container">
       <div className="row">

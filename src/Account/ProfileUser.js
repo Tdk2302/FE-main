@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import api, { BASE_URL } from "../services/axios";
 import { toast } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
@@ -71,7 +71,8 @@ const ProfileUser = () => {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [errors, setErrors] = useState({});
-
+  const { accountID: urlAccountID } = useParams();
+  const currentUserID = localStorage.getItem("accountID");
   const getImageUrl = (imgUrl) => {
     if (!imgUrl) return "/path/to/default/image.jpg";
     if (imgUrl.startsWith("http")) return imgUrl;
@@ -87,17 +88,7 @@ const ProfileUser = () => {
   const fetchUserInfo = async () => {
     setIsLoading(true);
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        toast.error("No token found. Please log in again.");
-        navigate("/login");
-        return;
-      }
-
-      const decodedToken = jwtDecode(token);
-      const accountID = decodedToken.sub;
-
-      const response = await api.get(`accounts/search/${accountID}`);
+      const response = await api.get(`accounts/search/${urlAccountID}`);
       const userData = response.data || {
         accountID: "",
         name: "",
@@ -209,9 +200,13 @@ const ProfileUser = () => {
   };
 
   const toggleEdit = () => {
+    const currentUserID = localStorage.getItem("accountID");
+    if (currentUserID !== urlAccountID) {
+      toast.error("You can only edit your own profile");
+      return;
+    }
     setIsEditing(!isEditing);
     if (!isEditing) {
-      // Reset newPassword when entering edit mode
       setNewPassword("");
     }
   };
@@ -247,13 +242,16 @@ const ProfileUser = () => {
           <Typography component="h1" variant="h4" sx={{ mt: 2, fontWeight: 'bold', color: '#333333' }}>
             {userInfo.name || "User Profile"}
           </Typography>
+          { currentUserID === urlAccountID && (
           <Chip 
+
             icon={<EditIcon />} 
             label={isEditing ? "Editing" : "Edit Profile"} 
             onClick={toggleEdit}
             color="default"
             sx={{ mt: 2, backgroundColor: '#f0f0f0', '&:hover': { backgroundColor: '#e0e0e0' } }}
           />
+          )}
         </Box>
         <Box component="form" onSubmit={handleOpenDialog} sx={{ mt: 3 }}>
           <Grid container spacing={3}>

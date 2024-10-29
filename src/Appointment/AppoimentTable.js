@@ -1,4 +1,4 @@
-  import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "../services/axios";
 import "../styles/appoitment.scss";
 import moment from "moment";
@@ -160,28 +160,41 @@ const AppointmentPage = () => {
   const handleFinalAccept = async (appointmentId) => {
     setProcessingAppointments((prev) => [...prev, appointmentId]);
     try {
-      const response = await api.put(`/appointment/acceptAdopt`, {
+      const staffId = userID;
+      const response = await api.put(`/appointment/acceptAdopt/${staffId}`, {
         appointID: appointmentId,
       });
+      console.log("API: ", response.data);
       toast.success(response.data.message);
-      refreshAppointments();
     } catch (error) {
+      // Hiển thị thông báo lỗi từ server
       toast.error(error.response.data.message);
-      console.error("Error final accepting appointment:", error);
+    } finally {
+      // Luôn refresh lại danh sách sau khi thực hiện, bất kể thành công hay thất bại
+      await refreshAppointments();
+      await apiNotHappenAppointments();
+      // Xóa appointmentId khỏi danh sách đang xử lý
+      setProcessingAppointments((prev) => prev.filter(id => id !== appointmentId));
     }
   };
   // Xử lý từ chối cuộc hẹn ở bảng notHappenyet
   const handleFinalRefuse = async (appointmentId) => {
     setProcessingAppointments((prev) => [...prev, appointmentId]);
     try {
-      const response = await api.delete(`/appointment/refuseAdopt`, {
+      const staffId = userID;
+      const response = await api.delete(`/appointment/refuseAdopt/${staffId}`, {
         data: { appointID: appointmentId },
       });
       toast.success(response.data.message);
-      refreshAppointments();
     } catch (error) {
+      // Hiển thị thông báo lỗi từ server
       toast.error(error.response.data.message);
-      console.error("Error final refusing appointment:", error);
+    } finally {
+      // Luôn refresh lại danh sách sau khi thực hiện, bất kể thành công hay thất bại
+      await refreshAppointments();
+      await apiNotHappenAppointments();
+      // Xóa appointmentId khỏi danh sách đang xử lý
+      setProcessingAppointments((prev) => prev.filter(id => id !== appointmentId));
     }
   };
   // Format ngày giờ
@@ -255,12 +268,23 @@ const AppointmentPage = () => {
                       {unprocessedAppointments.map((appointment) => (
                         <tr key={appointment.appointID}>
                           <td>{formatDateTime(appointment.date_time)}</td>
-                          <td>{appointment.accountID}</td>
+                          <td>
+                            <Link
+                             to={`/profile/${appointment.accountID}`}
+                             style={{
+                                color: '#f1ba3a',
+                                textDecoration: 'underline',
+                                cursor: 'pointer'
+                             }}
+                            >
+                            {appointment.accountID}
+                            </Link>
+                          </td>
                           <td>
                             <Link 
                                 to={`/petdetail/${appointment.petID}`}
                                 style={{
-                                    color: '#007bff',
+                                    color: '#f1ba3a',
                                     textDecoration: 'underline',
                                     cursor: 'pointer'
                                 }}
@@ -325,12 +349,23 @@ const AppointmentPage = () => {
                       {notHappenAppointments.map((appointment) => (
                         <tr key={appointment.appointID}>
                           <td>{formatDateTime(appointment.date_time)}</td>
-                          <td>{appointment.accountID}</td>
+                          <td>
+                            <Link
+                             to = {`/profile/${appointment.accountID}`}
+                             style={{
+                                color: '#f1ba3a',
+                                textDecoration: 'underline',
+                                cursor: 'pointer'
+                             }}
+                            >
+                            {appointment.accountID}
+                            </Link>
+                          </td>
                           <td>
                             <Link 
                                 to={`/petdetail/${appointment.petID}`}
                                 style={{
-                                    color: '#007bff',
+                                    color: '#f1ba3a',
                                     textDecoration: 'underline',
                                     cursor: 'pointer'
                                 }}
@@ -394,12 +429,23 @@ const AppointmentPage = () => {
                       {endedAppointments.map((appointment) => (
                         <tr key={appointment.appointID}>
                           <td>{formatDateTime(appointment.date_time)}</td>
-                          <td>{appointment.accountID}</td>
+                          <td>
+                          <Link
+                            to={`/profile/${appointment.accountID}`}
+                            style={{
+                              color: '#f1ba3a',
+                              textDecoration: 'underline',
+                              cursor: 'pointer'
+                            }}
+                            >
+                            {appointment.accountID}
+                            </Link>
+                          </td>
                           <td>
                             <Link 
                                 to={`/petdetail/${appointment.petID}`}
                                 style={{
-                                    color: '#007bff',
+                                    color: '#f1ba3a',
                                     textDecoration: 'underline',
                                     cursor: 'pointer'
                                 }}

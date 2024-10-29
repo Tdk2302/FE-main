@@ -161,7 +161,7 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-              <Route path="/profile" element={<Profile />} />
+              <Route path="/profile/:accountID" element={<Profile />} />
               <Route 
                 path="/admin/user-management" 
                 element={

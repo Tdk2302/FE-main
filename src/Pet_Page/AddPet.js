@@ -118,7 +118,7 @@ const AddPet = ({ onPetAdded = () => {} }) => {
         <div className="col-lg-6 col-md-6 col-sm-12 text-center">
           <input
             type="file"
-            name="img_url" // Thay đổi name từ "image" thành "img_url"
+            name="img_url"
             accept="image/*"
             onChange={handleImageChange}
             required

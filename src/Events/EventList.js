@@ -5,7 +5,6 @@ import "../styles/events.scss";
 import { toast } from "react-toastify";
 import { Card, Button, CardGroup } from "react-bootstrap";
 import Spinner from "../components/Spinner";
-// Thêm các import mới
 import Dropdown from "@mui/joy/Dropdown";
 import IconButton from "@mui/joy/IconButton";
 import Menu from "@mui/joy/Menu";
@@ -15,7 +14,7 @@ import MoreVert from "@mui/icons-material/MoreVert";
 import DeleteDialog from "../components/DeleteDialog";
 
 import EventStatusDot from "../components/EventStatusDot";
-import moment from 'moment'; // Đảm bảo bạn đã import moment
+import moment from 'moment';
 
 const EventList = () => {
   const location = useLocation();
@@ -30,9 +29,7 @@ const EventList = () => {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [eventToDelete, setEventToDelete] = useState(null);
   const [deleteConfirmation, setDeleteConfirmation] = useState("");
-
   useEffect(() => {
-    console.log("Current roleID:", roleID); // Thêm dòng này  
     fetchEvents();
   }, [roleID]);
 
@@ -40,7 +37,6 @@ const EventList = () => {
     const state = location.state;
     if (state && state.updated) {
       fetchEvents();
-      // Clear the state after fetching
       navigate(location.pathname, { replace: true, state: {} });
     }
   }, [location]);
@@ -48,7 +44,7 @@ const EventList = () => {
   const getImageUrl = (imgUrl) => {
     if (!imgUrl) return "/path/to/default/image.jpg";
     if (imgUrl.startsWith("http")) return imgUrl;
-    return `${BASE_URL}${imgUrl}`; // Thêm dấu '/' trước imgUrl
+    return `${BASE_URL}${imgUrl}`;
   };
 
   const fetchEvents = async () => {
@@ -61,7 +57,6 @@ const EventList = () => {
         response = await api.get("/events/showEvents");
       }
       if (response.data.status === 200) {
-        // Kiểm tra status
         setEvents(response.data.data);
       } else {
         toast.error("Failed to fetch events");
@@ -79,19 +74,32 @@ const EventList = () => {
   };
 
   const handleUpdateEvent = (eventID) => {
-    
-    if (eventID) {
-      navigate(`/events/update/${eventID}`);
-    } else {
-      toast.error("Không thể cập nhật sự kiện. ID sự kiện không hợp lệ.");
+    const event = events.find(e => e.eventID === eventID);
+    if (!event) {
+      toast.error("Invalid eventID");
+      return;
     }
+
+    if (isEventEnded(event)) {
+      toast.error("Cannot update event that has ended.");
+      return;
+    }
+    
+    navigate(`/events/update/${eventID}`);
   };
 
   const handleDeleteEvent = async (eventID) => {
-    if (!eventID) {
-      toast.error("Không thể xóa sự kiện. ID sự kiện không hợp lệ.");
+    const event = events.find(e => e.eventID === eventID);
+    if (!event) {
+      toast.error("Invalid eventID");
       return;
     }
+    
+    if (isEventEnded(event)) {
+      toast.error("Cannot delete event that has ended.");
+      return;
+    }
+    
     setEventToDelete(eventID);
     setOpenDeleteDialog(true);
   };
@@ -178,17 +186,15 @@ const EventList = () => {
     const endDate = moment(event.end_date);
 
     if (now.isBefore(startDate)) {
-      const daysUntilStart = startDate.diff(now, 'days');
-      if (daysUntilStart === 0) {
-        const hoursUntilStart = startDate.diff(now, 'hours');
-        if (hoursUntilStart === 0) {
-          return `Event starts in ${startDate.diff(now, 'minutes')} minutes`;
+        const daysUntilStart = startDate.diff(now, 'days');
+        if (daysUntilStart === 0) {
+            // Nếu còn dưới 1 ngày (chỉ còn giờ hoặc phút)
+            return "Event starts soon";
         }
-        return `Event starts in ${hoursUntilStart} hours`;
-      }
-      return `Event starts in ${daysUntilStart} day${daysUntilStart > 1 ? 's' : ''}`;
+        // Nếu còn nhiều ngày
+        return `Event starts in ${daysUntilStart} day${daysUntilStart > 1 ? 's' : ''}`;
     } else if (now.isBetween(startDate, endDate)) {
-      return "Event is ongoing";
+        return "Event is ongoing";
     }
     return null; // Sự kiện đã kết thúc, không hiển thị gì
   };
@@ -203,6 +209,22 @@ const EventList = () => {
 
   const handleDropdownClick = (e) => {
     e.stopPropagation(); // Ngăn chặn sự kiện click lan truyền lên Card
+  };
+
+  const isEventEnded = (event) => {
+    // Kiểm tra nếu status là "Ending"
+    if (event.status === "Ending") {
+        return true;
+    }
+    
+    // Kiểm tra nếu đã qua end_date
+    const now = moment();
+    const endDate = moment(event.end_date);
+    if (now.isAfter(endDate)) {
+        return true;
+    }
+    
+    return false;
   };
 
   if (isLoading) {
@@ -235,7 +257,7 @@ const EventList = () => {
                     <MoreVert />
                   </MenuButton>
                   <Menu>
-                    {roleID === "2" && (
+                    {roleID === "2" && !isEventEnded(event) && (
                       <MenuItem onClick={(e) => {
                         e.stopPropagation(); // Ngăn chặn sự kiện click lan truyền
                         handleMenuAction("update");
@@ -243,12 +265,19 @@ const EventList = () => {
                         Update
                       </MenuItem>
                     )}
-                    <MenuItem onClick={(e) => {
-                      e.stopPropagation(); // Ngăn chặn sự kiện click lan truyền
-                      handleMenuAction("delete");
-                    }}>
-                      Delete
-                    </MenuItem>
+                    {!isEventEnded(event) && (
+                      <MenuItem onClick={(e) => {
+                        e.stopPropagation(); // Ngăn chặn sự kiện click lan truyền
+                        handleMenuAction("delete");
+                      }}>
+                        Delete
+                      </MenuItem>
+                    )}
+                    {isEventEnded(event) && (
+                      <MenuItem disabled style={{ color: 'gray' }}>
+                        Event has ended
+                      </MenuItem>
+                    )}
                   </Menu>
                 </Dropdown>
               </div>
@@ -266,7 +295,7 @@ const EventList = () => {
               <Card.Subtitle className="mb-2 text-muted">
                 {event.title}
               </Card.Subtitle>
-              <Card.Text>{event.description}</Card.Text>
+            
               {getEventTimeInfo(event) && (
                 <Card.Text className="event-time-info" style={{
                   fontSize: "14px", 

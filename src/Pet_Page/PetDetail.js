@@ -183,7 +183,7 @@ const PetDetail = () => {
                 </NavLink>
               </div>
             )}
-            {roleID === "3" && (
+            {roleID === "3" && pet.status.toLowerCase() !== "unavailable" && (
               <div className="adopt-button">
                 <Button onClick={() => handleAdopt(pet)}>Adopt</Button>
               </div>

@@ -45,6 +45,10 @@ const HistoryAdoption = () => {
     }
   };
 
+  const handleViewDetail = (pet) => {
+    navigate(`/petdetail/${pet.petID}`, { state: { pet } });
+  };
+
   if (isLoading) {
     return <Spinner />;
   }
@@ -72,12 +76,20 @@ const HistoryAdoption = () => {
                   <p>Breed: {pet.breed}</p>
                   <p>Age: {pet.age} months</p>
                 </div>
-                <button
-                  className="report-button"
-                  onClick={() => handleReportVideo(pet)}
-                >
-                  Report
-                </button>
+                <div className="button-report">
+                  <button
+                    className="report-button"
+                    onClick={() => handleReportVideo(pet)}
+                  >
+                    Report
+                  </button>
+                  <button
+                    className="report-button"
+                    onClick={() => handleViewDetail(pet)}
+                  >
+                    View Detail
+                  </button>
+                </div>
               </li>
             ))}
           </ul>

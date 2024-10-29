@@ -95,6 +95,7 @@ const Donate = () => {
   // Pagination state
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage1, setRowsPerPage1] = useState(5);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -105,13 +106,24 @@ const Donate = () => {
     setPage(0);
   };
 
+  const handleChangeRowsPerPage1 = (event) => {
+    setRowsPerPage1(+event.target.value);
+    setPage(0);
+  };
   // Add this useEffect at the top of the component
   useEffect(() => {
-    // Cleanup function that runs when component unmounts or before re-render
-    return () => {
+    // Add event listener for page unload
+    const handleUnload = () => {
       sessionStorage.removeItem("eventID");
     };
-  }, []); // Empty dependency array means this runs only on mount/unmount
+
+    window.addEventListener("beforeunload", handleUnload);
+
+    // Cleanup function to remove event listener
+    return () => {
+      window.removeEventListener("beforeunload", handleUnload);
+    };
+  }, []);
 
   return (
     <div className="donate-container">
@@ -218,6 +230,7 @@ const Donate = () => {
             />
           </Paper>
         </div>
+
         <div className="col-sm-5 col-md-5 col-lg-5 res-margin donate-image-">
           <img
             src={imageURL}
@@ -251,7 +264,10 @@ const Donate = () => {
                 </TableHead>
                 <TableBody>
                   {anonymousDonators
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .slice(
+                      page * rowsPerPage1,
+                      page * rowsPerPage1 + rowsPerPage1
+                    )
                     .map((donator) => (
                       <TableRow
                         hover
@@ -275,10 +291,10 @@ const Donate = () => {
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
               count={anonymousDonators.length}
-              rowsPerPage={rowsPerPage}
+              rowsPerPage={rowsPerPage1}
               page={page}
               onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
+              onRowsPerPageChange={handleChangeRowsPerPage1}
             />
           </Paper>
         </div>

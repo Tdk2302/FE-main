@@ -142,8 +142,7 @@ const Header = () => {
             className="d-inline-block align-top"
             alt="FurryFriendsFund logo"
           />
-          {roleID === 3 && <p>FurryFriendsFund</p>}
-
+          {(!isLoggedIn || roleID === 3) && <p>FurryFriendsFund</p>}
           {roleID === 2 && <p>Staff</p>}
           {roleID === 1 && <p>Admin</p>}
         </Navbar.Brand>

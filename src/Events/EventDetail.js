@@ -18,12 +18,13 @@ import TablePagination from "@mui/material/TablePagination";
 const EventDetail = () => {
   const { eventId } = useParams();
   const [event, setEvent] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
   const roleID = localStorage.getItem("roleID");
   const [donations, setDonations] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchEventDetail = async () => {
@@ -70,6 +71,11 @@ const EventDetail = () => {
     }
   }, [eventId]);
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token);
+  }, []);
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -114,7 +120,7 @@ const EventDetail = () => {
             style={{ width: "40%", height: "40%" }}
           />
           <p className="description">{event.description}</p>
-          {roleID === "3" && (
+          {(!isLoggedIn || (isLoggedIn && roleID === "3")) && (
             <button className="donate-button" onClick={handleDonate}>
               Donate now
             </button>

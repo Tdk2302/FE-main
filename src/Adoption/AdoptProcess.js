@@ -132,7 +132,7 @@ const AdoptionProcess = () => {
         <ul className="adoption-steps-list">
           <li>
             <i class="fa-solid fa-1">.</i>
-            Learn about the pet you want to adopt on FFF's website.
+            Read the pet information you want to adopt on FFF's website.
           </li>
 
           <li>
@@ -152,7 +152,8 @@ const AdoptionProcess = () => {
             <i class="fa-solid fa-5">.</i>
             You need to regularly update your pet's status every two weeks. If
             the deadline is exceeded and reminders have been sent multiple
-            times, your account will be banned, and you will be penalized.
+            times, your account will be banned, and you will be penalized
+            approximately 5 millions VietNam Dong.
           </li>
         </ul>
         <div className="adoption-policy">
@@ -182,8 +183,8 @@ const AdoptionProcess = () => {
               <Form.Control
                 type="date"
                 name="date"
-                min={minDate} // Giới hạn ngày bắt đầu từ hôm nay
-                max={maxDate} // Giới hạn ngày tối đa là 10 ngày sau
+                min={minDate}
+                max={maxDate}
                 value={appointment.date}
                 onChange={handleAppointmentChange}
                 required

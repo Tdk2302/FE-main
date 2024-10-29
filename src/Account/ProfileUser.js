@@ -178,7 +178,6 @@ const ProfileUser = () => {
       userInfoToUpdate.password = newPassword.trim();
 
       const response = await api.put(`accounts/update/${currentPassword}`, userInfoToUpdate);
-      console.log("Update response:", response);
       toast.success("User information updated successfully!");
       handleCloseDialog();
       setIsEditing(false);

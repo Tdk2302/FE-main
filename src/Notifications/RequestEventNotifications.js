@@ -68,7 +68,7 @@ const RequestEventNotifications = () => {
         });
 
         toast.success(`Notification ${status ? 'Accepted' : 'Denied'} successfully`);
-        
+        apiEventNotifications();
       } else {
         throw new Error(response.data.message || 'Failed to update event status');
       }

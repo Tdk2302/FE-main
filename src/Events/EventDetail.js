@@ -3,9 +3,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import api from "../services/axios";
 import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
+import { BASE_URL } from "../services/axios";
 import "../styles/Eventdetail.scss";
-import BannerDonate from "../components/BannerDonate";
 import { NavLink } from "react-bootstrap";
+
 const EventDetail = () => {
   const { eventId } = useParams();
   const [event, setEvent] = useState(null);
@@ -39,6 +40,13 @@ const EventDetail = () => {
     localStorage.setItem("eventID", event.eventID);
   };
 
+  const getImageUrl = (imgUrl) => {
+    if (!imgUrl) return "/path/to/default/image.jpg";
+    if (imgUrl.startsWith("images\\"))
+      return `${BASE_URL}${imgUrl.replace("\\", "/")}`;
+    return imgUrl;
+  };
+
   if (isLoading) {
     return <Spinner />;
   }
@@ -50,7 +58,7 @@ const EventDetail = () => {
   return (
     <div className="event-detail">
       <h1>{event.event_name}</h1>
-      <img src={event.img_url} alt={event.event_name} />
+      <img src={getImageUrl(event.img_url)} alt={event.event_name} />
       <p className="description">{event.description}</p>
       <p>Start Date: {new Date(event.start_date).toLocaleDateString()}</p>
       <p>End Date: {new Date(event.end_date).toLocaleDateString()}</p>

@@ -45,13 +45,16 @@ const UpdateEvent = () => {
           setImagePreview(getImageUrl(response.data.data.img_url));
           // Kiểm tra trạng thái sự kiện
           const status = response.data.data.status;
-          if (status !== "Waiting" && status !== "Updating") {
+          console.log(status);
+          if (
+            status !== "Waiting" &&
+            status !== "Updating" &&
+            status !== "Published"
+          ) {
             setCanUpdate(false);
           }
         } else {
-          throw new Error(
-            response.data.message || "Cannot load event data"
-          );
+          throw new Error(response.data.message || "Cannot load event data");
         }
       } catch (error) {
         console.error("Error loading event data:", error);
@@ -64,17 +67,20 @@ const UpdateEvent = () => {
     fetchEventData();
 
     const today = new Date();
-    const formattedDate = today.toISOString().split('T')[0];
+    const formattedDate = today.toISOString().split("T")[0];
     setMinDate(formattedDate);
   }, [eventID, navigate]);
 
   const validateForm = () => {
     const newErrors = {};
-    if (!eventData.event_name.trim()) newErrors.event_name = "Event name is required";
-    if (!eventData.description.trim()) newErrors.description = "Description is required";
+    if (!eventData.event_name.trim())
+      newErrors.event_name = "Event name is required";
+    if (!eventData.description.trim())
+      newErrors.description = "Description is required";
     if (!eventData.start_date) newErrors.start_date = "Start date is required";
     if (!eventData.end_date) newErrors.end_date = "End date is required";
-    if (eventData.end_date < eventData.start_date) newErrors.end_date = "End date must be after start date";
+    if (eventData.end_date < eventData.start_date)
+      newErrors.end_date = "End date must be after start date";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -82,15 +88,19 @@ const UpdateEvent = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setEventData(prev => ({
+    setEventData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
 
-    if (name === 'start_date' && eventData.end_date && value > eventData.end_date) {
-      setEventData(prev => ({
+    if (
+      name === "start_date" &&
+      eventData.end_date &&
+      value > eventData.end_date
+    ) {
+      setEventData((prev) => ({
         ...prev,
-        end_date: value
+        end_date: value,
       }));
     }
   };
@@ -100,7 +110,7 @@ const UpdateEvent = () => {
     if (file) {
       setEventData((prev) => ({
         ...prev,
-        img_url: file,  // Lưu file hình ảnh, không phải URL
+        img_url: file, // Lưu file hình ảnh, không phải URL
       }));
       setImagePreview(URL.createObjectURL(file));
     }
@@ -113,34 +123,38 @@ const UpdateEvent = () => {
     }
     setIsLoading(true);
     const formData = new FormData();
-      
-    formData.append('event_name', eventData.event_name);
-    formData.append('description', eventData.description);
-    formData.append('start_date', eventData.start_date);
-    formData.append('end_date', eventData.end_date);
-    formData.append('status', eventData.status);
+
+    formData.append("event_name", eventData.event_name);
+    formData.append("description", eventData.description);
+    formData.append("start_date", eventData.start_date);
+    formData.append("end_date", eventData.end_date);
+    formData.append("status", eventData.status);
 
     // Chỉ gửi hình ảnh nếu người dùng đã chọn một hình ảnh mới
     if (eventData.img_url instanceof File) {
-      formData.append('image', eventData.img_url);
+      formData.append("image", eventData.img_url);
     }
 
     try {
-      const response = await api.post(`/events/${eventID}/updateEvents`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      
+      const response = await api.post(
+        `/events/${eventID}/updateEvents`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
       console.log("Response from server:", response);
       if (response.data.status === 200) {
-        toast.success(response.data.message || "Update successfully 😀");
+        toast.success(response.data.message);
         navigate("/events", { state: { updated: true } });
       } else {
-        throw new Error(response.data.message || "Update failed 😔");
+        throw new Error(response.data.message);
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || error.message || "Update failed 😔");
+      toast.error(error.response?.data?.message || error.message);
     } finally {
       setIsLoading(false);
     }
@@ -243,9 +257,9 @@ const UpdateEvent = () => {
                 {errors.end_date}
               </Form.Control.Feedback>
             </Form.Group>
-            <Button 
-              variant="primary" 
-              type="submit" 
+            <Button
+              variant="primary"
+              type="submit"
               className="update-button"
               disabled={!canUpdate}
             >

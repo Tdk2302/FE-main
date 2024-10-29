@@ -3,7 +3,7 @@
 }
 
 .donate-button {
-  background-color: #e74c3c;  // màu đỏ cam
+  background-color: #e74c3c; // màu đỏ cam
   color: white;
   padding: 12px 24px;
   border: none;
@@ -13,14 +13,26 @@
   cursor: pointer;
   transition: all 0.3s ease;
   margin: 20px 0;
-  
+
   &:hover {
-    background-color: #c0392b;  // màu đỏ cam đậm hơn khi hover
+    background-color: #c0392b; // màu đỏ cam đậm hơn khi hover
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
-  
+
   &:active {
     transform: translateY(0);
   }
 }
+
+.donation-history {
+  margin-bottom: 90px;
+}
+
+.event {
+  margin-bottom: 100px;
+}
+
+// .history-donation-table {
+//   margin-right: 30px;
+// }

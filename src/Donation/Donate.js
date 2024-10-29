@@ -25,8 +25,6 @@ const Donate = () => {
   const accountID = localStorage.getItem("accountID");
   const eventID = sessionStorage.getItem("eventID");
   let content = ``;
-  console.log(localStorage.getItem("eventID"));
-  console.log(accountID);
 
   if (accountID != null && eventID != null) {
     content = `Account ${accountID} donate event ${eventID}`;
@@ -37,7 +35,6 @@ const Donate = () => {
   } else {
     content = `Donate FurryFriendFund`;
   }
-  sessionStorage.removeItem("eventID");
 
   const imageURL = `https://api.vietqr.io/image/970422-1319102004913-wjc5eta.jpg?accountName=TRUONG%20PHUC%20LOC&amount=0&addInfo=${content.replaceAll(
     " ",
@@ -52,7 +49,6 @@ const Donate = () => {
           axios.get(`${BASE_URL}accounts/showDonators`),
           axios.get(`${BASE_URL}donation/getAnonymousDonator`),
         ]);
-        console.log(anonymousResponse.data.data);
         setDonators(donatorsResponse.data.data);
         setAnonymousDonators(anonymousResponse.data.data);
       } catch (error) {

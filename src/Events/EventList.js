@@ -51,10 +51,11 @@ const EventList = () => {
     setIsLoading(true);
     try {
       let response;
-      if (roleID === "1" || roleID === "2") {
-        response = await api.get("/events/showEventAdmin");
-      } else {
+      const token = localStorage.getItem("token");
+      if (!token || roleID ==="3"){
         response = await api.get("/events/showEvents");
+      }else if(roleID ==="1" || roleID ==="2"){
+        response = await api.get("/events/showEventAdmin");
       }
       if (response.data.status === 200) {
         setEvents(response.data.data);

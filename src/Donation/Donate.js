@@ -22,17 +22,16 @@ const Donate = () => {
   const [anonymousDonators, setAnonymousDonators] = useState([]); // State for anonymous donators
   const api_donate =
     "https://script.google.com/macros/s/AKfycbyQxSQp5kQd_tzarGa2l61fY2BKAVqC3jIhEhaqGOHOhraucs1P3c87XX4dsAqKRNjUvg/exec";
-  const accountID = sessionStorage.getItem("accountID");
-  const evenID = localStorage.getItem("evenID");
+  const accountID = localStorage.getItem("accountID");
+  const eventID = sessionStorage.getItem("eventID");
   let content = ``;
 
-  if (accountID != null && evenID != null) {
-    content = `Account ${accountID} donate event ${evenID}`;
-    localStorage.removeItem("evenID");
-  } else if (accountID != null && evenID == null) {
+  if (accountID != null && eventID != null) {
+    content = `Account ${accountID} donate event ${eventID}`;
+  } else if (accountID != null && eventID == null) {
     content = `Account ${accountID} donate FurryFriendFund`;
-  } else if (accountID == null && evenID != null) {
-    content = `Donate event ${evenID}`;
+  } else if (accountID == null && eventID != null) {
+    content = `Donate event ${eventID}`;
   } else {
     content = `Donate FurryFriendFund`;
   }
@@ -50,7 +49,6 @@ const Donate = () => {
           axios.get(`${BASE_URL}accounts/showDonators`),
           axios.get(`${BASE_URL}donation/getAnonymousDonator`),
         ]);
-        console.log(anonymousResponse.data.data);
         setDonators(donatorsResponse.data.data);
         setAnonymousDonators(anonymousResponse.data.data);
       } catch (error) {

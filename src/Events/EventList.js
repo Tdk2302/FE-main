@@ -14,7 +14,7 @@ import MoreVert from "@mui/icons-material/MoreVert";
 import DeleteDialog from "../components/DeleteDialog";
 
 import EventStatusDot from "../components/EventStatusDot";
-import moment from 'moment';
+import moment from "moment";
 
 const EventList = () => {
   const location = useLocation();
@@ -75,7 +75,7 @@ const EventList = () => {
   };
 
   const handleUpdateEvent = (eventID) => {
-    const event = events.find(e => e.eventID === eventID);
+    const event = events.find((e) => e.eventID === eventID);
     if (!event) {
       toast.error("Invalid eventID");
       return;
@@ -88,22 +88,22 @@ const EventList = () => {
       toast.error("Cannot update event that has ended.");
       return;
     }
-    
+
     navigate(`/events/update/${eventID}`);
   };
 
   const handleDeleteEvent = async (eventID) => {
-    const event = events.find(e => e.eventID === eventID);
+    const event = events.find((e) => e.eventID === eventID);
     if (!event) {
       toast.error("Invalid eventID");
       return;
     }
-    
+
     if (isEventEnded(event)) {
       toast.error("Cannot delete event that has ended.");
       return;
     }
-    
+
     setEventToDelete(eventID);
     setOpenDeleteDialog(true);
   };
@@ -190,15 +190,17 @@ const EventList = () => {
     const endDate = moment(event.end_date);
 
     if (now.isBefore(startDate)) {
-        const daysUntilStart = startDate.diff(now, 'days');
-        if (daysUntilStart === 0) {
-            // Nếu còn dưới 1 ngày (chỉ còn giờ hoặc phút)
-            return "Event starts soon";
-        }
-        // Nếu còn nhiều ngày
-        return `Event starts in ${daysUntilStart} day${daysUntilStart > 1 ? 's' : ''}`;
+      const daysUntilStart = startDate.diff(now, "days");
+      if (daysUntilStart === 0) {
+        // Nếu còn dưới 1 ngày (chỉ còn giờ hoặc phút)
+        return "Event starts soon";
+      }
+      // Nếu còn nhiều ngày
+      return `Event starts in ${daysUntilStart} day${
+        daysUntilStart > 1 ? "s" : ""
+      }`;
     } else if (now.isBetween(startDate, endDate)) {
-        return "Event is ongoing";
+      return "Event is ongoing";
     }
     return null; // Sự kiện đã kết thúc, không hiển thị gì
   };
@@ -216,24 +218,24 @@ const EventList = () => {
   };
 
   const isEventPushlished = (event) => {
-    if (event.status === "Published"){
+    if (event.status === "Published") {
       return true;
     }
-  }
+  };
 
   const isEventEnded = (event) => {
     // Kiểm tra nếu status là "Ending"
     if (event.status === "Ending") {
-        return true;
+      return true;
     }
-    
+
     // Kiểm tra nếu đã qua end_date
     const now = moment();
     const endDate = moment(event.end_date);
     if (now.isAfter(endDate)) {
-        return true;
+      return true;
     }
-    
+
     return false;
   };
 
@@ -250,7 +252,11 @@ const EventList = () => {
       )}
       <CardGroup>
         {currentEvents.map((event) => (
-          <Card key={event.eventID} className="mb-4" onClick={() => handleEventClick(event)}>
+          <Card
+            key={event.eventID}
+            className="mb-4"
+            onClick={() => handleEventClick(event)}
+          >
             {(roleID === "1" || roleID === "2") && (
               <div className="dropdown-wrapper" onClick={handleDropdownClick}>
                 <Dropdown>
@@ -267,24 +273,30 @@ const EventList = () => {
                     <MoreVert />
                   </MenuButton>
                   <Menu>
-                    {roleID === "2" && !isEventEnded(event) && !isEventPushlished(event) && (
-                      <MenuItem onClick={(e) => {
-                        e.stopPropagation(); // Ngăn chặn sự kiện click lan truyền
-                        handleMenuAction("update");
-                      }}>
-                        Update
-                      </MenuItem>
-                    )}
+                    {roleID === "2" &&
+                      !isEventEnded(event) &&
+                      !isEventPushlished(event) && (
+                        <MenuItem
+                          onClick={(e) => {
+                            e.stopPropagation(); // Ngăn chặn sự kiện click lan truyền
+                            handleMenuAction("update");
+                          }}
+                        >
+                          Update
+                        </MenuItem>
+                      )}
                     {!isEventEnded(event) && (
-                      <MenuItem onClick={(e) => {
-                        e.stopPropagation(); // Ngăn chặn sự kiện click lan truyền
-                        handleMenuAction("delete");
-                      }}>
+                      <MenuItem
+                        onClick={(e) => {
+                          e.stopPropagation(); // Ngăn chặn sự kiện click lan truyền
+                          handleMenuAction("delete");
+                        }}
+                      >
                         Delete
                       </MenuItem>
                     )}
                     {isEventEnded(event) && (
-                      <MenuItem disabled style={{ color: 'gray' }}>
+                      <MenuItem disabled style={{ color: "gray" }}>
                         Event has ended
                       </MenuItem>
                     )}
@@ -305,16 +317,20 @@ const EventList = () => {
               <Card.Subtitle className="mb-2 text-muted">
                 {event.title}
               </Card.Subtitle>
-            
+
+              <div className="event-description"> {event.description}</div>
               {getEventTimeInfo(event) && (
-                <Card.Text className="event-time-info" style={{
-                  fontSize: "14px", 
-                  color: "green",   
-                  fontWeight: "bold",
-                  marginTop: "10px",
-                  padding: "5px",
-                  borderRadius: "4px",
-                }}>
+                <Card.Text
+                  className="event-time-info"
+                  style={{
+                    fontSize: "14px",
+                    color: "green",
+                    fontWeight: "bold",
+                    marginTop: "10px",
+                    padding: "5px",
+                    borderRadius: "4px",
+                  }}
+                >
                   {getEventTimeInfo(event)}
                 </Card.Text>
               )}

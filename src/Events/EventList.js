@@ -52,19 +52,18 @@ const EventList = () => {
     try {
       let response;
       const token = localStorage.getItem("token");
-      if (!token || roleID ==="3"){
+      if (!token || roleID === "3") {
         response = await api.get("/events/showEvents");
-      }else if(roleID ==="1" || roleID ==="2"){
+      } else if (roleID === "1" || roleID === "2") {
         response = await api.get("/events/showEventAdmin");
       }
       if (response.data.status === 200) {
         setEvents(response.data.data);
       } else {
-        toast.error("Failed to fetch events");
+        toast.error(response.data.message);
       }
     } catch (error) {
       console.error("Error fetching events:", error);
-      toast.error("Failed to fetch events");
     } finally {
       setIsLoading(false);
     }
@@ -278,7 +277,7 @@ const EventList = () => {
                       !isEventPushlished(event) && (
                         <MenuItem
                           onClick={(e) => {
-                            e.stopPropagation(); // Ngăn chặn sự kiện click lan truyền
+                            e.stopPropagation();
                             handleMenuAction("update");
                           }}
                         >
@@ -288,7 +287,7 @@ const EventList = () => {
                     {!isEventEnded(event) && (
                       <MenuItem
                         onClick={(e) => {
-                          e.stopPropagation(); // Ngăn chặn sự kiện click lan truyền
+                          e.stopPropagation();
                           handleMenuAction("delete");
                         }}
                       >

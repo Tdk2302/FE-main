@@ -54,7 +54,6 @@ const EventDetail = () => {
         const response = await api.get(`/donation/getDonateByEvent/${eventId}`);
         if (response.data.status === 200) {
           setDonations(response.data.data);
-          console.log("Donations received:", response.data.data);
         } else {
           setDonations([]);
         }
@@ -87,7 +86,7 @@ const EventDetail = () => {
 
   const handleDonate = () => {
     sessionStorage.setItem("eventID", event.eventID);
-    navigate(`/donate`);
+    navigate(`/donatevent`);
   };
 
   const getImageUrl = (imgUrl) => {
@@ -170,7 +169,7 @@ const EventDetail = () => {
                               {donation.accountID || "Anonymous"}
                             </TableCell>
                             <TableCell align="right">
-                              ${donation.amount}
+                              {donation.amount}VND
                             </TableCell>
                           </TableRow>
                         ))}

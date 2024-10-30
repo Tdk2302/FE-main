@@ -32,7 +32,9 @@ import HistoryAdoption from "./Account/HistoryAdoption";
 import Report from "./Report/Report";
 import UserManagement from "./Admin/UserManagement";
 import RequestEventNotifications from "./Notifications/RequestEventNotifications";
-import EventDetail from './Events/EventDetail';
+import EventDetail from "./Events/EventDetail";
+import DonateEvent from "./Donation/DonateEvent";
+import Dashboard from "./Dashboard/Dashboard";
 
 function App() {
   const roleID = localStorage.getItem("roleID")
@@ -56,6 +58,7 @@ function App() {
               <Route path="/petdetail/:petID" element={<PetDetail />} />
               <Route path="/adoptprocess/:petID" element={<AdoptProcess />} />
               <Route path="/report/:petID" element={<Report />} />
+              <Route path="/donatevent" element={<DonateEvent />} />
 
               <Route
                 path="/admin"
@@ -162,13 +165,21 @@ function App() {
                 }
               />
               <Route path="/profile/:accountID" element={<Profile />} />
-              <Route 
-                path="/admin/user-management" 
+              <Route
+                path="/admin/user-management"
                 element={
                   <ProtectedRoute roleID={1}>
                     <UserManagement />
                   </ProtectedRoute>
-                } 
+                }
+              />
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute roleID={1}>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
               />
               <Route path="/events/:eventId" element={<EventDetail />} />
             </Routes>
@@ -176,7 +187,17 @@ function App() {
         </div>
         <Footer />
       </div>
-      <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </>
   );
 }

@@ -23,10 +23,15 @@ const Donate = () => {
   const api_donate =
     "https://script.google.com/macros/s/AKfycbyQxSQp5kQd_tzarGa2l61fY2BKAVqC3jIhEhaqGOHOhraucs1P3c87XX4dsAqKRNjUvg/exec";
   const accountID = localStorage.getItem("accountID");
+  const eventID = sessionStorage.getItem("eventID");
   let content = ``;
 
-  if (accountID != null) {
+  if (accountID != null && eventID != null) {
+    content = `Account ${accountID} donate event ${eventID}`;
+  } else if (accountID != null && eventID == null) {
     content = `Account ${accountID} donate FurryFriendFund`;
+  } else if (accountID == null && eventID != null) {
+    content = `Donate event ${eventID}`;
   } else {
     content = `Donate FurryFriendFund`;
   }
@@ -52,6 +57,16 @@ const Donate = () => {
       }
     };
     fetchDonators();
+
+    // Handle unload
+    const handleUnload = () => {
+      sessionStorage.removeItem("eventID");
+    };
+    window.addEventListener("beforeunload", handleUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleUnload);
+    };
   }, []);
 
   const getDonate = async () => {
@@ -192,7 +207,7 @@ const Donate = () => {
                         <TableCell>{donator.name}</TableCell>
 
                         <TableCell align="right">
-                          {donator.total_donation}VNĐ
+                          ${donator.total_donation}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -261,7 +276,7 @@ const Donate = () => {
                             "vi-VN"
                           )}
                         </TableCell>
-                        <TableCell align="right">{donator.amount}VNĐ</TableCell>
+                        <TableCell align="right">${donator.amount}</TableCell>
                       </TableRow>
                     ))}
                 </TableBody>

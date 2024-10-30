@@ -7,6 +7,7 @@ import "../styles/header.scss";
 import { useState, useEffect } from "react";
 import Notification from "../Notifications/Notification";
 import Spinner from "../components/Spinner";
+import { Remove } from "@mui/icons-material";
 
 const Header = () => {
   const location = useLocation();
@@ -20,7 +21,6 @@ const Header = () => {
   const loggedIn = localStorage.getItem("isLoggedIn") === "true";
   const role = Number(localStorage.getItem("roleID"));
   const accountID = localStorage.getItem("accountID");
-
   useEffect(() => {
     setIsLoading(true);
     setUserName(name);
@@ -28,7 +28,9 @@ const Header = () => {
     setRoleID(role);
     setIsLoading(false);
   }, [name, loggedIn]);
-
+  useEffect(() => {
+    sessionStorage.removeItem("eventID");
+  }, []);
   const handleLogout = () => {
     localStorage.clear();
     sessionStorage.removeItem("accountID");
@@ -88,6 +90,9 @@ const Header = () => {
               </NavLink>
               <NavLink to="/admin/user-management" className="nav-link">
                 <h3>User Management</h3>
+              </NavLink>
+              <NavLink to="/dashboard" className="nav-link">
+                <h3>Dashboard</h3>
               </NavLink>
               <NavDropdown
                 title={

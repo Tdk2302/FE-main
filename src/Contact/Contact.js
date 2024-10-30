@@ -2,9 +2,7 @@ import React from "react";
 import "../styles/Contact.scss";
 
 import { Container, Row, Col } from "react-bootstrap";
-import toyimg from "../assets/images/pet-toy.png";
-import clothesimg from "../assets/images/pet-clothes.png";
-import foodimg from "../assets/images/dog-food.png";
+
 import OtherSupportMethods from "../components/OtherSupportMethods";
 
 const Contact = (props) => {
@@ -43,22 +41,6 @@ const Contact = (props) => {
             {"  "}
             <strong>ACB:</strong>
             <p> Trương Phúc Lộc - 0011004054939</p>
-
-            <i
-              class="fa-solid fa-building-columns"
-              style={{ color: "#d71d1d" }}
-            ></i>
-            {"  "}
-            <strong>BIDV: </strong>
-            <p>Huỳnh Gia Bảo - 12610000951797</p>
-
-            <i
-              class="fa-solid fa-building-columns"
-              style={{ color: "#d71d1d" }}
-            ></i>
-            {"  "}
-            <strong>Military Bank:</strong>
-            <p> Tăng Đình Khôi - 9990305363979</p>
           </div>
         </Col>
 
@@ -67,11 +49,9 @@ const Contact = (props) => {
           <p>
             If you need additional information or would like to provide
             feedback, please{" "}
-            <a href="/feedback" className="feedback-link">
-              click here
-            </a>
-            . We greatly appreciate your input as it helps us improve and serve
-            you better.
+            <a href="https://forms.gle/hXt8Fn2gxnWe7CWX9">click here</a>. We
+            greatly appreciate your input as it helps us improve and serve you
+            better.
           </p>
         </div>
       </Row>

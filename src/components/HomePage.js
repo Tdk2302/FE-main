@@ -9,7 +9,9 @@ import axios from "../services/axios";
 import BackToTop from "./BackToTop"; // Import component
 import BannerDonate from "./BannerDonate";
 import api, { BASE_URL } from "../services/axios";
-
+import Card from "react-bootstrap/Card";
+import moment from "moment";
+import "../styles/events.scss";
 const HomePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [events, setEvents] = useState([]);
@@ -73,6 +75,23 @@ const HomePage = () => {
 
   const handleEventClick = (eventID) => {
     navigate(`/events/${eventID}`);
+  };
+
+  const getEventTimeInfo = (event) => {
+    const now = moment();
+    const startDate = moment(event.start_date);
+    const endDate = moment(event.end_date);
+
+    if (now.isBefore(startDate)) {
+      const daysUntilStart = startDate.diff(now, "days");
+      if (daysUntilStart === 0) {
+        return "Event starts soon";
+      }
+      return `Event starts in ${daysUntilStart} day${daysUntilStart > 1 ? "s" : ""}`;
+    } else if (now.isBetween(startDate, endDate)) {
+      return "Event is ongoing";
+    }
+    return null;
   };
 
   return (
@@ -142,44 +161,58 @@ const HomePage = () => {
       </section>
 
       {/* Thay thế phần Events */}
-      <section className="events">
+      <section className="featured-events">
         <h2>Events</h2>
-        {events && events.length > 0 ? (
-          <div className="events-container">
-            {events.slice(0, 4).map((event) => (
-              <div
-                key={event.eventID}
-                className="event-card"
-                onClick={() => handleEventClick(event.eventID)}
-              >
-                <img
-                  src={getImageUrl(event.img_url)}
-                  alt={event.event_name}
-                  className="event-image"
-                />
-                <div className="event-content">
-                  <h3>{event.event_name}</h3>
-                  <p>{event.title}</p>
-                  <div className="event-dates">
-                    <span>
-                      Start: {new Date(event.start_date).toLocaleDateString()}
-                    </span>
-                    <span>
-                      End: {new Date(event.end_date).toLocaleDateString()}
-                    </span>
-                  </div>
-                  <span
-                    className={`event-status ${event.status.toLowerCase()}`}
-                  >
-                    {event.status}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p className="no-events">No events available</p>
-        )}
+        <Carousel
+          responsive={responsive}
+          infinite={true}
+          removeArrowOnDeviceType={["tablet", "mobile"]}
+        >
+          {events.map((event) => (
+            <div key={event.eventID} className="event-card" onClick={() => handleEventClick(event.eventID)}>
+              <Card.Img
+              variant="top"
+              src={getImageUrl(event.img_url)}
+              alt={event.title}
+            />
+              <Card.Body>
+              <Card.Title>
+                {event.event_name}
+              </Card.Title>
+              <Card.Subtitle className="mb-2 text-muted">
+                {event.title}
+              </Card.Subtitle>
+              <div className="event-description"> {event.description}</div>
+              {getEventTimeInfo(event) && (
+                <Card.Text
+                  className="event-time-info"
+                  style={{
+                    fontSize: "14px",
+                    color: "green",
+                    fontWeight: "bold",
+                    marginTop: "10px",
+                    padding: "5px",
+                    borderRadius: "4px",
+                  }}
+                >
+                  {getEventTimeInfo(event)}
+                </Card.Text>
+              )}
+            </Card.Body>
+               <Card.Footer>
+              <small className="text-muted">
+                Start Date: {new Date(event.start_date).toLocaleDateString()}
+              </small>
+              <br />
+              <small className="text-muted">
+                End Date: {new Date(event.end_date).toLocaleDateString()}
+                </small>
+                <br />
+              </Card.Footer>
+            </div>
+          ))}
+        </Carousel>
+
         <NavLink to="/events" className="nav-link">
           <button className="view-all-events">VIEW ALL EVENTS</button>
         </NavLink>

@@ -211,12 +211,12 @@ const ProfileUser = () => {
   };
 
   const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat('vi-VN', {
       style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }).format(amount);
+      currency: 'VND',
+      maximumFractionDigits: 0,
+      minimumFractionDigits: 0
+    }).format(amount).replace('₫', 'VND');
   };
 
   const toggleNewPasswordVisibility = () => {

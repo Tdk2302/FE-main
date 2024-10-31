@@ -16,6 +16,7 @@ const BanRequestNotifications = () => {
         setError(null);
         try {
             const response = await axios.get("/notification/showBanRequest");
+            console.log(response.data);
             if (response.data && response.data.data) {
                 const processedNotifications = response.data.data.map(noti => ({
                     ...noti,
@@ -57,7 +58,8 @@ const BanRequestNotifications = () => {
                 if (!notification || !notification.petID) {
                     throw new Error('Pet information not found in notification');
                 }
-                const response = await axios.put(`/accounts/banAccount`, { petID: notification.petID });
+                const response = await axios.put(`/accounts/banAccount`, { "notiID": notiID });
+                console.log(response.data);
                 if (response.data && response.data.message) {
                     toast.success(response.data.message);
                 } else {

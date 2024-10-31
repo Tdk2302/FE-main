@@ -105,9 +105,9 @@ const Header = () => {
               >
                 <NavDropdown.Item
                   as={NavLink}
-                  to="/admin-notifications/add-pet"
+                  to="/admin-notifications/request-pet"
                 >
-                  Add Pet
+                  Request Pet
                 </NavDropdown.Item>
                 <NavDropdown.Item
                   as={NavLink}

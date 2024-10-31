@@ -34,11 +34,11 @@ const Footer = () => {
           <h4>Contact us</h4>
           <hr className="small-dividers"></hr>
           <p>
-            <i className="fa fa-phone"></i> (+84)000000000
+            <i className="fa fa-phone"></i> (+84)909090909
             <br />
             <i className="fa fa-envelope"></i> furryfriendFund@gmail.com
             <br />
-            <i className="fa fa-map-marker"></i> Ho Chi Minh - Viet Nam
+            <i className="fa fa-map-marker"></i> FPT University - Ho Chi Minh City
           </p>
         </div>
       </div>

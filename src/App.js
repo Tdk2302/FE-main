@@ -15,10 +15,8 @@ import Header from "./components/Header";
 import HomePage from "./components/HomePage";
 import Contact from "./Contact/Contact";
 import Donate from "./Donation/Donate";
-import AddPetNotifications from "./Notifications/AddPetNotifications";
+import RequestPetNotifications from "./Notifications/RequestPetNotifications";
 import BanRequestNotifications from "./Notifications/BanRequestNotifications";
-import DeletePetNotifications from "./Notifications/DeletePetNotifications";
-
 import RequestRegisterNotifications from "./Notifications/RequestRegisterNotifications";
 import AddPet from "./Pet_Page/AddPet";
 import PetDetail from "./Pet_Page/PetDetail";
@@ -119,10 +117,10 @@ function App() {
                 }
               />
               <Route
-                path="/admin-notifications/add-pet"
+                path="/admin-notifications/request-pet"
                 element={
                   <ProtectedRoute roleID={1}>
-                    <AddPetNotifications />
+                    <RequestPetNotifications />
                   </ProtectedRoute>
                 }
               />
@@ -142,14 +140,7 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-              <Route
-                path="/admin-notifications/deletepet-request"
-                element={
-                  <ProtectedRoute roleID={1}>
-                    <DeletePetNotifications />
-                  </ProtectedRoute>
-                }
-              />
+
               <Route
                 path="/admin-notifications/event-requests"
                 element={

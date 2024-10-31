@@ -283,3 +283,12 @@
     }
   }
 }
+.appointment-highlight {
+  font-weight: bold;
+  color: #dc3545;
+  
+  &::before {
+    content: '*';
+    margin-right: 5px;
+  }
+}

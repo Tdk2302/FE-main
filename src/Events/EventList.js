@@ -117,10 +117,6 @@ const EventList = () => {
     setSelectedEventId(null);
   };
 
-  const handleDeleteClick = (eventID) => {
-    setEventToDelete(eventID);
-    setOpenDeleteDialog(true);
-  };
 
   const handleCloseDeleteDialog = () => {
     setOpenDeleteDialog(false);
@@ -180,6 +176,11 @@ const EventList = () => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const getEventStatus = (event) => {
+    const now = moment();
+    const endDate = moment(event.end_date);
+    if (now.isAfter(endDate)) {
+      return "Ending"; // Trả về status "Ending" nếu đã qua ngày kết thúc
+    }
     return event.status;
   };
 
@@ -294,11 +295,7 @@ const EventList = () => {
                         Delete
                       </MenuItem>
                     )}
-                    {isEventEnded(event) && (
-                      <MenuItem disabled style={{ color: "gray" }}>
-                        Event has ended
-                      </MenuItem>
-                    )}
+                   
                   </Menu>
                 </Dropdown>
               </div>
@@ -345,10 +342,10 @@ const EventList = () => {
               <br />
               <small
                 className={`text-${
-                  event.status === "Ending" ? "danger" : "success"
+                  getEventStatus(event) === "Ending" ? "danger" : "success"
                 }`}
               >
-                Status: {event.status}
+                Status: {getEventStatus(event)}
               </small>
             </Card.Footer>
           </Card>

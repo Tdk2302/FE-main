@@ -35,7 +35,7 @@ const AddEvent = () => {
     if (!eventData.description.trim()) {
       newErrors.description = "Description is required";
     } else if (eventData.description.length > 2000) {
-      newErrors.description = "Description must be less than 500 characters";
+      newErrors.description = "Description must be less than 2000 characters";
     }
     if (!eventData.start_date) newErrors.start_date = "Start date is required";
     if (!eventData.end_date) newErrors.end_date = "End date is required";

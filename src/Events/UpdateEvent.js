@@ -148,7 +148,7 @@ const UpdateEvent = () => {
       console.log("Response from server:", response);
       if (response.data.status === 200) {
         toast.success(response.data.message);
-        navigate("/events", { state: { updated: true } });
+        navigate("/events");
       } else {
         throw new Error(response.data.message);
       }

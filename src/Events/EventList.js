@@ -12,7 +12,6 @@ import MenuButton from "@mui/joy/MenuButton";
 import MenuItem from "@mui/joy/MenuItem";
 import MoreVert from "@mui/icons-material/MoreVert";
 import DeleteDialog from "../components/DeleteDialog";
-
 import EventStatusDot from "../components/EventStatusDot";
 import moment from "moment";
 
@@ -32,14 +31,6 @@ const EventList = () => {
   useEffect(() => {
     fetchEvents();
   }, [roleID]);
-
-  useEffect(() => {
-    const state = location.state;
-    if (state && state.updated) {
-      fetchEvents();
-      navigate(location.pathname, { replace: true, state: {} });
-    }
-  }, [location]);
 
   const getImageUrl = (imgUrl) => {
     if (!imgUrl) return "/path/to/default/image.jpg";
@@ -131,14 +122,12 @@ const EventList = () => {
     try {
       const response = await api.delete(`/events/${eventID}/deleteEvents`);
       if (response.data.status === 200) {
-        // Kiểm tra status thay vì success
         if (response.data.data) {
           toast.success("Event status changed to Ending");
         } else {
           toast.success("Event deleted successfully");
         }
-        fetchEvents(); // Cập nhật danh sách sự kiện
-        setCurrentPage(1); // Reset về trang đầu tiên
+        fetchEvents();
       } else {
         toast.error(response.data.message || "Failed to delete event");
       }

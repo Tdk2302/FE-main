@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import moment from 'moment';
 import Spinner from "../components/Spinner";
 
-const AddPetNotifications = () => {
+const RequestPetNotifications = () => {
     const [notifications, setNotifications] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -50,7 +50,6 @@ const AddPetNotifications = () => {
                 toast.error('Invalid notification ID');
                 return;
             }   
-
             const response = await axios.put(`notification/${notiID}/status?status=${status}`);
             
             if (response.status === 200) {
@@ -158,4 +157,4 @@ const AddPetNotifications = () => {
     );
 };
 
-export default AddPetNotifications;
+export default RequestPetNotifications;

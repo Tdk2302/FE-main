@@ -57,7 +57,39 @@ const PetDetail = () => {
       toast.success(response.data.message);
     } catch (error) {
       toast.error(error.response.data.message);
-      console.log(error);
+    }
+  };
+
+  const handleDeletePet = async () => {
+    try {
+      // Check if pet has an accountID
+      if (pet.accountID) {
+        toast.error(
+          "Cannot delete this pet as it is currently associated with an account"
+        );
+        return;
+      }
+
+      if (!window.confirm("Are you sure you want to delete this pet?")) {
+        return;
+      }
+
+      const response = await api.post(
+        `notification/requestDeletePets/${pet.petID}`
+      );
+
+      if (response.data) {
+        toast.success(response.data.message);
+        navigate("/petlist");
+      }
+    } catch (error) {
+      const errorMessage =
+        error.response?.status === 406
+          ? "Cannot delete this pet as it is currently associated with an account"
+          : error.response?.data?.message ||
+            "Failed to delete pet. Please try again.";
+      toast.error(errorMessage);
+      console.error("Delete pet error:", error);
     }
   };
 
@@ -201,6 +233,7 @@ const PetDetail = () => {
           {roleID === "2" && (
             <div class="edit-button">
               <Button onClick={handleUpdatePet}>Edit Pet</Button>
+              <Button onClick={handleDeletePet}>Delete Pet</Button>
             </div>
           )}
           {roleID === "2" && pet.status === "Unavailable" && pet.accountID && (

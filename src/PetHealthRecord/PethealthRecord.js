@@ -53,6 +53,15 @@ const PetHealthRecord = ({ petID }) => {
   const handleSaveEdit = async (recordID) => {
     try {
       const updatedRecord = editedRows[recordID];
+
+      if (
+        new Date(updatedRecord.check_out_date) <=
+        new Date(updatedRecord.check_in_date)
+      ) {
+        toast.error("Check-out date must be after check-in date");
+        return;
+      }
+
       const response = await axios.put(
         "/petHealth/updateHealth",
         updatedRecord
@@ -87,6 +96,13 @@ const PetHealthRecord = ({ petID }) => {
   const handleAddRecord = async (e) => {
     e.preventDefault();
     try {
+      if (
+        new Date(newRecord.check_out_date) <= new Date(newRecord.check_in_date)
+      ) {
+        toast.error("Check-out date must be after check-in date");
+        return;
+      }
+
       const response = await axios.post("/petHealth/addRecord", {
         ...newRecord,
         petID,
@@ -142,7 +158,7 @@ const PetHealthRecord = ({ petID }) => {
         </div>
       )}
       {showAddForm && (
-        <form onSubmit={handleAddRecord}>
+        <form onSubmit={handleAddRecord} className="pethealthdetail">
           <input
             type="text"
             name="veterinarian_name"
@@ -154,7 +170,7 @@ const PetHealthRecord = ({ petID }) => {
             required
           />
           <input
-            type="date date"
+            type="date"
             name="check_in_date"
             value={newRecord.check_in_date}
             onChange={(e) =>
@@ -163,9 +179,10 @@ const PetHealthRecord = ({ petID }) => {
             required
           />
           <input
-            type="date date"
+            type="date"
             name="check_out_date"
             value={newRecord.check_out_date}
+            min={newRecord.check_in_date || undefined}
             onChange={(e) =>
               setNewRecord({ ...newRecord, check_out_date: e.target.value })
             }
@@ -280,6 +297,7 @@ const PetHealthRecord = ({ petID }) => {
                           .toISOString()
                           .split("T")[0]
                       }
+                      min={editedRows[row.recordID].check_in_date}
                       onChange={(e) =>
                         setEditedRows((prev) => ({
                           ...prev,

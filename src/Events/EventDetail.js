@@ -110,7 +110,7 @@ const EventDetail = () => {
         <div className="col-sm-8 col-md-8 col-lg-8 event">
           <h1>{event.event_name}</h1>
           <p>
-            <strong>Thời gian diễn ra sự kiện:</strong>{" "}
+            <strong>Event time:</strong>{" "}
             {new Date(event.start_date).toLocaleDateString()}
           </p>
           <img

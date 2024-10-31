@@ -27,13 +27,10 @@ const Login = () => {
         const decodedToken = jwtDecode(response.data.jwt);
         const role = decodedToken.roles[0];
         localStorage.setItem("roleID", Number(role));
-        localStorage.setItem("name", username);
+        localStorage.setItem("username", username);
         localStorage.setItem("accountID", decodedToken.sub);
         localStorage.setItem("isLoggedIn", true);
         toast.success("Login successfully!");
-        console.log("Name:", username);
-
-        console.log("Role:", role); // Thêm log để kiểm tra
 
         if (role === "1") {
           navigate("/dashboard", { replace: true });

@@ -17,6 +17,8 @@ import Contact from "./Contact/Contact";
 import Donate from "./Donation/Donate";
 import AddPetNotifications from "./Notifications/AddPetNotifications";
 import BanRequestNotifications from "./Notifications/BanRequestNotifications";
+import DeletePetNotifications from "./Notifications/DeletePetNotifications";
+
 import RequestRegisterNotifications from "./Notifications/RequestRegisterNotifications";
 import AddPet from "./Pet_Page/AddPet";
 import PetDetail from "./Pet_Page/PetDetail";
@@ -137,6 +139,14 @@ function App() {
                 element={
                   <ProtectedRoute roleID={1}>
                     <BanRequestNotifications />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin-notifications/deletepet-request"
+                element={
+                  <ProtectedRoute roleID={1}>
+                    <DeletePetNotifications />
                   </ProtectedRoute>
                 }
               />

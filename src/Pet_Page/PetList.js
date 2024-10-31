@@ -85,7 +85,7 @@ const PetsList = () => {
         }));
         setAgeError("");
       } else {
-        setAgeError("Age must be 1 or greater");
+        setAgeError("Age must be 0 or greater");
       }
     } else {
       setSearchParams((prevParams) => ({
@@ -161,7 +161,7 @@ const PetsList = () => {
               onChange={handleInputChange}
               placeholder="Select Age"
               step="0.5"
-              min="1"
+              min="0"
             />
             {ageError && <span className="error">{ageError}</span>}
             <select

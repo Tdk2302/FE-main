@@ -15,6 +15,7 @@ import {
 } from '@mui/material';
 import Spinner from '../components/Spinner';
 import { toast } from 'react-toastify';
+import ConfirmDialog from '../components/ConfirmDialog';
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
@@ -22,6 +23,9 @@ const UserManagement = () => {
   const [actionLoading, setActionLoading] = useState({});
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedAction, setSelectedAction] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(null);
 
   useEffect(() => {
     fetchUsers();
@@ -40,21 +44,26 @@ const UserManagement = () => {
     }
   };
 
+  const handleActionClick = (user, action) => {
+    setSelectedUser(user);
+    setSelectedAction(action);
+    setDialogOpen(true);
+  };
+
   const handleAction = async (accountID, action) => {
     setActionLoading(prev => ({ ...prev, [accountID]: action }));
     try {
       const response = await axios.put(`/accounts/${accountID}/${action}`);
-      
-      // Hiển thị thông báo thành công với thời gian tùy chỉnh
       toast.success(response.data.message);
       fetchUsers();
-      window.location.reload();
     } catch (error) {
       console.error(`Error ${action} user:`, error);
       toast.error(`Failed to ${action} user. Please try again.`);
     } finally {
       setActionLoading(prev => ({ ...prev, [accountID]: null }));
-      fetchUsers();
+      setDialogOpen(false);
+      setSelectedUser(null);
+      setSelectedAction(null);
     }
   };
 
@@ -103,7 +112,13 @@ const UserManagement = () => {
                         key={action}
                         variant="contained" 
                         color={action === 'Disable' ? 'error' : action === 'Enable' ? 'success' : 'primary'}
-                        onClick={() => handleAction(user.accountID, action)}
+                        onClick={() => {
+                          if (action === 'Disable') {
+                            handleActionClick(user, action);
+                          } else {
+                            handleAction(user.accountID, action);
+                          }
+                        }}
                         sx={{ 
                           minWidth: '80px', 
                           height: '30px',
@@ -138,6 +153,15 @@ const UserManagement = () => {
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
+      />
+      <ConfirmDialog
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        onConfirm={() => handleAction(selectedUser?.accountID, selectedAction)}
+        title="Confirm Disable User"
+        content="Are you sure you want to disable this user? This action will prevent the user from accessing the system."
+        confirmText="Disable"
+        cancelText="Cancel"
       />
     </Box>
   );

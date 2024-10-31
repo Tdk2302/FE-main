@@ -16,6 +16,7 @@ const RequestPetNotifications = () => {
         setError(null);
         try {
             const response = await axios.get("/notification/showAdminAdoptNoti");
+            console.log(response.data);
             if (response.data && Array.isArray(response.data)) {
                 const processedNotifications = response.data.map(noti => ({
                     ...noti,
@@ -122,6 +123,24 @@ const RequestPetNotifications = () => {
         );
     };
 
+    // Thêm hàm kiểm tra loại thông báo
+    const getNotificationStyle = (message) => {
+        if (message.toLowerCase().includes('deleted')) {
+            return {
+                backgroundColor: '#ffebee',  // Màu đỏ nhạt
+                borderLeft: '4px solid #d32f2f', // Màu đỏ đậm
+                padding: '15px',
+                marginBottom: '10px'
+            };
+        }
+        return {
+            backgroundColor: '#e3f2fd',  // Màu xanh dương nhạt
+            borderLeft: '4px solid #1976d2', // Màu xanh dương đậm
+            padding: '15px',
+            marginBottom: '10px'
+        };
+    };
+
     if (isLoading) {
         return <Spinner />;
     }
@@ -135,7 +154,11 @@ const RequestPetNotifications = () => {
                 ) : notifications.length > 0 ? (
                     <ul className="notification-list">
                         {notifications.map((noti) => (
-                            <li key={noti.notiID} className={`notification-item ${noti.isNew ? 'new' : ''}`}>
+                            <li 
+                                key={noti.notiID} 
+                                className={`notification-item ${noti.isNew ? 'new' : ''}`}
+                                style={getNotificationStyle(noti.message)}
+                            >
                                 {formatMessage(noti.message)}
                                 <p className="notification-date">
                                     {formatRelativeTime(noti.createdAt)}

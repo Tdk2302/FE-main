@@ -214,7 +214,9 @@ const ProfileUser = () => {
     return new Intl.NumberFormat('vi-VN', {
       style: 'currency',
       currency: 'VND',
-    }).format(amount);
+      maximumFractionDigits: 0,
+      minimumFractionDigits: 0
+    }).format(amount).replace('₫', 'VND');
   };
 
   const toggleNewPasswordVisibility = () => {

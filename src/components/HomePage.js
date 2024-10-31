@@ -44,7 +44,6 @@ const HomePage = () => {
   };
 
   useEffect(() => {
-    // Simulate loading
     const accountID = localStorage.getItem("accountID");
     if (accountID) {
       sessionStorage.setItem("accountID", accountID);
@@ -213,6 +212,7 @@ const HomePage = () => {
             </div>
           ))}
         </Carousel>
+
         <NavLink to="/events" className="nav-link">
           <button className="view-all-events">VIEW ALL EVENTS</button>
         </NavLink>

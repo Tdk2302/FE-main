@@ -56,6 +56,7 @@ const UserManagement = () => {
       const response = await axios.put(`/accounts/${accountID}/${action}`);
       toast.success(response.data.message);
       fetchUsers();
+      window.location.reload();
     } catch (error) {
       console.error(`Error ${action} user:`, error);
       toast.error(`Failed to ${action} user. Please try again.`);

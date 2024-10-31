@@ -4,6 +4,7 @@ import api, { BASE_URL } from "../services/axios";
 import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
 import "../styles/adminpage.scss";
+import { NavLink } from "react-bootstrap";
 
 const HistoryAdoption = () => {
   const [adoptedPets, setAdoptedPets] = useState([]);
@@ -45,6 +46,10 @@ const HistoryAdoption = () => {
     }
   };
 
+  const handleViewDetail = (pet) => {
+    navigate(`/petdetail/${pet.petID}`, { state: { pet } });
+  };
+
   if (isLoading) {
     return <Spinner />;
   }
@@ -71,13 +76,22 @@ const HistoryAdoption = () => {
                   <h2>{pet.name}</h2>
                   <p>Breed: {pet.breed}</p>
                   <p>Age: {pet.age} months</p>
+                  <p>Weight: {pet.weight} kg</p>
                 </div>
-                <button
-                  className="report-button"
-                  onClick={() => handleReportVideo(pet)}
-                >
-                  Report
-                </button>
+                <div className="button-report">
+                  <button
+                    className="report-button"
+                    onClick={() => handleReportVideo(pet)}
+                  >
+                    Report
+                  </button>
+                  <button
+                    className="report-button"
+                    onClick={() => handleViewDetail(pet)}
+                  >
+                    View Detail
+                  </button>
+                </div>
               </li>
             ))}
           </ul>

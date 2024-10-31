@@ -36,13 +36,10 @@ const Login = () => {
         console.log("Role:", role); // Thêm log để kiểm tra
 
         if (role === "1") {
-          console.log("Redirecting to /petlistadmin");
-          navigate("/petlistadmin", { replace: true });
+          navigate("/dashboard", { replace: true });
         } else if (role === "2") {
-          console.log("Redirecting to /appointment");
           navigate("/appointment", { replace: true });
         } else {
-          console.log("Redirecting to /");
           navigate("/", { replace: true });
         }
       } else {

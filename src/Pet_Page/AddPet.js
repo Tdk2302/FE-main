@@ -85,7 +85,8 @@ const AddPet = ({ onPetAdded = () => {} }) => {
           "Content-Type": "multipart/form-data",
         },
       });
-      toast.success("Added pet successfully");
+      toast.success("Added pet successfully \n Waiting admin to accept");
+
       onPetAdded();
       navigate("/petlist");
     } catch (error) {

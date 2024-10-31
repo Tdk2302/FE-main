@@ -12,7 +12,6 @@ import MenuButton from "@mui/joy/MenuButton";
 import MenuItem from "@mui/joy/MenuItem";
 import MoreVert from "@mui/icons-material/MoreVert";
 import DeleteDialog from "../components/DeleteDialog";
-
 import EventStatusDot from "../components/EventStatusDot";
 import moment from "moment";
 
@@ -32,14 +31,6 @@ const EventList = () => {
   useEffect(() => {
     fetchEvents();
   }, [roleID]);
-
-  useEffect(() => {
-    const state = location.state;
-    if (state && state.updated) {
-      fetchEvents();
-      navigate(location.pathname, { replace: true, state: {} });
-    }
-  }, [location]);
 
   const getImageUrl = (imgUrl) => {
     if (!imgUrl) return "/path/to/default/image.jpg";
@@ -117,10 +108,6 @@ const EventList = () => {
     setSelectedEventId(null);
   };
 
-  const handleDeleteClick = (eventID) => {
-    setEventToDelete(eventID);
-    setOpenDeleteDialog(true);
-  };
 
   const handleCloseDeleteDialog = () => {
     setOpenDeleteDialog(false);
@@ -135,14 +122,12 @@ const EventList = () => {
     try {
       const response = await api.delete(`/events/${eventID}/deleteEvents`);
       if (response.data.status === 200) {
-        // Kiểm tra status thay vì success
         if (response.data.data) {
           toast.success("Event status changed to Ending");
         } else {
           toast.success("Event deleted successfully");
         }
-        fetchEvents(); // Cập nhật danh sách sự kiện
-        setCurrentPage(1); // Reset về trang đầu tiên
+        fetchEvents();
       } else {
         toast.error(response.data.message || "Failed to delete event");
       }
@@ -180,6 +165,11 @@ const EventList = () => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const getEventStatus = (event) => {
+    const now = moment();
+    const endDate = moment(event.end_date);
+    if (now.isAfter(endDate)) {
+      return "Ending"; // Trả về status "Ending" nếu đã qua ngày kết thúc
+    }
     return event.status;
   };
 
@@ -294,11 +284,7 @@ const EventList = () => {
                         Delete
                       </MenuItem>
                     )}
-                    {isEventEnded(event) && (
-                      <MenuItem disabled style={{ color: "gray" }}>
-                        Event has ended
-                      </MenuItem>
-                    )}
+                   
                   </Menu>
                 </Dropdown>
               </div>
@@ -345,10 +331,10 @@ const EventList = () => {
               <br />
               <small
                 className={`text-${
-                  event.status === "Ending" ? "danger" : "success"
+                  getEventStatus(event) === "Ending" ? "danger" : "success"
                 }`}
               >
-                Status: {event.status}
+                Status: {getEventStatus(event)}
               </small>
             </Card.Footer>
           </Card>

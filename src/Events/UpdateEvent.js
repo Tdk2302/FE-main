@@ -73,8 +73,8 @@ const UpdateEvent = () => {
       newErrors.event_name = "Event name is required";
     if (!eventData.description.trim()){
       newErrors.description = "Description is required";
-    }else if (eventData.description.length > 500){
-      newErrors.description = "Description must be less than 500 characters";
+    }else if (eventData.description.length > 2000){
+      newErrors.description = "Description must be less than 2000 characters";
     }
     if (!eventData.start_date) newErrors.start_date = "Start date is required";
     if (!eventData.end_date) newErrors.end_date = "End date is required";
@@ -148,7 +148,7 @@ const UpdateEvent = () => {
       console.log("Response from server:", response);
       if (response.data.status === 200) {
         toast.success(response.data.message);
-        navigate("/events", { state: { updated: true } });
+        navigate("/events");
       } else {
         throw new Error(response.data.message);
       }

@@ -8,6 +8,12 @@ import Spinner from "../components/Spinner";
 import BackToTop from "../components/BackToTop";
 import BannerDonate from "../components/BannerDonate";
 import api from "../services/axios";
+import { toast } from "react-toastify";
+import moment from "moment";
+
+import ConfirmDialog from "../components/ConfirmDialog";
+
+import AppointmentList from '../components/AppointmentList';
 const PetsList = () => {
   const [pets, setPets] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -23,9 +29,14 @@ const PetsList = () => {
   const [noResults, setNoResults] = useState(false);
   const roleID = localStorage.getItem("roleID");
   const [isLoading, setIsLoading] = useState(true);
+  const accountID = localStorage.getItem("accountID");
+  const [memberAppointments, setMemberAppointments]= useState([]);
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+  const [appointmentToCancel, setAppointmentToCancel] = useState(null);
 
   useEffect(() => {
     apiListPets();
+    apiShowAppointmentforMember(accountID);
   }, []);
 
   const apiListPets = async () => {
@@ -44,6 +55,45 @@ const PetsList = () => {
       }
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const apiShowAppointmentforMember = async (accountID) => {
+    try {
+      const response = await api.get(`/appointment/showAppointmentForMember/${accountID}`);
+      console.log(response.data);
+      if (response.data.status === 200){
+        setMemberAppointments(response.data.data);
+      } else {
+        setMemberAppointments([]);
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      console.error("Error Api Show Appointment for Member:", error);
+      setMemberAppointments([]);
+    }
+  }
+
+  const handleCancelAppointment = async (appointmentID) => {
+    setIsLoading(true);
+    try {
+        const response = await api.delete("/appointment/cancelAppointment", {
+            data: { appointID: appointmentID }
+        });
+        
+        if (response.data.status === 200) {
+            toast.success(response.data.message); // Hiển thị thông báo thành công
+            // Refresh lại danh sách appointments
+            apiShowAppointmentforMember(accountID);
+        } else {
+            toast.error(response.data.message);
+        }
+    } catch (error) {
+        console.error("Error canceling appointment:", error);
+        // Hiển thị thông báo lỗi từ server nếu có
+        toast.error(error.response?.data?.message || "Error canceling appointment");
+    } finally {
+        setIsLoading(false);
     }
   };
 
@@ -116,8 +166,16 @@ const PetsList = () => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   // Callback function to refresh pets list
-  const refreshPetsList = () => {
-    apiListPets();
+  
+
+  const handleOpenCancelDialog = (appointmentID) => {
+    setAppointmentToCancel(appointmentID);
+    setOpenConfirmDialog(true);
+  };
+
+  const handleCloseConfirmDialog = () => {
+    setOpenConfirmDialog(false);
+    setAppointmentToCancel(null);
   };
 
   if (isLoading) {
@@ -185,6 +243,26 @@ const PetsList = () => {
           </div>
         </form>
       </div>
+      {memberAppointments.length > 0 && (
+        <AppointmentList
+          appointments={memberAppointments}
+          onCancelAppointment={handleOpenCancelDialog}
+        />
+      )}
+
+      <ConfirmDialog
+        open={openConfirmDialog}
+        onClose={handleCloseConfirmDialog}
+        onConfirm={() => {
+          handleCancelAppointment(appointmentToCancel);
+          handleCloseConfirmDialog();
+        }}
+        title="Cancel Appointment"
+        content="Are you sure you want to cancel this appointment?"
+        confirmText="Yes, Cancel"
+        cancelText="No, Keep it"
+      />
+
       <div className="pets-grid">
         {currentPets.length > 0 ? (
           currentPets.map((pet) => (

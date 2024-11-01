@@ -53,8 +53,9 @@ const AddPetNotifications = () => {
         return;
       }
 
-      const response = await axios.put(
-        `notification/${notiID}/status?status=${status}`
+      // Gọi API để xóa thông báo
+      const response = await axios.delete(
+        `notification/deleteNotiByPetID/${notiID}/status?status=${status}`
       );
 
       if (response.status === 200) {

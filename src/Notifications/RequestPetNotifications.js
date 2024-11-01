@@ -141,6 +141,23 @@ const AddPetNotifications = () => {
     return <Spinner />;
   }
 
+  const getNotificationStyle = (message) => {
+    if (message.toLowerCase().includes('deleted')) {
+        return {
+            backgroundColor: '#ffebee',  // Màu đỏ nhạt
+            borderLeft: '4px solid #d32f2f', // Màu đỏ đậm
+            padding: '15px',
+            marginBottom: '10px'
+        };
+    }
+    return {
+        backgroundColor: '#e3f2fd',  // Màu xanh dương nhạt
+        borderLeft: '4px solid #1976d2', // Màu xanh dương đậm
+        padding: '15px',
+        marginBottom: '10px'
+    };
+};
+
   return (
     <div className="admin-notifications">
       <div className="notifications-content">
@@ -160,6 +177,7 @@ const AddPetNotifications = () => {
               <li
                 key={noti.notiID}
                 className={`notification-item ${noti.isNew ? "new" : ""}`}
+                style={getNotificationStyle(noti.message)}
               >
                 {formatMessage(noti.message)}
                 <p className="notification-date">

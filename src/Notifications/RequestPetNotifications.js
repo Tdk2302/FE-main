@@ -53,54 +53,60 @@ const AddPetNotifications = () => {
         return;
       }
 
-      // Gọi API để xóa thông báo
-      const response = await axios.delete(
-        `notification/deleteNotiByPetID/${notiID}/status?status=${status}`
-      );
+      // Fetch the notification to check the message
+      const notification = notifications.find((noti) => noti.notiID === notiID);
+      if (!notification) {
+        toast.error("Notification not found");
+        return;
+      }
 
-      if (response.status === 200) {
-        localStorage.setItem(`noti_${notiID}_read`, "true");
-
-        // Cập nhật danh sách thông báo và đếm số thông báo mới
-        setNotifications((prev) => {
-          const updatedNotifications = prev.map((noti) =>
-            noti.notiID === notiID
-              ? { ...noti, isNew: false, button_status: false }
-              : noti
-          );
-          // Cập nhật số lượng thông báo mới
-          const newCount = updatedNotifications.filter(
-            (noti) => noti.isNew
-          ).length;
-          setNewNotificationsCount(newCount);
-          return updatedNotifications;
-        });
-
-        toast.success(
-          `Notification ${status ? "Accepted" : "Denied"} successfully`
+      // Check if the message contains "deleted"
+      if (notification.message.includes("deleted")) {
+        console.log(notification.message);
+        // Call API to delete the notification
+        const response = await axios.delete(
+          `notification/deleteNotiByPetID/${notiID}`
         );
-        apiAddPetNotifications();
+        if (response.status === 200) {
+          // Update notifications list
+          setNotifications((prev) =>
+            prev.filter((noti) => noti.notiID !== notiID)
+          );
+          toast.success("Notification deleted successfully");
+        }
+      } else {
+        // Call API to update the status
+        const response = await axios.put(
+          `notification/${notiID}/status?status=${status}`
+        );
+        if (response.status === 200) {
+          localStorage.setItem(`noti_${notiID}_read`, "true");
+
+          // Update notifications and count of new notifications
+          setNotifications((prev) => {
+            const updatedNotifications = prev.map((noti) =>
+              noti.notiID === notiID
+                ? { ...noti, isNew: false, button_status: false }
+                : noti
+            );
+            const newCount = updatedNotifications.filter(
+              (noti) => noti.isNew
+            ).length;
+            setNewNotificationsCount(newCount);
+            return updatedNotifications;
+          });
+
+          toast.success(
+            `Notification ${status ? "Accepted" : "Denied"} successfully`
+          );
+          apiAddPetNotifications();
+        }
       }
     } catch (error) {
       console.error("Error updating notification status:", error);
-
       const errorMessage =
         error.response?.data?.message || "Failed to update notification status";
       toast.error(errorMessage);
-
-      if (error.response?.status === 404) {
-        // Cập nhật notifications và đếm số thông báo mới
-        setNotifications((prev) => {
-          const updatedNotifications = prev.filter(
-            (noti) => noti.notiID !== notiID
-          );
-          const newCount = updatedNotifications.filter(
-            (noti) => noti.isNew
-          ).length;
-          setNewNotificationsCount(newCount);
-          return updatedNotifications;
-        });
-      }
     }
   };
 
@@ -137,6 +143,23 @@ const AddPetNotifications = () => {
     );
   };
 
+  const getNotificationStyle = (message) => {
+    if (message.toLowerCase().includes("deleted")) {
+      return {
+        backgroundColor: "#ffebee", // Màu đỏ nhạt
+        borderLeft: "4px solid #d32f2f", // Màu đỏ đậm
+        padding: "15px",
+        marginBottom: "10px",
+      };
+    }
+    return {
+      backgroundColor: "#e3f2fd", // Màu xanh dương nhạt
+      borderLeft: "4px solid #1976d2", // Màu xanh dương đậm
+      padding: "15px",
+      marginBottom: "10px",
+    };
+  };
+
   if (isLoading) {
     return <Spinner />;
   }
@@ -160,6 +183,7 @@ const AddPetNotifications = () => {
               <li
                 key={noti.notiID}
                 className={`notification-item ${noti.isNew ? "new" : ""}`}
+                style={getNotificationStyle(noti.message)}
               >
                 {formatMessage(noti.message)}
                 <p className="notification-date">

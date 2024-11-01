@@ -101,6 +101,14 @@ const UpdatePet = () => {
 
     if (petData.img_url instanceof File) {
       formData.append("img_url", petData.img_url);
+    } else if (petData.img_url) {
+      formData.append("img_url", petData.img_url); // Add existing image URL
+    } else {
+      // If no image is selected, you can choose to append a default image or handle it accordingly
+      formData.append("img_url", "/path/to/default/image.jpg"); // Optional: handle case with no image
+    }
+    for (const key in petData) {
+      console.log(key, petData[key]);
     }
     try {
       const response = await axios.post(

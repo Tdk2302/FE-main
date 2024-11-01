@@ -577,7 +577,7 @@ const Dashboard = () => {
                         faded: { innerRadius: 30, additionalRadius: -30 },
                       },
                     ]}
-                    width={400}
+                    width={450}
                     height={200}
                   />
                 </div>

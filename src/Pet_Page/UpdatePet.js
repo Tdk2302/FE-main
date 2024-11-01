@@ -100,12 +100,15 @@ const UpdatePet = () => {
     }
 
     if (petData.img_url instanceof File) {
-      formData.append("img_url", petData.img_url);
+      formData.append("img_url", petData.img_url); // Gửi tệp hình ảnh
     } else if (petData.img_url) {
-      formData.append("img_url", petData.img_url); // Add existing image URL
+      // Nếu img_url là một chuỗi, bạn có thể cần phải chuyển đổi nó thành một tệp
+      const response = await fetch(petData.img_url);
+      const blob = await response.blob();
+      const file = new File([blob], "image.jpg", { type: "image/jpeg" });
+      formData.append("img_url", file); // Gửi tệp hình ảnh
     } else {
-      // If no image is selected, you can choose to append a default image or handle it accordingly
-      formData.append("img_url", "/path/to/default/image.jpg"); // Optional: handle case with no image
+      formData.append("img_url", "/path/to/default/image.jpg"); // Xử lý trường hợp không có hình ảnh
     }
     for (const key in petData) {
       console.log(key, petData[key]);

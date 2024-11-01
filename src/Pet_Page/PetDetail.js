@@ -69,18 +69,13 @@ const PetDetail = () => {
         );
         return;
       }
-
-      if (!window.confirm("Are you sure you want to delete this pet?")) {
-        return;
-      }
-
       const response = await api.post(
         `notification/requestDeletePets/${pet.petID}`
       );
 
       if (response.data) {
         toast.success(response.data.message);
-        navigate("/petlist");
+        navigate("/petlistadmin");
       }
     } catch (error) {
       const errorMessage =
@@ -236,13 +231,11 @@ const PetDetail = () => {
                 </div>
               )}
           </div>
-          {roleID === "2" &&
-            pet.accountID === "Not yet" &&
-            pet.status === "Available" && (
-              <div class="edit-button">
-                <Button onClick={handleDeletePet}>Delete Pet</Button>
-              </div>
-            )}
+          {roleID === "2" && !pet.accountID && pet.status === "Available" && (
+            <div class="edit-button">
+              <Button onClick={handleDeletePet}>Delete Pet</Button>
+            </div>
+          )}
           {roleID === "2" && (
             <div class="edit-button">
               <Button onClick={handleUpdatePet}>Edit Pet</Button>

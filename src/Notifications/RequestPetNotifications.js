@@ -65,7 +65,7 @@ const AddPetNotifications = () => {
         console.log(notification.message);
         // Call API to delete the notification
         const response = await axios.delete(
-          `notification/deleteNotiByPetID/${notiID}`
+          `notification/deleteNotiByPetID/${notiID}/status?status=${status}`
         );
         if (response.status === 200) {
           // Update notifications list

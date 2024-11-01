@@ -9,11 +9,9 @@ import BackToTop from "../components/BackToTop";
 import BannerDonate from "../components/BannerDonate";
 import api from "../services/axios";
 import { toast } from "react-toastify";
-import moment from "moment";
-
 import ConfirmDialog from "../components/ConfirmDialog";
+import AppointmentList from "../components/AppointmentList";
 
-import AppointmentList from '../components/AppointmentList';
 const PetsList = () => {
   const [pets, setPets] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -30,7 +28,7 @@ const PetsList = () => {
   const roleID = localStorage.getItem("roleID");
   const [isLoading, setIsLoading] = useState(true);
   const accountID = localStorage.getItem("accountID");
-  const [memberAppointments, setMemberAppointments]= useState([]);
+  const [memberAppointments, setMemberAppointments] = useState([]);
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const [appointmentToCancel, setAppointmentToCancel] = useState(null);
 
@@ -60,9 +58,11 @@ const PetsList = () => {
 
   const apiShowAppointmentforMember = async (accountID) => {
     try {
-      const response = await api.get(`/appointment/showAppointmentForMember/${accountID}`);
+      const response = await api.get(
+        `/appointment/showAppointmentForMember/${accountID}`
+      );
       console.log(response.data);
-      if (response.data.status === 200){
+      if (response.data.status === 200) {
         setMemberAppointments(response.data.data);
       } else {
         setMemberAppointments([]);
@@ -72,28 +72,30 @@ const PetsList = () => {
       console.error("Error Api Show Appointment for Member:", error);
       setMemberAppointments([]);
     }
-  }
+  };
 
   const handleCancelAppointment = async (appointmentID) => {
     setIsLoading(true);
     try {
-        const response = await api.delete("/appointment/cancelAppointment", {
-            data: { appointID: appointmentID }
-        });
-        
-        if (response.data.status === 200) {
-            toast.success(response.data.message); // Hiển thị thông báo thành công
-            // Refresh lại danh sách appointments
-            apiShowAppointmentforMember(accountID);
-        } else {
-            toast.error(response.data.message);
-        }
+      const response = await api.delete("/appointment/cancelAppointment", {
+        data: { appointID: appointmentID },
+      });
+
+      if (response.data.status === 200) {
+        toast.success(response.data.message); // Hiển thị thông báo thành công
+        // Refresh lại danh sách appointments
+        apiShowAppointmentforMember(accountID);
+      } else {
+        toast.error(response.data.message);
+      }
     } catch (error) {
-        console.error("Error canceling appointment:", error);
-        // Hiển thị thông báo lỗi từ server nếu có
-        toast.error(error.response?.data?.message || "Error canceling appointment");
+      console.error("Error canceling appointment:", error);
+      // Hiển thị thông báo lỗi từ server nếu có
+      toast.error(
+        error.response?.data?.message || "Error canceling appointment"
+      );
     } finally {
-        setIsLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -164,9 +166,6 @@ const PetsList = () => {
   const indexOfFirstPet = indexOfLastPet - petsPerPage;
   const currentPets = pets.slice(indexOfFirstPet, indexOfLastPet);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
-  // Callback function to refresh pets list
-  
 
   const handleOpenCancelDialog = (appointmentID) => {
     setAppointmentToCancel(appointmentID);

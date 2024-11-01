@@ -31,7 +31,7 @@ const UpdatePet = () => {
 
   const [petData, setPetData] = useState(initialPetData);
   const [imagePreview, setImagePreview] = useState(initialPetData.img_url); // Hiển thị ảnh từ dữ liệu ban đầu
-
+  console.log(initialPetData.img_url);
   useEffect(() => {
     if (!location.state?.pet) {
       fetchPetData();
@@ -44,9 +44,10 @@ const UpdatePet = () => {
         params: { petID: petData.petID },
       });
       if (response.data.status === 200) {
-        console.log(response.data.data);
         setPetData(response.data.data);
-        setImagePreview(getImageUrl(response.data.data.img_url));
+        console.log(response.data.data);
+
+        setImagePreview(getImageUrl(response.data.img_url));
       }
     } catch (error) {
       console.error("Error fetching pet data:", error);
@@ -111,7 +112,7 @@ const UpdatePet = () => {
           },
         }
       );
-      console.log("Response:", response.data);
+      console.log("Response:", response.data.data);
       toast.success(response.data.message);
       // onPetUpdated();
       navigate("/petlistadmin");
@@ -135,14 +136,21 @@ const UpdatePet = () => {
             accept="image/*"
             onChange={handleImageChange}
           />
-          {imagePreview && (
+          {imagePreview ? (
             <img
-              src={getImageUrl(petData.img_url)}
-              alt="Pet Preview"
+              src={imagePreview}
+              alt="Event Preview"
               className="img-preview"
               style={{ width: "50%", marginTop: "10px" }}
             />
-          )}
+          ) : petData.img_url ? (
+            <img
+              src={getImageUrl(petData.img_url)}
+              alt="Current Pet Image"
+              className="img-preview"
+              style={{ width: "50%", marginTop: "10px" }}
+            />
+          ) : null}
         </div>
         <div className="col-lg-6 col-md-6 col-sm-12 text-center">
           <input

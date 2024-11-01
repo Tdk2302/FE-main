@@ -85,6 +85,7 @@ const PetListAdmin = () => {
   }, []);
 
   const handlePetAdded = () => {
+    setShowAddPet(false); // Đặt lại trạng thái showAddPet về false
     apiListAllPets(); // Gọi lại API để cập nhật danh sách pet
   };
 

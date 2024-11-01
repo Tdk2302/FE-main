@@ -154,7 +154,9 @@ const PetDetail = () => {
 
   const handleUpdatePet = () => {
     if (pet.petID) {
-      navigate(`/petupdate/${pet.petID}`, { state: { pet } });
+      navigate(`/petupdate/${pet.petID}`, {
+        state: { pet: { ...pet, img_url: getImageUrl(pet.img_url) } },
+      });
     } else {
       console.error("Pet ID is undefined");
     }
@@ -234,11 +236,13 @@ const PetDetail = () => {
                 </div>
               )}
           </div>
-          {roleID === "2" && !pet.accountID && pet.status === "Available" && (
-            <div class="edit-button">
-              <Button onClick={handleDeletePet}>Delete Pet</Button>
-            </div>
-          )}
+          {roleID === "2" &&
+            pet.accountID === "Not yet" &&
+            pet.status === "Available" && (
+              <div class="edit-button">
+                <Button onClick={handleDeletePet}>Delete Pet</Button>
+              </div>
+            )}
           {roleID === "2" && (
             <div class="edit-button">
               <Button onClick={handleUpdatePet}>Edit Pet</Button>

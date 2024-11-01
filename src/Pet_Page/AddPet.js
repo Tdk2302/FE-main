@@ -85,10 +85,10 @@ const AddPet = ({ onPetAdded = () => {} }) => {
           "Content-Type": "multipart/form-data",
         },
       });
-      toast.success("Added pet successfully \n Waiting admin to accept");
+      toast.success("Added pet successfully. Waiting admin to accept");
 
       onPetAdded();
-      navigate("/petlist");
+      navigate("/petlistadmin");
     } catch (error) {
       console.error(
         "Error adding pet:",
@@ -184,14 +184,7 @@ const AddPet = ({ onPetAdded = () => {} }) => {
             onChange={handleChange}
             min="0.1"
           />
-          <input
-            type="text"
-            placeholder="Note"
-            className="form-control"
-            name="note"
-            value={petData.note}
-            onChange={handleChange}
-          />
+
           <select
             type="text"
             placeholder="Size"

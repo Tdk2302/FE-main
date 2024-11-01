@@ -178,6 +178,9 @@ const EventList = () => {
     const startDate = moment(event.start_date);
     const endDate = moment(event.end_date);
 
+    if(getEventStatus(event) === "Ending"){
+      return null;
+    }
     if (now.isBefore(startDate)) {
       const daysUntilStart = startDate.diff(now, "days");
       if (daysUntilStart === 0) {

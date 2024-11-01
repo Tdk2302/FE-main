@@ -230,10 +230,14 @@ const PetDetail = () => {
                 </div>
               )}
           </div>
+          {roleID === "2" && pet.accountID && pet.status === "Available" && (
+            <div class="edit-button">
+              <Button onClick={handleDeletePet}>Delete Pet</Button>
+            </div>
+          )}
           {roleID === "2" && (
             <div class="edit-button">
               <Button onClick={handleUpdatePet}>Edit Pet</Button>
-              <Button onClick={handleDeletePet}>Delete Pet</Button>
             </div>
           )}
           {roleID === "2" && pet.status === "Unavailable" && pet.accountID && (

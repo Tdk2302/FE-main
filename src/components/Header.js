@@ -17,7 +17,7 @@ const Header = () => {
   const [roleID, setRoleID] = useState(null);
   const [username, setUserName] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const name = localStorage.getItem("name");
+  const name = localStorage.getItem("username");
   const loggedIn = localStorage.getItem("isLoggedIn") === "true";
   const role = Number(localStorage.getItem("roleID"));
   const accountID = localStorage.getItem("accountID");

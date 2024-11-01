@@ -53,38 +53,29 @@ const Donate = () => {
     fetchDonators();
   }, []);
 
-  const getDonate = async () => {
-    const donateData = await axios.get(api_donate);
-    let donates = donateData.data.data;
-    setDonation(donates);
-  };
-
-  const addDonation = async (donation) => {
+  const handleDonations = async () => {
     try {
-      const response = await axios.post(`${BASE_URL}donation/add`, {
-        donateID: donation.id,
-        date_time: donation.date_time.replace(" ", "T") + "Z",
-        note: donation.content,
-        amount: donation.amount,
-      });
-      console.log(response.data.message);
+      // Lấy dữ liệu quyên góp
+      const donateData = await axios.get(api_donate);
+      let donates = donateData.data.data;
+      setDonation(donates);
+      console.log(donateData.data.data);
+      toast.success(
+        `We will check transaction history. Please check your total donation after a few seconds`
+      );
+      // Thêm tất cả các khoản quyên góp
+      for (let donation of donates) {
+        const response = await axios.post(`${BASE_URL}donation/add`, {
+          donateID: donation.id,
+          date_time: donation.date_time.replace(" ", "T") + "Z",
+          note: donation.content,
+          amount: donation.amount,
+        });
+        console.log(response.data.message);
+      }
     } catch (error) {
       console.log(error.response.data);
     }
-  };
-
-  const addAll = async () => {
-    for (let donation of donations) {
-      await addDonation(donation);
-    }
-  };
-
-  const handleAddDonate = async () => {
-    toast.success(
-      `We will check transaction history. If you had donated, please check your total donation after a few seconds`
-    );
-    await getDonate();
-    await addAll();
   };
 
   const [page, setPage] = useState(0);
@@ -151,7 +142,7 @@ const Donate = () => {
           </p>
           <p>
             After a successful donation, click
-            <Button className="edit-button" onClick={handleAddDonate}>
+            <Button className="edit-button" onClick={handleDonations}>
               Here
             </Button>{" "}
             to check the transaction history and save your donation.

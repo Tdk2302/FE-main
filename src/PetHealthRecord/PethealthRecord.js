@@ -4,6 +4,7 @@ import Spinner from "../components/Spinner";
 import "../styles/petHealthRecord.scss";
 import { toast } from "react-toastify";
 import { styled } from "@mui/system";
+import DeleteDialog from "../components/DeleteDialog";
 
 import Button from "@mui/material/Button";
 
@@ -24,6 +25,8 @@ const PetHealthRecord = ({ petID }) => {
     veterinary_fee: 0,
     note: "",
   });
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [recordToDelete, setRecordToDelete] = useState(null);
 
   useEffect(() => {
     fetchPetHealthRecords();
@@ -83,16 +86,27 @@ const PetHealthRecord = ({ petID }) => {
     }
   };
 
-  const handleDeleteRow = async (recordID) => {
-    try {
-      await axios.delete(`/petHealth/deleteHealth/${recordID}`);
-      toast.success("Record deleted successfully");
-      fetchPetHealthRecords();
-    } catch (err) {
-      toast.error("Failed to delete record");
-      console.error(err);
+  const handleDeleteRow = (recordID) => {
+    setRecordToDelete(recordID);
+    setOpenDeleteDialog(true);
+  };
+
+  const confirmDelete = async () => {
+    if (recordToDelete) {
+      try {
+        await axios.delete(`/petHealth/deleteHealth/${recordToDelete}`);
+        toast.success("Record deleted successfully");
+        fetchPetHealthRecords();
+      } catch (err) {
+        toast.error("Failed to delete record");
+        console.error(err);
+      } finally {
+        setOpenDeleteDialog(false);
+        setRecordToDelete(null);
+      }
     }
   };
+
   const handleAddRecord = async (e) => {
     e.preventDefault();
     try {
@@ -347,7 +361,7 @@ const PetHealthRecord = ({ petID }) => {
                       }
                     />
                   ) : (
-                    `$${row.veterinary_fee}`
+                    `${row.veterinary_fee}VNĐ`
                   )}
                 </td>
                 <td>
@@ -422,6 +436,12 @@ const PetHealthRecord = ({ petID }) => {
           </tbody>
         </table>
       </Root>
+      <DeleteDialog
+        open={openDeleteDialog}
+        onClose={() => setOpenDeleteDialog(false)}
+        onConfirm={confirmDelete}
+        itemName="Pet Health Record"
+      />
     </div>
   );
 };

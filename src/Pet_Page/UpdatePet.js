@@ -32,12 +32,6 @@ const UpdatePet = () => {
   const [petData, setPetData] = useState(initialPetData);
   const [imagePreview, setImagePreview] = useState(initialPetData.img_url); // Hiển thị ảnh từ dữ liệu ban đầu
 
-  const getImageUrl = (imgUrl) => {
-    if (!imgUrl) return null; // Hoặc return một đường dẫn đến hình ảnh mặc đnh
-    if (imgUrl.startsWith("http")) return imgUrl;
-    return `${BASE_URL}${imgUrl}`;
-  };
-
   useEffect(() => {
     if (!location.state?.pet) {
       fetchPetData();
@@ -50,7 +44,7 @@ const UpdatePet = () => {
         params: { petID: petData.petID },
       });
       if (response.data.status === 200) {
-        console.log(response.data.data);  
+        console.log(response.data.data);
         setPetData(response.data.data);
         setImagePreview(getImageUrl(response.data.data.img_url));
       }
@@ -76,6 +70,13 @@ const UpdatePet = () => {
     }));
   };
 
+  const getImageUrl = (imgUrl) => {
+    if (!imgUrl) return "/path/to/default/image.jpg";
+    if (imgUrl.startsWith("images\\"))
+      return `${BASE_URL}${imgUrl.replace("\\", "/")}`;
+    return imgUrl;
+  };
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -84,6 +85,9 @@ const UpdatePet = () => {
         img_url: file,
       }));
       setImagePreview(URL.createObjectURL(file));
+    } else {
+      // Keep the existing image if no new file is selected
+      setImagePreview(getImageUrl(petData.img_url));
     }
   };
 
@@ -133,7 +137,7 @@ const UpdatePet = () => {
           />
           {imagePreview && (
             <img
-              src={imagePreview}
+              src={getImageUrl(petData.img_url)}
               alt="Pet Preview"
               className="img-preview"
               style={{ width: "50%", marginTop: "10px" }}

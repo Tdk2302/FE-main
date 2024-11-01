@@ -193,6 +193,10 @@ const PetDetail = () => {
               <strong>Sex: </strong> {pet.sex}
             </p>
             <p>
+              <strong>Category: </strong>{" "}
+              {pet.categoryID === "1" ? "Dog" : "Cat"}
+            </p>
+            <p>
               <strong>Size: </strong> {pet.size}
             </p>
             <p>
@@ -230,7 +234,7 @@ const PetDetail = () => {
                 </div>
               )}
           </div>
-          {roleID === "2" && pet.accountID && pet.status === "Available" && (
+          {roleID === "2" && !pet.accountID && pet.status === "Available" && (
             <div class="edit-button">
               <Button onClick={handleDeletePet}>Delete Pet</Button>
             </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from '../services/axios';
 import { 
   Table, 
@@ -16,8 +16,8 @@ import {
 import Spinner from '../components/Spinner';
 import { toast } from 'react-toastify';
 import ConfirmDialog from '../components/ConfirmDialog';
-
 const UserManagement = () => {
+  const currentUserID = localStorage.getItem('accountID');
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState({});
@@ -130,7 +130,10 @@ const UserManagement = () => {
                             color: '#666'
                           }
                         }}
-                        disabled={actionLoading[user.accountID] !== undefined}
+                        disabled={
+                          actionLoading[user.accountID] !== undefined || 
+                          user.accountID === currentUserID
+                        }
                       >
                         {actionLoading[user.accountID] === action ? (
                           <Spinner size={20} />

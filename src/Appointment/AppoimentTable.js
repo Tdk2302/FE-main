@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
-import axios from "../services/axios";
 import "../styles/appoitment.scss";
 import moment from "moment";
 import { toast } from "react-toastify";
-import Spinner from "../components/Spinner"; // Thêm dòng này
+import Spinner from "../components/Spinner";
 import api from "../services/axios";
 import { Link } from "react-router-dom";
 const AppointmentPage = () => {
@@ -16,7 +15,7 @@ const AppointmentPage = () => {
   const [appointmentToRefuse, setAppointmentToRefuse] = useState(null);
   const [notHappenAppointments, setNotHappenAppointments] = useState([]);
   const [endedAppointments, setEndedAppointments] = useState([]);
-  const [isLoading, setIsLoading] = useState(false); // Thêm state này
+  const [isLoading, setIsLoading] = useState(false);
 
   // Lấy thông tin người dùng hiện tại từ localStorage
 
@@ -95,12 +94,7 @@ const AppointmentPage = () => {
       const response = await api.put(`/appointment/accept/${staffId}`, {
         appointID: appointmentId,
       });
-
-      setUnprocessedAppointments((prev) =>
-        prev.filter((app) => app.appointID !== appointmentId)
-      );
       toast.success(response.data.message);
-      refreshAppointments();
     } catch (error) {
       toast.error(error.response.data.message);
       console.error("Error accepting appointment:", error);
@@ -108,6 +102,7 @@ const AppointmentPage = () => {
       setProcessingAppointments((prev) =>
         prev.filter((id) => id !== appointmentId)
       );
+      refreshAppointments();
     }
   };
 
@@ -135,11 +130,7 @@ const AppointmentPage = () => {
           data: { appointID: appointmentToRefuse },
         }
       );
-      setUnprocessedAppointments((prev) =>
-        prev.filter((app) => app.appointID !== appointmentToRefuse)
-      );
       toast.success(response.data.message);
-      refreshAppointments();
     } catch (error) {
       toast.error(error.response.data.message);
 
@@ -154,6 +145,7 @@ const AppointmentPage = () => {
       setShowModal(false);
       setRefusalReason("");
       setAppointmentToRefuse(null);
+      refreshAppointments();
     }
   };
   // Xử lý chấp nhận cuộc hẹn ở bảng notHappenyet
@@ -171,8 +163,7 @@ const AppointmentPage = () => {
       toast.error(error.response.data.message);
     } finally {
       // Luôn refresh lại danh sách sau khi thực hiện, bất kể thành công hay thất bại
-      await refreshAppointments();
-      await apiNotHappenAppointments();
+      refreshAppointments();
       // Xóa appointmentId khỏi danh sách đang xử lý
       setProcessingAppointments((prev) => prev.filter(id => id !== appointmentId));
     }
@@ -191,8 +182,7 @@ const AppointmentPage = () => {
       toast.error(error.response.data.message);
     } finally {
       // Luôn refresh lại danh sách sau khi thực hiện, bất kể thành công hay thất bại
-      await refreshAppointments();
-      await apiNotHappenAppointments();
+      refreshAppointments();
       // Xóa appointmentId khỏi danh sách đang xử lý
       setProcessingAppointments((prev) => prev.filter(id => id !== appointmentId));
     }
@@ -219,7 +209,7 @@ const AppointmentPage = () => {
             className={activeTab === "unprocessed" ? "active" : ""}
             onClick={() => {
               setActiveTab("unprocessed");
-              apiUnprocessedAppointments();
+              
             }}
           >
             Unprocessed
@@ -228,7 +218,7 @@ const AppointmentPage = () => {
             className={activeTab === "notHappenYet" ? "active" : ""}
             onClick={() => {
               setActiveTab("notHappenYet");
-              apiNotHappenAppointments();
+              
             }}
           >
             Not Happened Yet
@@ -237,7 +227,6 @@ const AppointmentPage = () => {
             className={activeTab === "ended" ? "active" : ""}
             onClick={() => {
               setActiveTab("ended");
-              apiEndedAppointments();
             }}
           >
             Ended

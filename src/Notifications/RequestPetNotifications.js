@@ -80,8 +80,6 @@ const AddPetNotifications = () => {
           `notification/${notiID}/status?status=${status}`
         );
         if (response.status === 200) {
-          localStorage.setItem(`noti_${notiID}_read`, "true");
-
           // Update notifications and count of new notifications
           setNotifications((prev) => {
             const updatedNotifications = prev.map((noti) =>

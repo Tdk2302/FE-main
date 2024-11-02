@@ -8,7 +8,7 @@ import DeleteDialog from "../components/DeleteDialog";
 
 import Button from "@mui/material/Button";
 
-const PetHealthRecord = ({ petID }) => {
+const PetHealthRecord = ({ petID, pet }) => {
   const [healthRecords, setHealthRecords] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -159,7 +159,7 @@ const PetHealthRecord = ({ petID }) => {
   return (
     <div className="pet-health-records">
       <h2>Pet Health Records</h2>
-      {roleID === "2" && (
+      {roleID === "2" && pet.status === "Available" && (
         <div className="controls">
           <Button
             className="action-button add-new-record-button"

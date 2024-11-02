@@ -31,7 +31,6 @@ const UpdatePet = () => {
 
   const [petData, setPetData] = useState(initialPetData);
   const [imagePreview, setImagePreview] = useState(initialPetData.img_url); // Hiển thị ảnh từ dữ liệu ban đầu
-  console.log(initialPetData.img_url);
   useEffect(() => {
     if (!location.state?.pet) {
       fetchPetData();
@@ -72,7 +71,6 @@ const UpdatePet = () => {
   };
 
   const getImageUrl = (imgUrl) => {
-    if (!imgUrl) return "/path/to/default/image.jpg";
     if (imgUrl.startsWith("images\\"))
       return `${BASE_URL}${imgUrl.replace("\\", "/")}`;
     return imgUrl;
@@ -107,8 +105,6 @@ const UpdatePet = () => {
       const blob = await response.blob();
       const file = new File([blob], "image.jpg", { type: "image/jpeg" });
       formData.append("img_url", file); // Gửi tệp hình ảnh
-    } else {
-      formData.append("img_url", "/path/to/default/image.jpg"); // Xử lý trường hợp không có hình ảnh
     }
     for (const key in petData) {
       console.log(key, petData[key]);
@@ -125,7 +121,6 @@ const UpdatePet = () => {
       );
       console.log("Response:", response.data.data);
       toast.success(response.data.message);
-      // onPetUpdated();
       navigate("/petlistadmin");
     } catch (error) {
       console.error(
@@ -204,14 +199,6 @@ const UpdatePet = () => {
             className="form-control"
             name="weight"
             value={petData.weight}
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            placeholder="Note"
-            className="form-control"
-            name="note"
-            value={petData.note}
             onChange={handleChange}
           />
           <select

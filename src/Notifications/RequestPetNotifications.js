@@ -168,7 +168,7 @@ const AddPetNotifications = () => {
     <div className="admin-notifications">
       <div className="notifications-content">
         <h2>
-          Add Pet Notifications{" "}
+          Request Pet Notifications
           {newNotificationsCount > 0 && (
             <span className="notification-count">
               ({newNotificationsCount})

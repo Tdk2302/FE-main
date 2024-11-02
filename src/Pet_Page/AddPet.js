@@ -94,7 +94,7 @@ const AddPet = ({ onPetAdded = () => {} }) => {
       }
     } catch (error) {
       console.error("Error adding pet:", error);
-      toast.error(error.message || "Failed to add pet. Please try again.");
+      toast.error("Failed to add pet. Please try again.");
     } finally {
       setIsLoading(false);
     }

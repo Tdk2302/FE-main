@@ -39,6 +39,15 @@ const Header = () => {
     navigate("/");
   };
 
+  const handleLogoClick = () => {
+    if (roleID === 3) {
+      navigate("/"); // Redirect to homepage
+    } else {
+      // Optionally, you can show a message or do nothing
+      console.log("Redirect not allowed for this role.");
+    }
+  };
+
   if (isLoading) {
     return <Spinner />;
   }
@@ -139,7 +148,7 @@ const Header = () => {
     <div className="header-container">
       <Navbar expand="lg" className="header">
         {/* Logo */}
-        <Navbar.Brand className="logo" href="/">
+        <Navbar.Brand className="logo" onClick={handleLogoClick}>
           <img
             src={logoApp}
             width="45"

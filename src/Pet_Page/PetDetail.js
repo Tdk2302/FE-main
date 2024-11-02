@@ -62,7 +62,6 @@ const PetDetail = () => {
 
   const handleDeletePet = async () => {
     try {
-      // Check if pet has an accountID
       if (pet.accountID) {
         toast.error(
           "Cannot delete this pet as it is currently associated with an account"
@@ -137,10 +136,6 @@ const PetDetail = () => {
 
   if (isLoading) {
     return <Spinner />;
-  }
-
-  if (!pet) {
-    return <div>Pet not found</div>;
   }
 
   const videoSrc = pet.video_report
@@ -345,7 +340,7 @@ const PetDetail = () => {
             </div>
           </div>
         </div>
-        <PetHealthRecord petID={petID} />
+        <PetHealthRecord petID={petID} pet={pet} />
 
         {pet.status.toLowerCase() === "unavailable" && pet.accountID && (
           <div className="pet-video">

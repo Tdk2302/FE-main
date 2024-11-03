@@ -94,11 +94,16 @@ const Donate = () => {
   };
 
   const [page, setPage] = useState(0);
+  const [page1, setPage1] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [rowsPerPage1, setRowsPerPage1] = useState(5);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
+  };
+
+  const handleChangePage1 = (event, newPage) => {
+    setPage1(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
@@ -251,8 +256,8 @@ const Donate = () => {
                 <TableBody>
                   {anonymousDonators
                     .slice(
-                      page * rowsPerPage1,
-                      page * rowsPerPage1 + rowsPerPage1
+                      page1 * rowsPerPage1,
+                      page1 * rowsPerPage1 + rowsPerPage1
                     )
                     .map((donator) => (
                       <TableRow
@@ -278,8 +283,8 @@ const Donate = () => {
               component="div"
               count={anonymousDonators.length}
               rowsPerPage={rowsPerPage1}
-              page={page}
-              onPageChange={handleChangePage}
+              page={page1}
+              onPageChange={handleChangePage1}
               onRowsPerPageChange={handleChangeRowsPerPage1}
             />
           </Paper>

@@ -12,17 +12,16 @@ const AdoptionProcess = () => {
   const location = useLocation(); // Lấy location
   const pet = location.state?.pet;
   const petID = pet.petID;
-  const [agreed, setAgreed] = useState(false);
+  const [agreed, setAgreed] = useState(false); //Trang thái của nút policy
   const [showModal, setShowModal] = useState(false);
   const [appointment, setAppointment] = useState({
     date: "",
     time: "",
   }); // Lưu thông tin đặt lịch hẹn
 
-  const date_time = `${appointment.date}T${appointment.time}`; // Định dạng ISO 8601
+  const date_time = `${appointment.date}T${appointment.time}`;
   const [minDate, setMinDate] = useState("");
   const [maxDate, setMaxDate] = useState("");
-  const [ErrorMessage, setErrorMessage] = useState("");
   const [showThankYou, setShowThankYou] = useState(false); // Trạng thái hiển thị bảng cảm ơn
   const accountID = localStorage.getItem("accountID"); // Lấy accountID
   // Xử lý khi người dùng nhấn nút "Đặt lịch hẹn"
@@ -38,8 +37,6 @@ const AdoptionProcess = () => {
         accountID,
         petID,
       });
-      setErrorMessage(response.data.message);
-      // Kiểm tra nếu thành công thì hiển thị bảng cảm ơn
       if (response.status === 200) {
         setShowModal(false);
         setShowThankYou(true);
@@ -78,9 +75,6 @@ const AdoptionProcess = () => {
       toast.error("Please agree to the policy before continuing.");
     }
   };
-  useEffect(() => {
-    console.log("showModal has changed:", showModal);
-  }, [showModal]); // Theo dõi sự thay đổi của showModal
 
   const handleAppointmentChange = (event) => {
     const { name, value } = event.target;
@@ -111,7 +105,7 @@ const AdoptionProcess = () => {
   // Hàm đóng modal
   const handleClose = () => {
     setShowModal(false);
-    navigate("/");
+    navigate(`/petdetail/${petID}`);
   };
 
   return (

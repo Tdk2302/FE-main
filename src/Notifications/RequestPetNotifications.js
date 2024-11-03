@@ -52,14 +52,12 @@ const AddPetNotifications = () => {
         toast.error("Invalid notification ID");
         return;
       }
-
       // Fetch the notification to check the message
       const notification = notifications.find((noti) => noti.notiID === notiID);
       if (!notification) {
         toast.error("Notification not found");
         return;
       }
-
       // Check if the message contains "deleted"
       if (notification.message.includes("deleted")) {
         console.log(notification.message);

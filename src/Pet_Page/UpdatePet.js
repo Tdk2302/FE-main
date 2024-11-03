@@ -110,14 +110,9 @@ const UpdatePet = () => {
       console.log(key, petData[key]);
     }
     try {
-      const response = await axios.post(
+      const response = await axios.postForm(
         `/pets/${petData.petID}/updatePets`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
+        formData
       );
       console.log("Response:", response.data.data);
       toast.success(response.data.message);

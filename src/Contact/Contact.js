@@ -5,7 +5,7 @@ import { Container, Row, Col } from "react-bootstrap";
 
 import OtherSupportMethods from "../components/OtherSupportMethods";
 
-const Contact = (props) => {
+const Contact = () => {
   return (
     <Container className="contact-container">
       <h1>Contact Information</h1>

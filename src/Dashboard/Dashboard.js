@@ -14,7 +14,6 @@ const Dashboard = () => {
   const [eventStats, setEventStats] = useState({});
   const [donationStats, setDonationStats] = useState({});
 
-  // Fetch account statistics
   const fetchAccountStats = useCallback(async () => {
     setIsLoading(true);
     try {
@@ -261,116 +260,6 @@ const Dashboard = () => {
             <tr>
               <td>Total</td>
               <td>{petStats.total}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    );
-  };
-
-  const renderEventCharts = () => {
-    const eventData = [
-      { id: 0, value: eventStats.waiting || 0, label: "Waiting" },
-      { id: 1, value: eventStats.updating || 0, label: "Updating" },
-      { id: 2, value: eventStats.published || 0, label: "Published" },
-      { id: 3, value: eventStats.ending || 0, label: "Ending" },
-    ];
-
-    return (
-      <div className="stats-section">
-        <h3>Event Statistics</h3>
-        <div className="chart-container">
-          <PieChart
-            series={[
-              {
-                data: eventData,
-                highlightScope: { faded: "global", highlighted: "item" },
-                faded: { innerRadius: 30, additionalRadius: -30 },
-              },
-            ]}
-            width={400}
-            height={200}
-          />
-        </div>
-        <table className="dashboard-table">
-          <thead>
-            <tr>
-              <th>Status</th>
-              <th>Count</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Waiting</td>
-              <td>{eventStats.waiting}</td>
-            </tr>
-            <tr>
-              <td>Updating</td>
-              <td>{eventStats.updating}</td>
-            </tr>
-            <tr>
-              <td>Published</td>
-              <td>{eventStats.published}</td>
-            </tr>
-            <tr>
-              <td>Ending</td>
-              <td>{eventStats.ending}</td>
-            </tr>
-            <tr>
-              <td>Total</td>
-              <td>{eventStats.total}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    );
-  };
-
-  const renderDonationCharts = () => {
-    const donationData = [
-      { id: 0, value: donationStats.anonymous || 0, label: "Anonymous" },
-      {
-        id: 1,
-        value: donationStats.eventDonate || 0,
-        label: "Event Donations",
-      },
-    ];
-
-    return (
-      <div className="stats-section">
-        <h3>Donation Statistics</h3>
-        <div className="chart-container">
-          <PieChart
-            series={[
-              {
-                data: donationData,
-                highlightScope: { faded: "global", highlighted: "item" },
-                faded: { innerRadius: 30, additionalRadius: -30 },
-              },
-            ]}
-            width={400}
-            height={200}
-          />
-        </div>
-        <table className="dashboard-table">
-          <thead>
-            <tr>
-              <th>Type</th>
-              <th>Count</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Anonymous</td>
-              <td>{donationStats.anonymous}</td>
-            </tr>
-            <tr>
-              <td>Event Donations</td>
-              <td>{donationStats.eventDonate}</td>
-            </tr>
-            <tr>
-              <td>Total</td>
-              <td>{donationStats.total}</td>
             </tr>
           </tbody>
         </table>

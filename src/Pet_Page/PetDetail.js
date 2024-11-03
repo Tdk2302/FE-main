@@ -114,7 +114,6 @@ const PetDetail = () => {
         const response = await api.get(`/pets/getByID/${petID}`);
         setPet(response.data.data);
         console.log("Fetching other pets..."); // Kiểm tra việc gọi fetchOtherPets
-
         await fetchOtherPets();
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -153,7 +152,6 @@ const PetDetail = () => {
   };
 
   const getImageUrl = (imgUrl) => {
-    if (!imgUrl) return "/path/to/default/image.jpg";
     if (imgUrl.startsWith("images\\"))
       return `${BASE_URL}${imgUrl.replace("\\", "/")}`;
     return imgUrl;

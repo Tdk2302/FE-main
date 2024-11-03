@@ -6,7 +6,6 @@ import "react-toastify/dist/ReactToastify.css";
 import Admin from "./Account/Admin";
 import Login from "./Account/Login";
 import Register from "./Account/Register";
-import Staff from "./Account/Staff";
 import AdoptProcess from "./Adoption/AdoptProcess";
 import "./App.scss";
 import AppoimentTable from "./Appointment/AppoimentTable";
@@ -84,14 +83,7 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-              <Route
-                path="/staff"
-                element={
-                  <ProtectedRoute roleID={2}>
-                    <Staff />
-                  </ProtectedRoute>
-                }
-              />
+
               <Route
                 path="/appointment"
                 element={

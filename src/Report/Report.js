@@ -91,16 +91,26 @@ const Report = () => {
 
   return (
     <div>
-      {/* Video element để hiển thị luồng video trực tiếp (xem trước) */}
+      {/* Instructions for the user */}
+      <p style={{ marginTop: "10px" }}>
+        Please place your pet in front of the camera and press the "Start
+        Recording" button. The video will be recorded for 7 seconds.
+      </p>
+
+      {/* Video element to display the live video stream (preview) */}
       <video
         ref={videoRef}
-        style={{ width: "500px", height: "400px" }}
+        style={{ width: "55%", height: "60%" }}
         autoPlay
         muted
       ></video>
       <br />
-      {/* Nút bắt đầu quay video */}
-      <button onClick={startRecording} disabled={isRecording}>
+      {/* Button to start recording video */}
+      <button
+        onClick={startRecording}
+        disabled={isRecording}
+        style={{ margin: "10px" }}
+      >
         Start Recording
       </button>
     </div>

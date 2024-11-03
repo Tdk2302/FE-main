@@ -49,7 +49,7 @@ const Contact = (props) => {
           <p>
             If you need additional information or would like to provide
             feedback, please{" "}
-            <a href="https://forms.gle/hXt8Fn2gxnWe7CWX9">click here</a>. We
+            <a href="https://forms.gle/ihngEzoZSdXeCYNY9">click here</a>. We
             greatly appreciate your input as it helps us improve and serve you
             better.
           </p>

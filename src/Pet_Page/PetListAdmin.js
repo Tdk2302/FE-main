@@ -138,7 +138,6 @@ const PetListAdmin = () => {
   };
 
   const getImageUrl = useCallback((imgUrl) => {
-    if (!imgUrl) return "/path/to/default/image.jpg";
     if (imgUrl.startsWith("http")) return imgUrl;
     return `${BASE_URL}${imgUrl}`;
   }, []);

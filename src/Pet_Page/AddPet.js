@@ -80,20 +80,15 @@ const AddPet = ({ onPetAdded = () => {} }) => {
     }
 
     try {
-      const response = await axios.post("pets/addPets", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      if (response.data.status == 200) {
-        toast.success("Added pet successfully. Waiting admin to accept");
-        onPetAdded();
-        navigate("/petlistadmin");
-      } else {
-        throw new Error(response.data.message || "Failed to add pet");
-      }
+      const response = await axios.postForm("pets/addPets", formData);
+      toast.success("Added pet successfully. Waiting admin to accept");
+      onPetAdded();
+      navigate("/petlistadmin");
     } catch (error) {
       console.error("Error adding pet:", error);
+      if (error.response) {
+        console.error("Response data:", error.response.data); // Log the response data
+      }
       toast.error("Failed to add pet. Please try again.");
     } finally {
       setIsLoading(false);

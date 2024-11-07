@@ -224,16 +224,19 @@ const PetDetail = () => {
                 </div>
               )}
           </div>
-          {roleID === "2" && !pet.accountID && pet.status === "Available" && (
-            <div class="edit-button">
-              <Button onClick={handleDeletePet}>Delete Pet</Button>
-            </div>
-          )}
-          {roleID === "2" && (
-            <div class="edit-button">
-              <Button onClick={handleUpdatePet}>Edit Pet</Button>
-            </div>
-          )}
+          <div className="button-UD">
+            {roleID === "2" && !pet.accountID && pet.status === "Available" && (
+              <div class="edit-button">
+                <Button onClick={handleDeletePet}>Delete</Button>
+              </div>
+            )}
+            {roleID === "2" && (
+              <div class="edit-button">
+                <Button onClick={handleUpdatePet}>Edit</Button>
+              </div>
+            )}
+          </div>
+
           {roleID === "2" && pet.status === "Unavailable" && pet.accountID && (
             <div class="remind-button">
               <Button onClick={handleRemind}>Remind</Button>

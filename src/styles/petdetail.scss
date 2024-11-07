@@ -63,12 +63,14 @@
     }
   }
 }
-
+.button-UD {
+  display: flex;
+  // flex-direction: row;
+}
 .edit-button {
-  margin-top: auto;
   button {
     font-size: 18px;
-    width: 60%;
+    width: 80%;
     margin: 20px;
     background-color: #f1ba3a;
     color: white;

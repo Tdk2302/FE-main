@@ -119,23 +119,6 @@ const BanRequestNotifications = () => {
         }
     };
 
-    const formatMessage = (message) => {
-        const lines = message.split('\n');
-        const columnLength = Math.ceil(lines.length / 3);
-        return (
-            <div className="notification-message-container">
-                <div className="notification-message-column">
-                    {lines.slice(0, columnLength).join('\n')}
-                </div>
-                <div className="notification-message-column">
-                    {lines.slice(columnLength, 2 * columnLength).join('\n')}
-                </div>
-                <div className="notification-message-column">
-                    {lines.slice(2 * columnLength).join('\n')}
-                </div>
-            </div>
-        );
-    };
 
     if (isLoading) {
         return <Spinner />;
@@ -153,7 +136,7 @@ const BanRequestNotifications = () => {
                     <ul className="notification-list">
                         {notifications.map((noti) => (
                             <li key={noti.notiID} className={`notification-item ${noti.button_status ? 'new' : ''}`}>
-                                {formatMessage(noti.message)}
+                                {(noti.message)}
                                 <p className="notification-date">
                                     {formatRelativeTime(noti.createdAt)}
                                 </p>

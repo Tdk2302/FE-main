@@ -273,7 +273,7 @@ const AppointmentPage = () => {
                             <Link 
                                 to={`/petdetail/${appointment.petID}`}
                                 style={{
-                                    color: '#f1ba3a',
+                                    color: '#534ee1',
                                     textDecoration: 'underline',
                                     cursor: 'pointer'
                                 }}

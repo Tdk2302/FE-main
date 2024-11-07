@@ -17,15 +17,10 @@ const AddPetNotifications = () => {
     try {
       const response = await axios.get("/notification/showAdminAdoptNoti");
       if (response.data && Array.isArray(response.data)) {
-        const processedNotifications = response.data.map((noti) => ({
-          ...noti,
-          isNew: !localStorage.getItem(`noti_${noti.notiID}_read`),
-        }));
-        const newCount = processedNotifications.filter(
-          (noti) => noti.isNew
-        ).length;
-        setNewNotificationsCount(newCount);
-        setNotifications(processedNotifications);
+        const notifications = response.data;
+        const pendingCount = notifications.filter(noti => noti.button_status).length;
+        setNewNotificationsCount(pendingCount);
+        setNotifications(notifications);
       } else {
         setNotifications([]);
       }
@@ -66,11 +61,13 @@ const AddPetNotifications = () => {
           `notification/deleteNotiByPetID/${notiID}/status?status=${status}`
         );
         if (response.status === 200) {
-          // Update notifications list
           setNotifications((prev) =>
             prev.filter((noti) => noti.notiID !== notiID)
           );
+          const newCount = notifications.filter(noti => noti.button_status).length;
+          setNewNotificationsCount(newCount);
           toast.success("Notification deleted successfully");
+          apiAddPetNotifications();
         }
       } else {
         // Call API to update the status
@@ -82,11 +79,11 @@ const AddPetNotifications = () => {
           setNotifications((prev) => {
             const updatedNotifications = prev.map((noti) =>
               noti.notiID === notiID
-                ? { ...noti, isNew: false, button_status: false }
+                ? { ...noti, button_status: false }
                 : noti
             );
             const newCount = updatedNotifications.filter(
-              (noti) => noti.isNew
+              (noti) => noti.button_status
             ).length;
             setNewNotificationsCount(newCount);
             return updatedNotifications;
@@ -178,7 +175,7 @@ const AddPetNotifications = () => {
             {notifications.map((noti) => (
               <li
                 key={noti.notiID}
-                className={`notification-item ${noti.isNew ? "new" : ""}`}
+                className={`notification-item ${noti.button_status ? "new" : ""}`}
                 style={getNotificationStyle(noti.message)}
               >
                 {formatMessage(noti.message)}

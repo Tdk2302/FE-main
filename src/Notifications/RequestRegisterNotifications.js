@@ -17,15 +17,10 @@ const RequestRegisterNotifications = () => {
     try {
       const response = await axios.get("/notification/showRegisNoti");
       if (response.data && response.data.data) {
-        const processedNotifications = response.data.data.map((noti) => ({
-          ...noti,
-          isNew: !localStorage.getItem(`noti_${noti.notiID}_read`),
-        }));
-        const newCount = processedNotifications.filter(
-          (noti) => noti.isNew
-        ).length;
-        setNewNotificationsCount(newCount);
-        setNotifications(processedNotifications);
+        const notifications = response.data.data;
+        const pendingCount = notifications.filter(noti => noti.button_status).length;
+        setNewNotificationsCount(pendingCount);
+        setNotifications(notifications);
       } else {
         setNotifications([]);
       }
@@ -64,7 +59,7 @@ const RequestRegisterNotifications = () => {
         setNotifications((prev) => {
           const updatedNotifications = prev.map((noti) =>
             noti.notiID === notiID
-              ? { ...noti, isNew: false, button_status: false }
+              ? { ...noti, button_status: false }
               : noti
           );
           // Cập nhật số lượng thông báo mới
@@ -141,7 +136,7 @@ const RequestRegisterNotifications = () => {
             {notifications.map((noti) => (
               <li
                 key={noti.notiID}
-                className={`notification-item ${noti.isNew ? "new" : ""}`}
+                className={`notification-item ${noti.button_status ? "new" : ""}`}
               >
                 <div className="notification-message">{noti.message}</div>
                 <p className="notification-date">

@@ -49,7 +49,10 @@ const EventList = () => {
         response = await api.get("/events/showEventAdmin");
       }
       if (response.data.status === 200) {
-        setEvents(response.data.data);
+        const sortedEvents = response.data.data.sort((a, b) => {
+          return new Date(b.start_date) - new Date(a.start_date);
+        });
+        setEvents(sortedEvents);
       } else {
         toast.error(response.data.message);
       }

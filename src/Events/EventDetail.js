@@ -169,7 +169,7 @@ const EventDetail = () => {
                               {donation.accountID || "Anonymous"}
                             </TableCell>
                             <TableCell align="right">
-                              {donation.amount}VND
+                              {donation.amount.toLocaleString()} VND
                             </TableCell>
                           </TableRow>
                         ))}

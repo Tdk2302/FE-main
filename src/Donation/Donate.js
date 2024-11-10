@@ -187,7 +187,7 @@ const Donate = () => {
                         <TableCell>{donator.name}</TableCell>
 
                         <TableCell align="right">
-                          {donator.total_donation}VNĐ
+                          {donator.total_donation.toLocaleString()} VNĐ
                         </TableCell>
                       </TableRow>
                     ))}
@@ -256,7 +256,9 @@ const Donate = () => {
                             "vi-VN"
                           )}
                         </TableCell>
-                        <TableCell align="right">{donator.amount}VNĐ</TableCell>
+                        <TableCell align="right">
+                          {donator.amount.toLocaleString()} VNĐ
+                        </TableCell>
                       </TableRow>
                     ))}
                 </TableBody>

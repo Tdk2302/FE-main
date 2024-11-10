@@ -361,7 +361,7 @@ const PetHealthRecord = ({ petID, pet }) => {
                       }
                     />
                   ) : (
-                    `${row.veterinary_fee}VNĐ`
+                    `${row.veterinary_fee.toLocaleString()} VNĐ`
                   )}
                 </td>
                 <td>

@@ -54,23 +54,25 @@ input[type="number-edit"] {
 
 // Có thể thêm các kiểu riêng cho từng nút nếu cần
 .save-button {
+  width: 55%;
   background-color: #e6bf33 !important;
-  color: black !important;
+  color: white !important;
 }
 
 .cancel-button {
   background-color: #e6bf33 !important;
-  color: black !important;
+  color: white !important;
 }
 
 .edit-button2 {
+  width: 30%;
   background-color: #e6bf33 !important;
-  color: black !important;
+  color: white !important;
 }
 
 .table-actions .delete-button {
   background-color: #e6bf33 !important;
-  color: black !important;
+  color: white !important;
 }
 
 .controls {

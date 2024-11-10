@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react"; // Added useEffect for fetching donators
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { BASE_URL } from "../services/axios";
 import { Button } from "react-bootstrap";
 import { toast } from "react-toastify";
-import PageTitle from "../components/PageTitle"; // Import the new component
-import "../styles/donate.scss"; // Import the new SCSS file
+import "../styles/donate.scss";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -14,7 +13,6 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TablePagination from "@mui/material/TablePagination";
 import OtherSupportMethods from "../components/OtherSupportMethods";
-import ContactBanner from "../components/ContactBanner";
 
 const Donate = () => {
   const [donations, setDonation] = useState([]);

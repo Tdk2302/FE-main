@@ -63,49 +63,46 @@
     }
   }
 }
-.button-UD {
-  display: flex;
-  margin-top: 20px;
 
-  .delete-button-petdetail {
-    .delete-button1 {
-      font-size: 18px;
-      margin: 20px;
-      background-color: #f1ba3a;
-      color: white;
-      border: none;
-      padding: 10px 30px;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+.delete-button-petdetail {
+  .delete-button1 {
+    font-size: 16px;
+    margin: 10px;
+    margin-left: 27px;
+    background-color: #f1ba3a;
+    color: white;
+    border: none;
+    padding: 10px 50px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 
-      &:hover {
-        background-color: #dead43;
-        transform: translateY(-2px);
-      }
+    &:hover {
+      background-color: #dead43;
+      transform: translateY(-2px);
     }
   }
+}
 
-  .edit-button {
-    .edit-button1 {
-      font-size: 18px;
-      margin: 20px;
-      width: 90%;
-      background-color: #f1ba3a;
-      color: white;
-      border: none;
-      padding: 10px 30px;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+.edit-button1 {
+  font-size: 16px;
+  margin-top: 20px;
+  margin-left: 30px;
+  margin-bottom: 20px;
+  width: 25%;
+  background-color: #f1ba3a;
+  color: white;
+  border: none;
+  padding: 10px 50px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 
-      &:hover {
-        background-color: #dead43;
-        transform: translateY(-2px);
-      }
-    }
+  &:hover {
+    background-color: #dead43;
+    transform: translateY(-2px);
   }
 }
 

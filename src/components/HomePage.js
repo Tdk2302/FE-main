@@ -38,7 +38,6 @@ const HomePage = () => {
   }, []);
 
   const getImageUrl = (imgUrl) => {
-    if (!imgUrl) return "/path/to/default/image.jpg";
     if (imgUrl.startsWith("http")) return imgUrl;
     return `${BASE_URL}${imgUrl}`;
   };
@@ -87,7 +86,9 @@ const HomePage = () => {
       if (daysUntilStart === 0) {
         return "Event starts soon";
       }
-      return `Event starts in ${daysUntilStart} day${daysUntilStart > 1 ? "s" : ""}`;
+      return `Event starts in ${daysUntilStart} day${
+        daysUntilStart > 1 ? "s" : ""
+      }`;
     } else if (now.isBetween(startDate, endDate)) {
       return "Event is ongoing";
     }
@@ -169,43 +170,45 @@ const HomePage = () => {
           removeArrowOnDeviceType={["tablet", "mobile"]}
         >
           {events.map((event) => (
-            <div key={event.eventID} className="event-card" onClick={() => handleEventClick(event.eventID)}>
+            <div
+              key={event.eventID}
+              className="event-card"
+              onClick={() => handleEventClick(event.eventID)}
+            >
               <Card.Img
-              variant="top"
-              src={getImageUrl(event.img_url)}
-              alt={event.title}
-            />
+                variant="top"
+                src={getImageUrl(event.img_url)}
+                alt={event.title}
+              />
               <Card.Body>
-              <Card.Title>
-                {event.event_name}
-              </Card.Title>
-              <Card.Subtitle className="mb-2 text-muted">
-                {event.title}
-              </Card.Subtitle>
-              <div className="event-description"> {event.description}</div>
-              {getEventTimeInfo(event) && (
-                <Card.Text
-                  className="event-time-info"
-                  style={{
-                    fontSize: "14px",
-                    color: "green",
-                    fontWeight: "bold",
-                    marginTop: "10px",
-                    padding: "5px",
-                    borderRadius: "4px",
-                  }}
-                >
-                  {getEventTimeInfo(event)}
-                </Card.Text>
-              )}
-            </Card.Body>
-               <Card.Footer>
-              <small className="text-muted">
-                Start Date: {new Date(event.start_date).toLocaleDateString()}
-              </small>
-              <br />
-              <small className="text-muted">
-                End Date: {new Date(event.end_date).toLocaleDateString()}
+                <Card.Title>{event.event_name}</Card.Title>
+                <Card.Subtitle className="mb-2 text-muted">
+                  {event.title}
+                </Card.Subtitle>
+                <div className="event-description"> {event.description}</div>
+                {getEventTimeInfo(event) && (
+                  <Card.Text
+                    className="event-time-info"
+                    style={{
+                      fontSize: "14px",
+                      color: "green",
+                      fontWeight: "bold",
+                      marginTop: "10px",
+                      padding: "5px",
+                      borderRadius: "4px",
+                    }}
+                  >
+                    {getEventTimeInfo(event)}
+                  </Card.Text>
+                )}
+              </Card.Body>
+              <Card.Footer>
+                <small className="text-muted">
+                  Start Date: {new Date(event.start_date).toLocaleDateString()}
+                </small>
+                <br />
+                <small className="text-muted">
+                  End Date: {new Date(event.end_date).toLocaleDateString()}
                 </small>
                 <br />
               </Card.Footer>

@@ -90,7 +90,6 @@ const EventDetail = () => {
   };
 
   const getImageUrl = (imgUrl) => {
-    if (!imgUrl) return "/path/to/default/image.jpg";
     if (imgUrl.startsWith("images\\"))
       return `${BASE_URL}${imgUrl.replace("\\", "/")}`;
     return imgUrl;

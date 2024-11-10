@@ -152,15 +152,22 @@ const PetDetail = () => {
   };
 
   const getImageUrl = (imgUrl) => {
-    if (imgUrl.startsWith("images\\"))
-      return `${BASE_URL}${imgUrl.replace("\\", "/")}`;
-    return imgUrl;
+    if (imgUrl.startsWith("http")) return imgUrl;
+    return `${BASE_URL}${imgUrl}`;
   };
 
   // Xử lý trường hợp không có pet
   if (!pet) {
     return <div>Pet not found</div>;
   }
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const year = date.getFullYear();
+    return `${month}/${day}/${year}`;
+  };
 
   return (
     <div className="petdetail-container">
@@ -224,22 +231,17 @@ const PetDetail = () => {
                 </div>
               )}
           </div>
-          <div className="button-UD">
-            {roleID === "2" && !pet.accountID && pet.status === "Available" && (
-              <div className="delete-button-petdetail">
-                <Button className="delete-button1" onClick={handleDeletePet}>
-                  Delete
-                </Button>
-              </div>
-            )}
-            {roleID === "2" && (
-              <div className="edit-button">
-                <Button className="edit-button1" onClick={handleUpdatePet}>
-                  Edit
-                </Button>
-              </div>
-            )}
-          </div>
+
+          {roleID === "2" && !pet.accountID && pet.status === "Available" && (
+            <div className="delete-button-petdetail">
+              <Button className="delete-button1" onClick={handleDeletePet}>
+                Delete
+              </Button>
+              <Button className="edit-button1" onClick={handleUpdatePet}>
+                Edit
+              </Button>
+            </div>
+          )}
 
           {roleID === "2" && pet.status === "Unavailable" && pet.accountID && (
             <div className="remind-button">
@@ -356,7 +358,8 @@ const PetDetail = () => {
             {videoSrc ? (
               <div>
                 <h2>
-                  Video report of {pet.name} at {pet.date_time_report}
+                  Video report of {pet.name} at{" "}
+                  {formatDate(pet.date_time_report)}
                 </h2>
                 <video
                   src={videoSrc}
@@ -406,7 +409,10 @@ const PetDetail = () => {
                   to={`/petdetail/${otherPet.petID}`}
                   className="nav-link"
                 >
-                  <img src={otherPet.img_url} alt={otherPet.name} />
+                  <img
+                    src={getImageUrl(otherPet.img_url)}
+                    alt={otherPet.name}
+                  />
                   <h3>{otherPet.name}</h3>
                   <p>Sex: {otherPet.sex}</p>
                   <p>Age: {otherPet.age}</p>

@@ -70,16 +70,16 @@ h6 {
 }
 
 button.edit-button {
-  background-color: #3bd4eb; // Green background for button
-  color: white; // White text
-  border: none; // No border
-  border-radius: 5px; // Rounded corners
-  padding: 10px 15px; // Padding for button
-  cursor: pointer; // Pointer cursor on hover
-  transition: background-color 0.3s; // Smooth transition
+  background-color: #f1ba3a;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background-color 0.3s;
 
   &:hover {
-    background-color: #19b9d1; // Darker green on hover
+    background-color: #dead43;
   }
 }
 .root-table {

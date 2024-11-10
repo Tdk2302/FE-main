@@ -4,7 +4,7 @@ import "../styles/adminpage.scss";
 import { toast } from "react-toastify";
 import moment from "moment";
 import Spinner from "../components/Spinner";
-
+import { Link } from "react-router-dom";
 const RequestEventNotifications = () => {
   const [notifications, setNotifications] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -17,19 +17,31 @@ const RequestEventNotifications = () => {
     return match ? match[1] : null;
   };
 
+  const extractMessageBeforeID = (message) => {
+    const parts = message.split('ID:');
+    return parts[0].trim();
+  };
+
+  const extractFirstPart = (message) => {
+    const parts = message.split('_');
+    return parts[1].trim();
+  };
+
+  const extractStatus = (message) => {
+    const match = message.match(/Status: (\w+)/);
+    return match ? match[1] : null;
+  };
+
   const apiEventNotifications = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
       const response = await axios.get("/notification/showEventNoti");
       if (response.data && response.data.data) {
-        const processedNotifications = response.data.data.map(noti => ({
-          ...noti,
-          isNew: !localStorage.getItem(`event_noti_${noti.notiID}_read`)
-        }));
-        const newCount = processedNotifications.filter(noti => noti.isNew).length;
-        setNewNotificationsCount(newCount);
-        setNotifications(processedNotifications);
+        const notifications = response.data.data;
+        const pendingCount = notifications.filter(noti => noti.button_status).length;
+        setNewNotificationsCount(pendingCount);
+        setNotifications(notifications);
       } else {
         setNotifications([]);
       }
@@ -55,14 +67,13 @@ const RequestEventNotifications = () => {
     try {
       const response = await axios.put(`/events/${eventID}/status?status=${status}`);
       if (response.status === 200) {
-        localStorage.setItem(`event_noti_${noti.notiID}_read`,'true');
         setNotifications(prev => {
           const updatedNotifications = prev.map(n => 
             n.notiID === noti.notiID
-            ? { ...n, isNew: false, button_status: false}
+            ? { ...n, button_status: false }
             : n
           );
-          const newCount = updatedNotifications.filter(n => n.isNew).length;
+          const newCount = updatedNotifications.filter(n => n.button_status).length;
           setNewNotificationsCount(newCount);
           return updatedNotifications;
         });
@@ -104,28 +115,26 @@ const RequestEventNotifications = () => {
     }
   };
 
-  const formatMessage = (message) => {
-    const lines = message.split('\n');
-    const columnLength = Math.ceil(lines.length / 3);
-    return (
-      <div className="notification-message-container">
-        <div className="notification-message-column">
-          {lines.slice(0, columnLength).join('\n')}
-        </div>
-        <div className="notification-message-column">
-          {lines.slice(columnLength, 2 * columnLength).join('\n')}
-        </div>
-        <div className="notification-message-column">
-          {lines.slice(2 * columnLength).join('\n')}
-        </div>
-      </div>
-    );
-  };
-
   if (isLoading || isUpdating) {
     return <Spinner />;
   }
-
+  
+  const getNotificationStyle = (message) => {
+    if (extractStatus(message) === "Waiting") {
+      return {
+        backgroundColor: "#ffecb3",
+      borderLeft: "4px solid #ffb74d",
+        padding: "15px",
+        
+      };
+    }
+    return {
+      backgroundColor: "#e3f2fd",
+        borderLeft: "4px solid #1976d2",
+        padding: "15px",
+        
+    };
+  };
   return (
     <div className="admin-notifications">
       <div className="notifications-content">
@@ -144,12 +153,30 @@ const RequestEventNotifications = () => {
             {notifications.map((noti) => (
               <li
                 key={noti.notiID}
-                className={`notification-item ${noti.isNew ? "new" : ""}`}
+                className={`notification-item ${noti.button_status ? "new" : ""}`}
+                style={getNotificationStyle(noti.message)}
               >
-                {formatMessage(noti.message)}
-                <p className="notification-date">
+                <div className="notification-message">
+                  {extractMessageBeforeID(noti.message)}
+                </div>
+
+                <Link to={`/events/${extractEventID(noti.message)}`}
+                style={{
+                  color: '#534ee1',
+                  textDecoration: 'underline',
+                  cursor: 'pointer'
+                }}
+                className="notification-message">
+                  Event Name: {extractFirstPart(noti.message)}
+                </Link>
+                
+                <div className="notification-status">
+                  Status: {extractStatus(noti.message)}
+                </div>
+      
+                <div className="notification-date">
                   {formatRelativeTime(noti.createdAt)}
-                </p>
+                </div>
                 {noti.button_status && (
                   <div className="notification-actions">
                     <button

@@ -18,13 +18,10 @@ const BanRequestNotifications = () => {
             const response = await axios.get("/notification/showBanRequest");
             console.log(response.data);
             if (response.data && response.data.data) {
-                const processedNotifications = response.data.data.map(noti => ({
-                    ...noti,
-                    isNew: !localStorage.getItem(`noti_${noti.notiID}_read`)
-                }));
-                const newCount = processedNotifications.filter(noti => noti.isNew).length;
-                setNewNotificationsCount(newCount);
-                setNotifications(processedNotifications);
+                const notifications = response.data.data;
+                const pendingCount = notifications.filter(noti => noti.button_status).length;
+                setNewNotificationsCount(pendingCount);
+                setNotifications(notifications);
             } else {
                 setNotifications([]);
             }
@@ -77,18 +74,15 @@ const BanRequestNotifications = () => {
              
             }
 
-            // Cập nhật localStorage và UI
-            localStorage.setItem(`noti_${notiID}_read`, 'true');
-            
             // Cập nhật danh sách thông báo và đếm số thông báo mới
             setNotifications(prev => {
                 const updatedNotifications = prev.map(noti => 
                     noti.notiID === notiID 
-                        ? { ...noti, isNew: false, button_status: false }
+                        ? { ...noti, button_status: false }
                         : noti
                 );
                 // Cập nhật số lượng thông báo mới
-                const newCount = updatedNotifications.filter(noti => noti.isNew).length;
+                const newCount = updatedNotifications.filter(noti => noti.button_status).length;
                 setNewNotificationsCount(newCount);
                 return updatedNotifications;
             });
@@ -102,7 +96,7 @@ const BanRequestNotifications = () => {
             if (error.response?.status === 404) {
                 setNotifications(prev => {
                     const updatedNotifications = prev.filter(noti => noti.notiID !== notiID);
-                    const newCount = updatedNotifications.filter(noti => noti.isNew).length;
+                    const newCount = updatedNotifications.filter(noti => noti.button_status).length;
                     setNewNotificationsCount(newCount);
                     return updatedNotifications;
                 });
@@ -125,23 +119,6 @@ const BanRequestNotifications = () => {
         }
     };
 
-    const formatMessage = (message) => {
-        const lines = message.split('\n');
-        const columnLength = Math.ceil(lines.length / 3);
-        return (
-            <div className="notification-message-container">
-                <div className="notification-message-column">
-                    {lines.slice(0, columnLength).join('\n')}
-                </div>
-                <div className="notification-message-column">
-                    {lines.slice(columnLength, 2 * columnLength).join('\n')}
-                </div>
-                <div className="notification-message-column">
-                    {lines.slice(2 * columnLength).join('\n')}
-                </div>
-            </div>
-        );
-    };
 
     if (isLoading) {
         return <Spinner />;
@@ -158,8 +135,8 @@ const BanRequestNotifications = () => {
                 ) : notifications.length > 0 ? (
                     <ul className="notification-list">
                         {notifications.map((noti) => (
-                            <li key={noti.notiID} className={`notification-item ${noti.isNew ? 'new' : ''}`}>
-                                {formatMessage(noti.message)}
+                            <li key={noti.notiID} className={`notification-item ${noti.button_status ? 'new' : ''}`}>
+                                {(noti.message)}
                                 <p className="notification-date">
                                     {formatRelativeTime(noti.createdAt)}
                                 </p>

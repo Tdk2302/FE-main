@@ -30,18 +30,31 @@ const AddEvent = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!eventData.event_name.trim())
+    if (!eventData.event_name.trim()) {
       newErrors.event_name = "Event name is required";
+    }
     if (!eventData.description.trim()) {
       newErrors.description = "Description is required";
     } else if (eventData.description.length > 2000) {
       newErrors.description = "Description must be less than 2000 characters";
     }
-    if (!eventData.start_date) newErrors.start_date = "Start date is required";
-    if (!eventData.end_date) newErrors.end_date = "End date is required";
-    if (eventData.end_date < eventData.start_date)
-      newErrors.end_date = "End date must be after start date";
-    if (!eventData.img_url) newErrors.img_url = "Image is required";
+    if (!eventData.start_date) {
+      newErrors.start_date = "Start date is required";
+    }
+    if (!eventData.end_date) {
+      newErrors.end_date = "End date is required";
+    }
+    if (eventData.start_date && eventData.end_date) {
+      const start = new Date(eventData.start_date);
+      const end = new Date(eventData.end_date);
+      if (end <= start) {
+        newErrors.end_date = "End date must be after start date";
+      }
+    }
+
+    if (!eventData.img_url) {
+      newErrors.img_url = "Image is required";
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;

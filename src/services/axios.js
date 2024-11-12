@@ -1,13 +1,13 @@
 import axios from "axios";
 
 export const BASE_URL =
-  "https://furryfriendfund-gbhdbqchbfaqe7fm.canadacentral-01.azurewebsites.net/";
+  "http://localhost:8081/";
 const token = localStorage.getItem("token");
 const instance = axios.create({
   baseURL: BASE_URL,
   withCredentials: true,
   headers: {
-    "Access-Control-Allow-Origin": "https://fundfe.vercel.app/",
+    "Access-Control-Allow-Origin": "http://localhost:3000",
     "Content-Type": "application/json",
     Authorization: token ? `Bearer ${token}` : "",
   },

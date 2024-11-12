@@ -10,6 +10,7 @@ const RequestRegisterNotifications = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [newNotificationsCount, setNewNotificationsCount] = useState(0);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const apiRequestRegisterNotifications = useCallback(async () => {
     setIsLoading(true);
@@ -42,6 +43,7 @@ const RequestRegisterNotifications = () => {
   }, [apiRequestRegisterNotifications]);
 
   const HandleStatusUpdate = async (notiID, status) => {
+    setIsUpdating(true);
     try {
       if (!notiID) {
         toast.error("Invalid notification ID");
@@ -95,6 +97,8 @@ const RequestRegisterNotifications = () => {
           return updatedNotifications;
         });
       }
+    } finally {
+      setIsUpdating(false);
     }
   };
   const formatRelativeTime = (dateString) => {
@@ -112,7 +116,7 @@ const RequestRegisterNotifications = () => {
     }
   };
 
-  if (isLoading) {
+  if (isLoading || isUpdating) {
     return <Spinner />;
   }
 
@@ -146,11 +150,13 @@ const RequestRegisterNotifications = () => {
                   <div className="notification-actions">
                     <button
                       onClick={() => HandleStatusUpdate(noti.notiID, true)}
+                      disabled={isUpdating}
                     >
                       Accept
                     </button>
                     <button
                       onClick={() => HandleStatusUpdate(noti.notiID, false)}
+                      disabled={isUpdating}
                     >
                       Deny
                     </button>

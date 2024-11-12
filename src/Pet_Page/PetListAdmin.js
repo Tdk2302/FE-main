@@ -119,7 +119,7 @@ const PetListAdmin = () => {
     const { name, value } = e.target;
     if (name === "age") {
       const floatValue = parseFloat(value);
-      if (value === "" || (floatValue >= 1 && !isNaN(floatValue))) {
+      if (value === "" || (floatValue >= 0 && !isNaN(floatValue))) {
         setSearchParams((prevParams) => ({
           ...prevParams,
           [name]: value,
@@ -188,7 +188,7 @@ const PetListAdmin = () => {
               onChange={handleInputChange}
               placeholder="Select Age"
               step="0.5"
-              min="1"
+              min="0"
             />
             {ageError && <span className="error">{ageError}</span>}
             <select

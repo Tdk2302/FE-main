@@ -130,7 +130,7 @@ const PetsList = () => {
     const { name, value } = e.target;
     if (name === "age") {
       const floatValue = parseFloat(value);
-      if (value === "" || (floatValue >= 1 && !isNaN(floatValue))) {
+      if (value === "" || (floatValue >= 0 && !isNaN(floatValue))) {
         setSearchParams((prevParams) => ({
           ...prevParams,
           [name]: value,

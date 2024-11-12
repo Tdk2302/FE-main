@@ -10,6 +10,7 @@ const BanRequestNotifications = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [newNotificationsCount, setNewNotificationsCount] = useState(0);
+    const [isUpdating, setIsUpdating] = useState(false);
 
     const apiBanRequestNotifications = useCallback(async () => {
         setIsLoading(true);
@@ -43,6 +44,7 @@ const BanRequestNotifications = () => {
     }, [apiBanRequestNotifications]);
 
     const handleStatusUpdate = async (notiID, status) => {
+        setIsUpdating(true);
         try {
             if (!notiID) {
                 toast.error('Invalid notification ID');
@@ -101,6 +103,8 @@ const BanRequestNotifications = () => {
                     return updatedNotifications;
                 });
             }
+        } finally {
+            setIsUpdating(false);
         }
     }
 
@@ -120,7 +124,7 @@ const BanRequestNotifications = () => {
     };
 
 
-    if (isLoading) {
+    if (isLoading || isUpdating) {
         return <Spinner />;
     }
 
@@ -142,8 +146,8 @@ const BanRequestNotifications = () => {
                                 </p>
                                 {noti.button_status && (
                                     <div className="notification-actions">
-                                        <button onClick={() => handleStatusUpdate(noti.notiID, true)}>Accept</button>
-                                        <button onClick={() => handleStatusUpdate(noti.notiID, false)}>Deny</button>
+                                        <button onClick={() => handleStatusUpdate(noti.notiID, true)} disabled={isUpdating}>Accept</button>
+                                        <button onClick={() => handleStatusUpdate(noti.notiID, false)} disabled={isUpdating}>Deny</button>
                                     </div>
                                 )}
                             </li>

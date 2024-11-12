@@ -4,19 +4,20 @@ import "../styles/adminpage.scss";
 import { toast } from "react-toastify";
 import moment from "moment";
 import Spinner from "../components/Spinner";
-
+import { Link } from "react-router-dom";
 const AddPetNotifications = () => {
   const [notifications, setNotifications] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [newNotificationsCount, setNewNotificationsCount] = useState(0);
-
+  const [isUpdating, setIsUpdating] = useState(false);
   const apiAddPetNotifications = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
       const response = await axios.get("/notification/showAdminAdoptNoti");
       if (response.data && Array.isArray(response.data)) {
+        console.log(response.data);
         const notifications = response.data;
         const pendingCount = notifications.filter(noti => noti.button_status).length;
         setNewNotificationsCount(pendingCount);
@@ -42,6 +43,7 @@ const AddPetNotifications = () => {
   }, [apiAddPetNotifications]);
 
   const HandleStatusUpdate = async (notiID, status) => {
+    setIsUpdating(true);
     try {
       if (!notiID) {
         toast.error("Invalid notification ID");
@@ -100,6 +102,8 @@ const AddPetNotifications = () => {
       const errorMessage =
         error.response?.data?.message || "Failed to update notification status";
       toast.error(errorMessage);
+    } finally {
+      setIsUpdating(false);
     }
   };
 
@@ -118,22 +122,19 @@ const AddPetNotifications = () => {
     }
   };
 
-  const formatMessage = (message) => {
-    const lines = message.split("\n");
-    const columnLength = Math.ceil(lines.length / 3);
-    return (
-      <div className="notification-message-container">
-        <div className="notification-message-column">
-          {lines.slice(0, columnLength).join("\n")}
-        </div>
-        <div className="notification-message-column">
-          {lines.slice(columnLength, 2 * columnLength).join("\n")}
-        </div>
-        <div className="notification-message-column">
-          {lines.slice(2 * columnLength).join("\n")}
-        </div>
-      </div>
-    );
+  const extractMessageBeforeID = (message) => {
+    const parts = message.split('ID:');
+    return parts[0].trim();
+  };
+
+  const extractName = (message) => {
+    const match = message.match(/_(.*?)\s+can/);
+    return match ? match[1] : null;
+  };
+
+  const extractPetID = (message) => {
+    const match = message.match(/ID: (\w+)/);
+    return match ? match[1] : null;
   };
 
   const getNotificationStyle = (message) => {
@@ -153,7 +154,7 @@ const AddPetNotifications = () => {
     };
   };
 
-  if (isLoading) {
+  if (isLoading || isUpdating) {
     return <Spinner />;
   }
 
@@ -178,7 +179,20 @@ const AddPetNotifications = () => {
                 className={`notification-item ${noti.button_status ? "new" : ""}`}
                 style={getNotificationStyle(noti.message)}
               >
-                {formatMessage(noti.message)}
+                <div className="notification-message">
+                  {extractMessageBeforeID(noti.message)}
+                </div>
+
+                <Link to={`/petdetail/${extractPetID(noti.message)}`}
+                style={{
+                  color: '#534ee1',
+                  textDecoration: 'underline',
+                  cursor: 'pointer'
+                }}
+                className="notification-message">
+                  Pet Name: {extractName(noti.message)}
+                </Link>
+
                 <p className="notification-date">
                   {formatRelativeTime(noti.createdAt)}
                 </p>
@@ -186,11 +200,13 @@ const AddPetNotifications = () => {
                   <div className="notification-actions">
                     <button
                       onClick={() => HandleStatusUpdate(noti.notiID, true)}
+                      disabled={isUpdating}
                     >
                       Accept
                     </button>
                     <button
                       onClick={() => HandleStatusUpdate(noti.notiID, false)}
+                      disabled={isUpdating}
                     >
                       Deny
                     </button>

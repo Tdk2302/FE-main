@@ -31,6 +31,7 @@ const PetsList = () => {
   const [memberAppointments, setMemberAppointments] = useState([]);
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const [appointmentToCancel, setAppointmentToCancel] = useState(null);
+  const [isSearch, setIsSearch] = useState(false);
 
   useEffect(() => {
     apiListPets();
@@ -101,6 +102,7 @@ const PetsList = () => {
 
   const handleSearch = async (e) => {
     e.preventDefault();
+    setIsSearch(true);
     try {
       const searchData = {
         name: searchParams.name || "",
@@ -123,6 +125,8 @@ const PetsList = () => {
       console.error("Error searching pets:", error);
       setNoResults(true);
       setPets([]);
+    } finally {
+      setIsSearch(false);
     }
   };
 
@@ -177,7 +181,7 @@ const PetsList = () => {
     setAppointmentToCancel(null);
   };
 
-  if (isLoading) {
+  if (isLoading || isSearch) {
     return <Spinner />;
   }
 
@@ -198,7 +202,7 @@ const PetsList = () => {
           <button
             className="search-btn"
             onClick={handleSearch}
-            disabled={ageError !== ""}
+            disabled={ageError !== "" || isSearch}
           >
             Search
           </button>

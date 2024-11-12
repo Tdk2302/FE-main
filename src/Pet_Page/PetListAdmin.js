@@ -22,7 +22,7 @@ const PetListAdmin = () => {
   const [noResults, setNoResults] = useState(false);
   const [showAddPet, setShowAddPet] = useState(false); // State để kiểm soát hiển thị AddPet
   const roleID = localStorage.getItem("roleID");
-
+  const [isSearch, setIsSearch] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -91,6 +91,7 @@ const PetListAdmin = () => {
 
   const handleSearch = async (e) => {
     e.preventDefault();
+    setIsSearch(true);
     try {
       const searchData = {
         name: searchParams.name || "",
@@ -112,6 +113,8 @@ const PetListAdmin = () => {
       console.error("Error searching pets:", error);
       setNoResults(true);
       setPets([]);
+    } finally {
+      setIsSearch(false);
     }
   };
 
@@ -148,7 +151,7 @@ const PetListAdmin = () => {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  if (isLoading) {
+  if (isLoading || isSearch) {
     return <Spinner />;
   }
 
@@ -168,7 +171,7 @@ const PetListAdmin = () => {
           <button
             className="search-btn"
             onClick={handleSearch}
-            disabled={ageError !== ""}
+            disabled={ageError !== "" || isSearch}
           >
             Search
           </button>

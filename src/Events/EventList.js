@@ -171,7 +171,7 @@ const EventList = () => {
     const now = moment();
     const endDate = moment(event.end_date);
     if (now.isAfter(endDate)) {
-      return "Ending"; // Trả về status "Ending" nếu đã qua ngày kết thúc
+      return "Ending";
     }
     return event.status;
   };

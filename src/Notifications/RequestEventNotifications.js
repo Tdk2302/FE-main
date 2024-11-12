@@ -158,7 +158,7 @@ const RequestEventNotifications = () => {
               >
                 <div className="notification-message">
                   {extractMessageBeforeID(noti.message)}
-                </div>
+                </div>  
 
                 <Link to={`/events/${extractEventID(noti.message)}`}
                 style={{

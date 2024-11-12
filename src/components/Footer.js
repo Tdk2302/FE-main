@@ -7,15 +7,15 @@ const Footer = () => {
     <div className="footer bottom">
       <div className="footer-container">
         <div className="footer-info">
-          <h3>FurryFriendsFund</h3>
+          <h3 >FurryFriendsFund</h3>
           <div className="social-icons">
-            <a href="...">
+            <a href="..." style={{ color: "#1976d2" }}>
               <FaFacebookF />
             </a>
-            <a href="...">
+            <a href="..." style={{ color: "#f51a13" }}>
               <FaYoutube />
             </a>
-            <a href="...">
+            <a href="..." style={{ color: "#e1306c" }}>
               <FaInstagram />
             </a>
           </div>
@@ -34,11 +34,14 @@ const Footer = () => {
           <h4>Contact us</h4>
           <hr className="small-dividers"></hr>
           <p>
-            <i className="fa fa-phone"></i> (+84)909090909
+            <i className="fa fa-phone"></i>{" "}
+            <span style={{ color: '#1976d2' }}>(+84)64889265</span>
             <br />
-            <i className="fa fa-envelope"></i> furryfriendFund@gmail.com
+            <i className="fa fa-envelope"></i>{" "}
+            <span style={{ color: '#1976d2' }}>furryfriendFund@gmail.com</span>
             <br />
-            <i className="fa fa-map-marker"></i> FPT University - Ho Chi Minh City
+            <i className="fa fa-map-marker"></i>{" "}
+            <span >FPT University - Ho Chi Minh City</span>
           </p>
         </div>
       </div>

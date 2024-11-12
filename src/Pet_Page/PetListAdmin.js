@@ -22,7 +22,7 @@ const PetListAdmin = () => {
   const [noResults, setNoResults] = useState(false);
   const [showAddPet, setShowAddPet] = useState(false); // State để kiểm soát hiển thị AddPet
   const roleID = localStorage.getItem("roleID");
-
+  const [isSearch, setIsSearch] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -91,6 +91,7 @@ const PetListAdmin = () => {
 
   const handleSearch = async (e) => {
     e.preventDefault();
+    setIsSearch(true);
     try {
       const searchData = {
         name: searchParams.name || "",
@@ -112,6 +113,8 @@ const PetListAdmin = () => {
       console.error("Error searching pets:", error);
       setNoResults(true);
       setPets([]);
+    } finally {
+      setIsSearch(false);
     }
   };
 
@@ -119,7 +122,7 @@ const PetListAdmin = () => {
     const { name, value } = e.target;
     if (name === "age") {
       const floatValue = parseFloat(value);
-      if (value === "" || (floatValue >= 1 && !isNaN(floatValue))) {
+      if (value === "" || (floatValue >= 0 && !isNaN(floatValue))) {
         setSearchParams((prevParams) => ({
           ...prevParams,
           [name]: value,
@@ -148,7 +151,7 @@ const PetListAdmin = () => {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  if (isLoading) {
+  if (isLoading || isSearch) {
     return <Spinner />;
   }
 
@@ -168,7 +171,7 @@ const PetListAdmin = () => {
           <button
             className="search-btn"
             onClick={handleSearch}
-            disabled={ageError !== ""}
+            disabled={ageError !== "" || isSearch}
           >
             Search
           </button>
@@ -188,7 +191,7 @@ const PetListAdmin = () => {
               onChange={handleInputChange}
               placeholder="Select Age"
               step="0.5"
-              min="1"
+              min="0"
             />
             {ageError && <span className="error">{ageError}</span>}
             <select

@@ -161,7 +161,7 @@ const AddPet = ({ onPetAdded = () => {} }) => {
           <input
             type="number"
             step="0.5"
-            placeholder="Pet Age"
+            placeholder="Pet Age(Month)"
             className="form-control"
             name="age"
             value={petData.age}
@@ -172,7 +172,7 @@ const AddPet = ({ onPetAdded = () => {} }) => {
           <input
             type="number"
             step="0.1"
-            placeholder="Pet Weight"
+            placeholder="Pet Weight(Kg)"
             className="form-control"
             name="weight"
             value={petData.weight}

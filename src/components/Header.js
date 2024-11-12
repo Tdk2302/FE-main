@@ -7,7 +7,6 @@ import "../styles/header.scss";
 import { useState, useEffect } from "react";
 import Notification from "../Notifications/Notification";
 import Spinner from "../components/Spinner";
-import { Remove } from "@mui/icons-material";
 
 const Header = () => {
   const location = useLocation();

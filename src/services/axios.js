@@ -1,7 +1,6 @@
 import axios from "axios";
 
-export const BASE_URL =
-  "https://furryfriendfund-gbhdbqchbfaqe7fm.canadacentral-01.azurewebsites.net/";
+export const BASE_URL = "http://localhost:8081/";
 const token = localStorage.getItem("token");
 const instance = axios.create({
   baseURL: BASE_URL,

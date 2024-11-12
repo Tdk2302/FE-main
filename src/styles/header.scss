@@ -1,7 +1,7 @@
 /*Header*/
 
 .header {
-  background: #f4f4f4;
+  background: #f7eddc;
   box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.07);
   width: 100vw;
   margin-left: calc(-50vw + 50%);
@@ -21,7 +21,9 @@
 
   p {
     margin-top: 5px;
-    font-size: 27px;
+    font-size: 30px;
+    color: #080704;
+    font-weight: 400;
   }
 }
 
@@ -32,8 +34,8 @@
 
   h3 {
     color: black;
+    font-weight: 500;
     font-size: 20px;
-    font-weight: 400;
     z-index: 1;
     transition: color 0.3s;
   }

@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react"; // Added useEffect for fetching donators
 import axios from "axios";
 import { BASE_URL } from "../services/axios";
 import { Button } from "react-bootstrap";
 import { toast } from "react-toastify";
-import "../styles/donate.scss";
+import PageTitle from "../components/PageTitle"; // Import the new component
+import "../styles/donate.scss"; // Import the new SCSS file
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -13,9 +14,9 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TablePagination from "@mui/material/TablePagination";
 import OtherSupportMethods from "../components/OtherSupportMethods";
+import ContactBanner from "../components/ContactBanner";
 
 const Donate = () => {
-  const [donations, setDonation] = useState([]);
   const [donators, setDonators] = useState([]); // State for donators
   const [anonymousDonators, setAnonymousDonators] = useState([]); // State for anonymous donators
   const api_donate =
@@ -25,13 +26,11 @@ const Donate = () => {
   let content = ``;
 
   if (accountID != null && eventID != null) {
-    content = `Account ${accountID} donate event ${eventID}`;
-  } else if (accountID != null && eventID == null) {
-    content = `Account ${accountID} donate FurryFriendFund`;
+    content = `Acc ${accountID} donate ${eventID} `;
   } else if (accountID == null && eventID != null) {
-    content = `Donate event ${eventID}`;
+    content = `Donate event ${eventID} `;
   } else {
-    content = `Donate FurryFriendFund`;
+    content = `Donate FFF`;
   }
 
   const imageURL = `https://api.vietqr.io/image/970422-1319102004913-wjc5eta.jpg?accountName=TRUONG%20PHUC%20LOC&amount=0&addInfo=${content.replaceAll(
@@ -67,17 +66,19 @@ const Donate = () => {
     };
   }, []);
 
-  const handleAddDonate = async () => {
+
+  const handleDonations = async () => {
     try {
       // Lấy dữ liệu quyên góp
       const donateData = await axios.get(api_donate);
       let donates = donateData.data.data;
-      setDonation(donates);
+      console.log(donateData.data.data);
       toast.success(
         `We will check transaction history. Please check your total donation after a few seconds`
       );
       // Thêm tất cả các khoản quyên góp
       for (let donation of donates) {
+        try{
         const response = await axios.post(`${BASE_URL}donation/add`, {
           donateID: donation.id,
           date_time: donation.date_time.replace(" ", "T") + "Z",
@@ -85,6 +86,9 @@ const Donate = () => {
           amount: donation.amount,
         });
         console.log(response.data.message);
+      }catch (error){
+        console.log(error.response.data);
+      }
       }
     } catch (error) {
       console.log(error.response.data);
@@ -92,16 +96,11 @@ const Donate = () => {
   };
 
   const [page, setPage] = useState(0);
-  const [page1, setPage1] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [rowsPerPage1, setRowsPerPage1] = useState(5);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
-  };
-
-  const handleChangePage1 = (event, newPage) => {
-    setPage1(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
@@ -155,7 +154,7 @@ const Donate = () => {
           </p>
           <p>
             After a successful donation, click
-            <Button className="edit-button" onClick={handleAddDonate}>
+            <Button className="edit-button" onClick={handleDonations}>
               Here
             </Button>{" "}
             to check the transaction history and save your donation.
@@ -200,7 +199,7 @@ const Donate = () => {
                         <TableCell>{donator.name}</TableCell>
 
                         <TableCell align="right">
-                          {donator.total_donation.toLocaleString()} VNĐ
+                          ${donator.total_donation}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -254,8 +253,8 @@ const Donate = () => {
                 <TableBody>
                   {anonymousDonators
                     .slice(
-                      page1 * rowsPerPage1,
-                      page1 * rowsPerPage1 + rowsPerPage1
+                      page * rowsPerPage1,
+                      page * rowsPerPage1 + rowsPerPage1
                     )
                     .map((donator) => (
                       <TableRow
@@ -269,9 +268,7 @@ const Donate = () => {
                             "vi-VN"
                           )}
                         </TableCell>
-                        <TableCell align="right">
-                          {donator.amount.toLocaleString()} VNĐ
-                        </TableCell>
+                        <TableCell align="right">${donator.amount}</TableCell>
                       </TableRow>
                     ))}
                 </TableBody>
@@ -283,8 +280,8 @@ const Donate = () => {
               component="div"
               count={anonymousDonators.length}
               rowsPerPage={rowsPerPage1}
-              page={page1}
-              onPageChange={handleChangePage1}
+              page={page}
+              onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage1}
             />
           </Paper>

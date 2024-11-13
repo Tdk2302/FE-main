@@ -16,7 +16,6 @@ import TablePagination from "@mui/material/TablePagination";
 import OtherSupportMethods from "../components/OtherSupportMethods";
 
 const Donate = () => {
-  const [donations, setDonation] = useState([]);
   const [donators, setDonators] = useState([]); // State for donators
   const [anonymousDonators, setAnonymousDonators] = useState([]); // State for anonymous donators
   const api_donate =
@@ -25,16 +24,11 @@ const Donate = () => {
   let content = ``;
 
   if (accountID != null) {
-    content = `Account ${accountID} donate FurryFriendFund`;
+    content = `Acc ${accountID} donate FFF`;
   } else {
-    content = `Donate FurryFriendFund`;
+    content = `Donate FFF`;
   }
-
-  const imageURL = `https://api.vietqr.io/image/970422-1319102004913-wjc5eta.jpg?accountName=TRUONG%20PHUC%20LOC&amount=0&addInfo=${content.replaceAll(
-    " ",
-    "%20"
-  )}`;
-
+  const imageURL = `https://api.vietqr.io/image/970422-1319102004913-wjc5eta.jpg?accountName=TRUONG%20PHUC%20LOC&addInfo=${content.replaceAll(" ","%20")}&amount=0`;
   // Combine the useEffect hooks
   useEffect(() => {
     // Fetch donators
@@ -58,13 +52,13 @@ const Donate = () => {
       // Lấy dữ liệu quyên góp
       const donateData = await axios.get(api_donate);
       let donates = donateData.data.data;
-      setDonation(donates);
       console.log(donateData.data.data);
       toast.success(
         `We will check transaction history. Please check your total donation after a few seconds`
       );
       // Thêm tất cả các khoản quyên góp
       for (let donation of donates) {
+        try{
         const response = await axios.post(`${BASE_URL}donation/add`, {
           donateID: donation.id,
           date_time: donation.date_time.replace(" ", "T") + "Z",
@@ -72,6 +66,9 @@ const Donate = () => {
           amount: donation.amount,
         });
         console.log(response.data.message);
+      }catch (error){
+        console.log(error.response.data);
+      }
       }
     } catch (error) {
       console.log(error.response.data);

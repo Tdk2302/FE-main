@@ -11,7 +11,8 @@ import {
   Paper, 
   Button, 
   Typography,
-  Box
+  Box,
+  TextField
 } from '@mui/material';
 import Spinner from '../components/Spinner';
 import { toast } from 'react-toastify';
@@ -26,6 +27,8 @@ const UserManagement = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedAction, setSelectedAction] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [searchAccount, SetSearchAccount] = useState('');
+  
 
   useEffect(() => {
     fetchUsers();
@@ -77,6 +80,10 @@ const UserManagement = () => {
     setPage(0);
   };
 
+  const filteredAccount = users.filter(user => 
+    user.name.toLowerCase().includes(searchAccount.toLocaleLowerCase()) || user.accountID.toString().includes(searchAccount)
+  )
+
   if (isLoading) {
     return <Spinner />;
   }
@@ -86,6 +93,14 @@ const UserManagement = () => {
       <Typography variant="h4" gutterBottom>
         User Management
       </Typography>
+      <TextField
+        label="Search User"
+        variant="outlined"
+        fullWidth
+        value={searchAccount}
+        onChange={(e) => SetSearchAccount(e.target.value)}
+        sx={{ marginBottom: 2 }}
+      />
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="user management table">
           <TableHead>
@@ -98,7 +113,7 @@ const UserManagement = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {users
+            {filteredAccount
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((user) => (
               <TableRow key={user.accountID}>
@@ -152,7 +167,7 @@ const UserManagement = () => {
       <TablePagination
         rowsPerPageOptions={[10, 15, 20]}
         component="div"
-        count={users.length}
+        count={filteredAccount.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

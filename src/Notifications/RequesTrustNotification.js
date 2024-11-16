@@ -71,13 +71,26 @@ const RequesTrustNotification = () => {
       const handleDeny = async (notiID) => {
         setIsUpdating(true);
         try {
-          const response = await axios.delete(`appointment/refuseTrustRequest/${notiID}`);
+          const response = await axios.delete(`/notification/refuseTrustRequest/${notiID}`);
           if (response.status === 200 && response.data.message) {
             toast.success(response.data.message);
-            apiRequestTrustNotifications();
+            
+            setNotifications(prev => {
+              const updatedNotifications = prev.filter(noti => noti.notiID !== notiID);
+              const newCount = updatedNotifications.filter(noti => noti.button_status).length;
+              setNewNotificationsCount(newCount);
+              return updatedNotifications;
+            });
+            
           }
         } catch (error) {
-          toast.error(error.response?.data?.message || "Failed to refuse trust request");
+          if (error.response?.status === 404) {
+            toast.error("Request not found");
+          } else if (error.response?.status === 400) {
+            toast.error("Invalid request");
+          } else {
+            toast.error(error.response?.data?.message || "Failed to refuse trust request");
+          }
         } finally {
           setIsUpdating(false);
         }

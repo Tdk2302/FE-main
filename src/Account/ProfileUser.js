@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api, { BASE_URL } from "../services/axios";
 import { toast } from "react-toastify";
-import { jwtDecode } from "jwt-decode";
 import { 
   TextField, 
   Button, 
@@ -153,8 +152,8 @@ const ProfileUser = () => {
     else if (!/^0\d{9,10}$/.test(userInfo.phone))
       newErrors.phone = "Invalid phone number! Must start with 0 and be 9-10 digits.";
 
-    if (newPassword && newPassword.length < 6) {
-      newErrors.newPassword = "Password must be at least 6 characters long";
+    if (newPassword && newPassword.length < 4) {
+      newErrors.newPassword = "Password must be at least 4 characters long";
     }
 
     setErrors(newErrors);

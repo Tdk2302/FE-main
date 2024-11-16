@@ -1,22 +1,41 @@
 import React, { useState, useEffect, useCallback } from "react";
 import "../styles/appoitment.scss";
-import moment from "moment";
 import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
 import api from "../services/axios";
 import { Link } from "react-router-dom";
+import moment from "moment";
+import UserInfoModal from "../components/UserInfoModal";
+import EditUserInfoModal from "../components/EditUserInfoModal";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Box, Typography, Grid, TextField } from "@mui/material";
+
 const AppointmentPage = () => {
-  // Các state để lưu trữ và quản lý dữ liệu
   const [unprocessedAppointments, setUnprocessedAppointments] = useState([]);
   const [processingAppointments, setProcessingAppointments] = useState([]);
   const [activeTab, setActiveTab] = useState("unprocessed");
-  const [showModal, setShowModal] = useState(false);
-  const [refusalReason, setRefusalReason] = useState("");
+  const [showRefusalModal, setShowRefusalModal] = useState(false);
+  const [showUserInfoModal, setShowUserInfoModal] = useState(false);
   const [appointmentToRefuse, setAppointmentToRefuse] = useState(null);
+  const [refusalReason, setRefusalReason] = useState("");
   const [notHappenAppointments, setNotHappenAppointments] = useState([]);
-  const [endedAppointments, setEndedAppointments] = useState([]);
+  const [reliableAppointments, setReliableAppointments] = useState([]);
+  const [approvedAppointments, setApprovedAppointments] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [userInfo, setUserInfo] = useState({
+    accountID: "",
+    name: "",
+    sex: "",
+    birthdate: "",
+    phone: "",
+    address: "",
+    total_donation: 0,
+    married: "",
+    job: "",
+    income: 0,
+    citizen_serial: "",
+    experience_caring: "",
+    confirm_address: "",
+  });
   // Lấy thông tin người dùng hiện tại từ localStorage
 
   const userID = localStorage.getItem("accountID");
@@ -34,6 +53,7 @@ const AppointmentPage = () => {
       setIsLoading(false);
     }
   }, []);
+
   // Lấy danh sách cuộc hẹn đang chờ gặp mặt
   const apiNotHappenAppointments = useCallback(async () => {
     setIsLoading(true);
@@ -47,15 +67,29 @@ const AppointmentPage = () => {
       setIsLoading(false);
     }
   }, []);
-  // Lấy danh sách cuộc hẹn kết thúc
-  const apiEndedAppointments = useCallback(async () => {
+
+  // Lấy danh sách cuộc hẹn đang trong quá trình xây dựng niềm tin
+  const apiReliableAppointments = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await api.get("appointment/showEnded");
-      setEndedAppointments(response.data.data);
+      const response = await api.get("appointment/showReliableProcess");
+      setReliableAppointments(response.data.data);
     } catch (error) {
-      console.error("Error fetching ended appointments:", error);
-      setEndedAppointments([]);
+      console.error("Error fetching reliable appointments:", error);
+      setReliableAppointments([]);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const apiApprovedAppointments = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const response = await api.get("appointment/showApproved");
+      setApprovedAppointments(response.data.data);
+    } catch (error) {
+      console.error("Error fetching approved appointments:", error);
+      setApprovedAppointments([]);
     } finally {
       setIsLoading(false);
     }
@@ -67,14 +101,17 @@ const AppointmentPage = () => {
       await apiUnprocessedAppointments();
     } else if (activeTab === "notHappenYet") {
       await apiNotHappenAppointments();
-    } else if (activeTab === "ended") {
-      await apiEndedAppointments();
+    } else if (activeTab === "reliable") {
+      await apiReliableAppointments();
+    } else if (activeTab === "approved") {
+      await apiApprovedAppointments();
     }
   }, [
     activeTab,
     apiUnprocessedAppointments,
     apiNotHappenAppointments,
-    apiEndedAppointments,
+    apiReliableAppointments,
+    apiApprovedAppointments,
   ]);
 
   // Gọi làm mới khi tab thay đổi
@@ -84,6 +121,7 @@ const AppointmentPage = () => {
 
   // Xử lý chấp nhận cuộc hẹn ở bảng unprocessed
   const acceptAppointment = async (appointmentId) => {
+    setIsLoading(true);
     if (processingAppointments.includes(appointmentId)) {
       toast.error("This appointment is already being processed.");
       return;
@@ -103,17 +141,20 @@ const AppointmentPage = () => {
         prev.filter((id) => id !== appointmentId)
       );
       refreshAppointments();
+      setIsLoading(false);
     }
   };
 
   // Xử lý từ chối cuộc hẹn ở bảng unprocessed
   const refuseAppointment = (appointmentId) => {
+    setIsLoading(true);
     if (processingAppointments.includes(appointmentId)) {
       toast.error("This appointment is already being processed.");
       return;
     }
     setAppointmentToRefuse(appointmentId);
-    setShowModal(true);
+    setShowRefusalModal(true);
+    setShowUserInfoModal(false);
   };
 
   // Xử lý khi submit lý do từ chối
@@ -142,34 +183,45 @@ const AppointmentPage = () => {
       setProcessingAppointments((prev) =>
         prev.filter((id) => id !== appointmentToRefuse)
       );
-      setShowModal(false);
+      setShowRefusalModal(false);
       setRefusalReason("");
       setAppointmentToRefuse(null);
       refreshAppointments();
+      setIsLoading(false);
     }
   };
   // Xử lý chấp nhận cuộc hẹn ở bảng notHappenyet
-  const handleFinalAccept = async (appointmentId) => {
+  const handleFinalAccept = async (appointmentId, accountId) => {
+    setIsLoading(true);
     setProcessingAppointments((prev) => [...prev, appointmentId]);
     try {
       const staffId = userID;
-      const response = await api.put(`/appointment/acceptAdopt/${staffId}`, {
-        appointID: appointmentId,
-      });
-      console.log("API: ", response.data);
+      const response = await api.put(
+        `/appointment/acceptAdopt/${staffId}/${accountId}`, 
+        {
+          appointID: appointmentId,
+        }
+      );
       toast.success(response.data.message);
+      setShowEditUserInfoModal(false);
     } catch (error) {
-      // Hiển thị thông báo lỗi từ server
-      toast.error(error.response.data.message);
+      // Xử lý các trường hợp lỗi cụ thể
+      if (error.response?.status === 404) {
+        toast.error("Account didn't have enough confirmation information");
+      } else if (error.response?.status === 409) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Failed to accept appointment");
+      }
     } finally {
-      // Luôn refresh lại danh sách sau khi thực hiện, bất kể thành công hay thất bại
       refreshAppointments();
-      // Xóa appointmentId khỏi danh sách đang xử lý
       setProcessingAppointments((prev) => prev.filter(id => id !== appointmentId));
+      setIsLoading(false);
     }
   };
   // Xử lý từ chối cuộc hẹn ở bảng notHappenyet
   const handleFinalRefuse = async (appointmentId) => {
+    setIsLoading(true);
     setProcessingAppointments((prev) => [...prev, appointmentId]);
     try {
       const staffId = userID;
@@ -178,13 +230,13 @@ const AppointmentPage = () => {
       });
       toast.success(response.data.message);
     } catch (error) {
-      // Hiển thị thông báo lỗi từ server
       toast.error(error.response.data.message);
     } finally {
       // Luôn refresh lại danh sách sau khi thực hiện, bất kể thành công hay thất bại
       refreshAppointments();
       // Xóa appointmentId khỏi danh sách đang xử lý
       setProcessingAppointments((prev) => prev.filter(id => id !== appointmentId));
+      setIsLoading(false);
     }
   };
   // Format ngày giờ
@@ -198,6 +250,96 @@ const AppointmentPage = () => {
   const renderAdoptStatus = (adoptStatus) => {
     if (adoptStatus === undefined) return "Not set";
     return adoptStatus === true ? "Adopted" : "Not yet";
+  };
+
+  const renderApproveStatus = (approveStatus) => {
+    return approveStatus === true ? "Approved" : "Not yet";
+  };
+
+  const [isModalLoading, setIsModalLoading] = useState(false);
+
+  const fetchUserInfo = async (accountID) => {
+    setIsModalLoading(true);
+    try {
+      const response = await api.get(`accounts/getConfirm/${accountID}`);
+      console.log("API Response:", response.data);
+      const userData = response.data.data;
+      setSelectedUserInfo(userData);
+      setUserInfo(userData);
+    } catch (error) {
+      toast.error("Failed to fetch user information");
+    } finally {
+      setIsModalLoading(false);
+    }
+  };
+
+  const handleLinkClick = async (accountID) => {
+    await fetchUserInfo(accountID); 
+    setShowUserInfoModal(true); 
+  };
+
+  const [showEditUserInfoModal, setShowEditUserInfoModal] = useState(false);
+  const [selectedUserInfo, setSelectedUserInfo] = useState({});
+
+  const handleUpdateUserInfo = async (data) => {
+    setIsLoading(true);
+    const { accountID, params } = data;
+    try {
+      // Chuyển params thành query string
+      const queryString = new URLSearchParams(params).toString();
+      const response = await api.put(
+        `/accounts/confirmationInfor/${accountID}?${queryString}`
+      );
+      toast.success(response.data.message);
+      setShowEditUserInfoModal(false);
+    } catch (error) {
+      toast.error("Failed to update user information");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleAcceptClick = async (accountID, appointID) => {
+    setIsLoading(true);
+    try {
+      const response = await api.get(`accounts/getConfirm/${accountID}`);
+      const userData = response.data.data;
+      // Kết hợp userData với appointID
+      setSelectedUserInfo({
+        ...userData,
+        appointID: appointID  // Thêm appointID vào cùng với dữ liệu user
+      });
+      setShowEditUserInfoModal(true);
+    } catch (error) {
+      toast.error("Failed to fetch user information");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleTrustClick = async (appointID) => {
+    setIsLoading(true);
+    setProcessingAppointments(prev => [...prev, appointID]); // Disable button ngay lập tức
+    
+    try {
+      const staffId = userID;
+      const response = await api.post(`notification/requestTrust/${appointID}/${staffId}`);
+      if (response.data.message) {
+        toast.success(response.data.message);
+        setReliableAppointments(prev => 
+          prev.filter(appointment => appointment.appointID !== appointID)
+        );
+      } else {
+        toast.error("Failed to request trust");
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to request trust");
+    } finally {
+      setProcessingAppointments(prev => 
+        prev.filter(id => id !== appointID)
+      );
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -224,12 +366,20 @@ const AppointmentPage = () => {
             Not Happened Yet
           </li>
           <li
-            className={activeTab === "ended" ? "active" : ""}
+            className={activeTab === "reliable" ? "active" : ""}
             onClick={() => {
-              setActiveTab("ended");
+              setActiveTab("reliable");
             }}
           >
-            Ended
+            Reliable Process
+          </li>
+          <li
+            className={activeTab === "approved" ? "active" : ""}
+            onClick={() => {
+              setActiveTab("approved");
+            }}
+          >
+            Approved
           </li>
         </ul>
       </div>
@@ -259,14 +409,11 @@ const AppointmentPage = () => {
                           <td>{formatDateTime(appointment.date_time)}</td>
                           <td>
                             <Link
-                             to={`/profile/${appointment.accountID}`}
-                             style={{
-                                color: '#f1ba3a',
-                                textDecoration: 'underline',
-                                cursor: 'pointer'
-                             }}
+                              to="#"
+                              onClick={() => handleLinkClick(appointment.accountID)}
+                              style={{ color: '#f1ba3a', textDecoration: 'underline', cursor: 'pointer' }}
                             >
-                            {appointment.accountID}
+                              {appointment.accountID}
                             </Link>
                           </td>
                           <td>
@@ -340,7 +487,8 @@ const AppointmentPage = () => {
                           <td>{formatDateTime(appointment.date_time)}</td>
                           <td>
                             <Link
-                             to = {`/profile/${appointment.accountID}`}
+                             to="#"
+                             onClick={() => handleLinkClick(appointment.accountID)}
                              style={{
                                 color: '#f1ba3a',
                                 textDecoration: 'underline',
@@ -368,9 +516,7 @@ const AppointmentPage = () => {
                           <td>
                             <button
                               className="btn btn-success"
-                              onClick={() =>
-                                handleFinalAccept(appointment.appointID)
-                              }
+                              onClick={() => handleAcceptClick(appointment.accountID, appointment.appointID)}
                               disabled={processingAppointments.includes(
                                 appointment.appointID
                               )}
@@ -400,9 +546,9 @@ const AppointmentPage = () => {
                 )}
               </>
             )}
-            {activeTab === "ended" && (
+            {activeTab === "reliable" && (
               <>
-                {endedAppointments.length > 0 ? (
+                {reliableAppointments.length > 0 ? (
                   <table className="appointments-table">
                     <thead>
                       <tr>
@@ -412,15 +558,18 @@ const AppointmentPage = () => {
                         <th>Staff ID</th>
                         <th>Status</th>
                         <th>Adopt Status</th>
+                        <th>Video Report</th>
+                        <th>Button</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {endedAppointments.map((appointment) => (
+                      {reliableAppointments.map((appointment) => (
                         <tr key={appointment.appointID}>
                           <td>{formatDateTime(appointment.date_time)}</td>
                           <td>
                           <Link
-                            to={`/profile/${appointment.accountID}`}
+                            to="#"
+                            onClick={() => handleLinkClick(appointment.accountID)}
                             style={{
                               color: '#f1ba3a',
                               textDecoration: 'underline',
@@ -445,13 +594,85 @@ const AppointmentPage = () => {
                           <td>{appointment.staffID}</td>
                           <td>{renderStatus(appointment.status)}</td>
                           <td>{renderAdoptStatus(appointment.adopt_status)}</td>
+                          
+                          <td> <a href={appointment.video_report} target="_blank" rel="noopener noreferrer">Video Report</a> </td>
+                          <td>
+                            <button 
+                              className="btn btn-success"
+                              onClick={() => handleTrustClick(appointment.appointID)}
+                              disabled={processingAppointments.includes(appointment.appointID)}
+                            >
+                              Trust
+                            </button>
+                            <button className="btn btn-danger">Recall Pet</button>
+                          </td>
+                        </tr> 
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <p className="no-appointments">
+                    No reliable process appointments found.
+                  </p>
+                )}
+              </>
+            )}
+
+            {activeTab === "approved" && (
+              <>
+                {approvedAppointments.length > 0 ? (
+                  <table className="appointments-table">
+                      <thead>
+                      <tr>
+                        <th>Date Time</th>
+                        <th>Account ID</th>
+                        <th>Pet ID</th>
+                        <th>Staff ID</th>
+                        <th>Status</th>
+                        <th>Adopt Status</th>
+                        <th>Approve Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {approvedAppointments.map((appointment) => (
+                        <tr key={appointment.appointID}>
+                          <td>{formatDateTime(appointment.date_time)}</td>
+                          <td>
+                          <Link
+                            to="#"
+                            onClick={() => handleLinkClick(appointment.accountID)}
+                            style={{
+                              color: '#f1ba3a',
+                              textDecoration: 'underline',
+                              cursor: 'pointer'
+                            }}
+                            >
+                            {appointment.accountID}
+                            </Link>
+                          </td>
+                          <td>
+                            <Link 
+                                to={`/petdetail/${appointment.petID}`}
+                                style={{
+                                    color: '#f1ba3a',
+                                    textDecoration: 'underline',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                {appointment.petID}
+                            </Link>
+                          </td>
+                          <td>{appointment.staffID}</td>
+                          <td>{renderStatus(appointment.status)}</td>
+                          <td>{renderAdoptStatus(appointment.adopt_status)}</td>
+                          <td>{renderApproveStatus(appointment.approve_status)}</td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
                 ) : (
                   <p className="no-appointments">
-                    No ended appointments found.
+                    No approved appointments found.
                   </p>
                 )}
               </>
@@ -459,31 +680,40 @@ const AppointmentPage = () => {
           </>
         )}
       </div>
+      {isModalLoading && <Spinner />}
+      <UserInfoModal 
+        open={showUserInfoModal} 
+        onClose={() => setShowUserInfoModal(false)} 
+        userInfo={userInfo} 
+      />
+      {/* Modal từ chối cuộc hẹn */}
+      <Dialog open={showRefusalModal} onClose={() => setShowRefusalModal(false)}>
+        <DialogTitle>Refuse Appointment</DialogTitle>
+        <DialogContent>
+          <p>Enter reason for refusal:</p>
+          <textarea
+            value={refusalReason}
+            onChange={(e) => setRefusalReason(e.target.value)}
+            placeholder="Enter reason for refusal"
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setShowRefusalModal(false)} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleRefusalSubmit} color="secondary">
+            Submit
+          </Button>
+        </DialogActions>
+      </Dialog>
 
-      {showModal && (
-        <div className="appointment-refusal-modal">
-          <div className="modal-content">
-            <h2>Refuse Appointment</h2>
-            <textarea
-              value={refusalReason}
-              onChange={(e) => setRefusalReason(e.target.value)}
-              placeholder="Enter reason for refusal"
-            />
-            <div className="modal-buttons">
-              <button onClick={handleRefusalSubmit}>Submit</button>
-              <button
-                onClick={() => {
-                  setShowModal(false);
-                  setRefusalReason("");
-                  setAppointmentToRefuse(null);
-                }}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <EditUserInfoModal 
+        open={showEditUserInfoModal} 
+        onClose={() => setShowEditUserInfoModal(false)} 
+        userInfo={selectedUserInfo} 
+        onUpdate={handleUpdateUserInfo} 
+        onAccept={handleFinalAccept}
+      />
     </div>
   );
 };

@@ -324,14 +324,22 @@ const AppointmentPage = () => {
 
       const staffId = userID;
       const response = await api.post(`notification/requestTrust/${appointID}/${staffId}`);
-      if (response.data.message) {
+
+      if (response.status === 200) {
         toast.success(response.data.message);
-        setReliableAppointments(prev => 
-          prev.filter(appointment => appointment.appointID !== appointID)
-        );
+      } else {
+        toast.error(response.data.message);
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to request trust");
+      if (error.response?.status === 208) {
+        toast.error("You have sent request, please wait for the response");
+      } else if (error.response?.status === 404) {
+        toast.error("Appointment not found");
+      } else if (error.response?.status === 403) {
+        toast.error("You do not have permission for this appointment");
+      } else {
+        toast.error(error.response?.data?.message || "Failed to request trust");
+      }
     } finally {
       setProcessingAppointments(prev => 
         prev.filter(id => id !== appointID)
@@ -379,9 +387,6 @@ const AppointmentPage = () => {
       
       if (response.status === 200) {
         toast.success(response.data.message);
-        setReliableAppointments(prev => 
-          prev.filter(appointment => appointment.appointID !== appointmentToNotTrust)
-        );
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to recall pet");

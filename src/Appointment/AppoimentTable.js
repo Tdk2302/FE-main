@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import moment from "moment";
 import UserInfoModal from "../components/UserInfoModal";
 import EditUserInfoModal from "../components/EditUserInfoModal";
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Box, Typography, Grid, TextField } from "@mui/material";
+import ReasonModal from '../components/ReasonModal';
 
 const AppointmentPage = () => {
   const [unprocessedAppointments, setUnprocessedAppointments] = useState([]);
@@ -16,7 +16,6 @@ const AppointmentPage = () => {
   const [showRefusalModal, setShowRefusalModal] = useState(false);
   const [showUserInfoModal, setShowUserInfoModal] = useState(false);
   const [appointmentToRefuse, setAppointmentToRefuse] = useState(null);
-  const [refusalReason, setRefusalReason] = useState("");
   const [notHappenAppointments, setNotHappenAppointments] = useState([]);
   const [reliableAppointments, setReliableAppointments] = useState([]);
   const [approvedAppointments, setApprovedAppointments] = useState([]);
@@ -147,7 +146,6 @@ const AppointmentPage = () => {
 
   // Xử lý từ chối cuộc hẹn ở bảng unprocessed
   const refuseAppointment = (appointmentId) => {
-    setIsLoading(true);
     if (processingAppointments.includes(appointmentId)) {
       toast.error("This appointment is already being processed.");
       return;
@@ -158,15 +156,12 @@ const AppointmentPage = () => {
   };
 
   // Xử lý khi submit lý do từ chối
-  const handleRefusalSubmit = async () => {
-    if (!refusalReason.trim()) {
-      toast.error("Please provide a reason for refusal.");
-      return;
-    }
+  const handleRefusalSubmit = async (reason) => {
+    setIsLoading(true);
     setProcessingAppointments((prev) => [...prev, appointmentToRefuse]);
     try {
       const response = await api.delete(
-        `/appointment/refuse/${refusalReason}`,
+        `/appointment/refuse/${reason}`,
         {
           data: { appointID: appointmentToRefuse },
         }
@@ -174,17 +169,11 @@ const AppointmentPage = () => {
       toast.success(response.data.message);
     } catch (error) {
       toast.error(error.response.data.message);
-
-      console.error(
-        "Error refusing appointment:",
-        error.response?.data || error.message
-      );
     } finally {
       setProcessingAppointments((prev) =>
         prev.filter((id) => id !== appointmentToRefuse)
       );
       setShowRefusalModal(false);
-      setRefusalReason("");
       setAppointmentToRefuse(null);
       refreshAppointments();
       setIsLoading(false);
@@ -205,7 +194,6 @@ const AppointmentPage = () => {
       toast.success(response.data.message);
       setShowEditUserInfoModal(false);
     } catch (error) {
-      // Xử lý các trường hợp lỗi cụ thể
       if (error.response?.status === 404) {
         toast.error("Account didn't have enough confirmation information");
       } else if (error.response?.status === 409) {
@@ -232,9 +220,7 @@ const AppointmentPage = () => {
     } catch (error) {
       toast.error(error.response.data.message);
     } finally {
-      // Luôn refresh lại danh sách sau khi thực hiện, bất kể thành công hay thất bại
       refreshAppointments();
-      // Xóa appointmentId khỏi danh sách đang xử lý
       setProcessingAppointments((prev) => prev.filter(id => id !== appointmentId));
       setIsLoading(false);
     }
@@ -243,21 +229,22 @@ const AppointmentPage = () => {
   const formatDateTime = (dateTimeString) => {
     return moment(dateTimeString).format("YYYY-MM-DD HH:mm:ss");
   };
-
+  // In trạng thái
   const renderStatus = (status) =>
     status === true ? "Processed" : "Unprocessed";
-
+  // In trạng thái đã nhận
   const renderAdoptStatus = (adoptStatus) => {
     if (adoptStatus === undefined) return "Not set";
     return adoptStatus === true ? "Adopted" : "Not yet";
   };
-
+  // In trạng thái đã duyệt
   const renderApproveStatus = (approveStatus) => {
     return approveStatus === true ? "Approved" : "Not yet";
   };
 
   const [isModalLoading, setIsModalLoading] = useState(false);
 
+  // Lấy thông tin người dùng
   const fetchUserInfo = async (accountID) => {
     setIsModalLoading(true);
     try {
@@ -272,7 +259,7 @@ const AppointmentPage = () => {
       setIsModalLoading(false);
     }
   };
-
+  // Click vào link để lấy thông tin người dùng
   const handleLinkClick = async (accountID) => {
     await fetchUserInfo(accountID); 
     setShowUserInfoModal(true); 
@@ -280,7 +267,7 @@ const AppointmentPage = () => {
 
   const [showEditUserInfoModal, setShowEditUserInfoModal] = useState(false);
   const [selectedUserInfo, setSelectedUserInfo] = useState({});
-
+  // Cập nhật thông tin người dùng
   const handleUpdateUserInfo = async (data) => {
     setIsLoading(true);
     const { accountID, params } = data;
@@ -298,16 +285,22 @@ const AppointmentPage = () => {
       setIsLoading(false);
     }
   };
-
+  // Accept để lấy thông tin người dùng ở bảng notHappenYet
   const handleAcceptClick = async (accountID, appointID) => {
     setIsLoading(true);
     try {
+      const appointment = notHappenAppointments.find(app => app.appointID === appointID);
+      
+      if (!checkStaffPermission(appointment)) {
+        toast.error("You don't have permission to handle this appointment");
+        return;
+      }
+
       const response = await api.get(`accounts/getConfirm/${accountID}`);
       const userData = response.data.data;
-      // Kết hợp userData với appointID
       setSelectedUserInfo({
         ...userData,
-        appointID: appointID  // Thêm appointID vào cùng với dữ liệu user
+        appointID: appointID
       });
       setShowEditUserInfoModal(true);
     } catch (error) {
@@ -316,28 +309,93 @@ const AppointmentPage = () => {
       setIsLoading(false);
     }
   };
-
+  // Request trust ở bảng reliable
   const handleTrustClick = async (appointID) => {
     setIsLoading(true);
-    setProcessingAppointments(prev => [...prev, appointID]); // Disable button ngay lập tức
+    setProcessingAppointments(prev => [...prev, appointID]);
     
     try {
+      const appointment = reliableAppointments.find(app => app.appointID === appointID);
+      
+      if (!checkStaffPermission(appointment)) {
+        toast.error("You don't have permission to handle this appointment");
+        return;
+      }
+
       const staffId = userID;
       const response = await api.post(`notification/requestTrust/${appointID}/${staffId}`);
-      if (response.data.message) {
+
+      if (response.status === 200) {
         toast.success(response.data.message);
-        setReliableAppointments(prev => 
-          prev.filter(appointment => appointment.appointID !== appointID)
-        );
       } else {
-        toast.error("Failed to request trust");
+        toast.error(response.data.message);
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to request trust");
+      if (error.response?.status === 208) {
+        toast.error("You have sent request, please wait for the response");
+      } else if (error.response?.status === 404) {
+        toast.error("Appointment not found");
+      } else if (error.response?.status === 403) {
+        toast.error("You do not have permission for this appointment");
+      } else {
+        toast.error(error.response?.data?.message || "Failed to request trust");
+      }
     } finally {
       setProcessingAppointments(prev => 
         prev.filter(id => id !== appointID)
       );
+      setIsLoading(false);
+    }
+  };
+  
+  const [showNotTrustModal, setShowNotTrustModal] = useState(false);
+  const [appointmentToNotTrust, setAppointmentToNotTrust] = useState(null);
+  // Kiểm tra có phải đúng staff xử lý không
+  const checkStaffPermission = (appointment) => {
+    if (!appointment.staffID) {
+      return true;
+    }
+    return appointment.staffID === userID;
+  };
+  // Recall pet ở bảng reliable
+  const handleNotTrust = (appointmentId) => {
+    if (processingAppointments.includes(appointmentId)) {
+      toast.error("This appointment is already being processed.");
+      return;
+    }
+    
+    const appointment = reliableAppointments.find(app => app.appointID === appointmentId);
+    
+    if (!checkStaffPermission(appointment)) {
+      toast.error("You don't have permission to handle this appointment");
+      return;
+    }
+
+    setAppointmentToNotTrust(appointmentId);
+    setShowNotTrustModal(true);
+  };
+  // Submit lý do từ chối
+  const handleNotTrustSubmit = async (reason) => {
+    setIsLoading(true);
+    setProcessingAppointments((prev) => [...prev, appointmentToNotTrust]);
+    try {
+      const response = await api.put(`appointment/notTrust/${appointmentToNotTrust}`, null, {
+        params: {
+          reason: reason
+        }
+      });
+      
+      if (response.status === 200) {
+        toast.success(response.data.message);
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to recall pet");
+    } finally {
+      setProcessingAppointments((prev) =>
+        prev.filter((id) => id !== appointmentToNotTrust)
+      );
+      setShowNotTrustModal(false);
+      setAppointmentToNotTrust(null);
       setIsLoading(false);
     }
   };
@@ -604,7 +662,13 @@ const AppointmentPage = () => {
                             >
                               Trust
                             </button>
-                            <button className="btn btn-danger">Recall Pet</button>
+                            <button 
+                              className="btn btn-danger"
+                              onClick={() => handleNotTrust(appointment.appointID)}
+                              disabled={processingAppointments.includes(appointment.appointID)}
+                            >
+                              Recall Pet
+                            </button>
                           </td>
                         </tr> 
                       ))}
@@ -686,26 +750,8 @@ const AppointmentPage = () => {
         onClose={() => setShowUserInfoModal(false)} 
         userInfo={userInfo} 
       />
-      {/* Modal từ chối cuộc hẹn */}
-      <Dialog open={showRefusalModal} onClose={() => setShowRefusalModal(false)}>
-        <DialogTitle>Refuse Appointment</DialogTitle>
-        <DialogContent>
-          <p>Enter reason for refusal:</p>
-          <textarea
-            value={refusalReason}
-            onChange={(e) => setRefusalReason(e.target.value)}
-            placeholder="Enter reason for refusal"
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setShowRefusalModal(false)} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleRefusalSubmit} color="secondary">
-            Submit
-          </Button>
-        </DialogActions>
-      </Dialog>
+      
+
 
       <EditUserInfoModal 
         open={showEditUserInfoModal} 
@@ -713,6 +759,29 @@ const AppointmentPage = () => {
         userInfo={selectedUserInfo} 
         onUpdate={handleUpdateUserInfo} 
         onAccept={handleFinalAccept}
+      />
+
+      <ReasonModal
+        open={showRefusalModal}
+        onClose={() => setShowRefusalModal(false)}
+        onSubmit={handleRefusalSubmit}
+        title="Enter reason for refusal"
+        submitText="Refuse"
+        cancelText="Cancel"
+        placeholder="Enter reason for refusal..."
+      />
+
+      <ReasonModal
+        open={showNotTrustModal}
+        onClose={() => {
+          setShowNotTrustModal(false);
+          setAppointmentToNotTrust(null);
+        }}
+        onSubmit={handleNotTrustSubmit}
+        title="Enter reason for recalling pet"
+        submitText="Recall"
+        cancelText="Cancel"
+        placeholder="Enter reason for recalling pet..."
       />
     </div>
   );

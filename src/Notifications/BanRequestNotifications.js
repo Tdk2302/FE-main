@@ -19,6 +19,7 @@ const BanRequestNotifications = () => {
             const response = await axios.get("/notification/showBanRequest");
             console.log(response.data);
             if (response.data && response.data.data) {
+                console.log(response.data.data);
                 const notifications = response.data.data;
                 const pendingCount = notifications.filter(noti => noti.button_status).length;
                 setNewNotificationsCount(pendingCount);
@@ -43,6 +44,17 @@ const BanRequestNotifications = () => {
         apiBanRequestNotifications();
     }, [apiBanRequestNotifications]);
 
+    const extractAccountID = (message) => {
+        try {
+            const accountWithName = message.split(" ")[1];
+            const accountID = accountWithName.split("_")[0];
+            return accountID;
+        } catch (error) {
+            console.error('Error extracting accountID:', error);
+            return null;
+        }
+    };
+
     const handleStatusUpdate = async (notiID, status) => {
         setIsUpdating(true);
         try {
@@ -51,51 +63,22 @@ const BanRequestNotifications = () => {
                 return;
             }
 
-            if (status) {
-                // Accept: Ban the account
-                const notification = notifications.find(noti => noti.notiID === notiID);
-                if (!notification || !notification.petID) {
-                    throw new Error('Pet information not found in notification');
-                }
-                const response = await axios.put(`/accounts/banAccount`, { "notiID": notiID });
-                console.log(response.data);
-                if (response.data && response.data.message) {
-                    toast.success(response.data.message);
-                } else {
-                    toast.success('Account banned successfully');
-                }
-                
-            } else {
-                // Deny: Delete the notification
-                const response = await axios.delete(`/notification/deleteNotification`, { data: { notiID } });
-                if (response.data && response.data.message) {
-                    toast.success(response.data.message);
-                } else {
-                    toast.success('Notification deleted successfully');
-                }
-             
+            const notification = notifications.find(noti => noti.notiID === notiID);
+            if (!notification) {
+                toast.error('Notification not found');
+                return;
             }
 
-            // Cập nhật danh sách thông báo và đếm số thông báo mới
-            setNotifications(prev => {
-                const updatedNotifications = prev.map(noti => 
-                    noti.notiID === notiID 
-                        ? { ...noti, button_status: false }
-                        : noti
-                );
-                // Cập nhật số lượng thông báo mới
-                const newCount = updatedNotifications.filter(noti => noti.button_status).length;
-                setNewNotificationsCount(newCount);
-                return updatedNotifications;
-            });
-            apiBanRequestNotifications();
+            const accountID = extractAccountID(notification.message);
 
-        } catch (error) {
-            console.error('Error updating notification status:', error);
-            toast.error(error.response?.data?.message || 'Failed to update notification status');
-            
-            // Xử lý lỗi 404
-            if (error.response?.status === 404) {
+            const response = await axios.put(
+                `/notification/banAccountByReason/${accountID}`, 
+                null,
+                { params: { status } }
+            );
+
+            if (response.data.message) {
+                toast.success(response.data.message);
                 setNotifications(prev => {
                     const updatedNotifications = prev.filter(noti => noti.notiID !== notiID);
                     const newCount = updatedNotifications.filter(noti => noti.button_status).length;
@@ -103,10 +86,18 @@ const BanRequestNotifications = () => {
                     return updatedNotifications;
                 });
             }
+
+        } catch (error) {
+            console.error('Error updating notification status:', error);
+            if (error.response?.status === 404) {
+                toast.error("Account not found");
+            } else {
+                toast.error(error.response?.data?.message || 'Failed to update status');
+            }
         } finally {
             setIsUpdating(false);
         }
-    }
+    };
 
     const formatRelativeTime = (dateString) => {
         if (!dateString) return 'Date not available';

@@ -396,7 +396,6 @@ const AppointmentPage = () => {
       );
       setShowNotTrustModal(false);
       setAppointmentToNotTrust(null);
-      refreshAppointments();
       setIsLoading(false);
     }
   };

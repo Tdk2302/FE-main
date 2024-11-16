@@ -5,7 +5,6 @@ import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
 import { BASE_URL } from "../services/axios";
 import "../styles/Eventdetail.scss";
-import { NavLink } from "react-bootstrap";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -14,6 +13,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TablePagination from "@mui/material/TablePagination";
+import EventStatus from "../components/EventStatus";
 
 const EventDetail = () => {
   const { eventId } = useParams();
@@ -108,6 +108,9 @@ const EventDetail = () => {
       <div className="row">
         <div className="col-sm-8 col-md-8 col-lg-8 event">
           <h1>{event.event_name}</h1>
+          <h4>
+            Status: <EventStatus status={event.status} />
+          </h4>
           <p>
             <strong>Event time:</strong>{" "}
             {new Date(event.start_date).toLocaleDateString()}

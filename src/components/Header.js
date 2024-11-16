@@ -135,6 +135,12 @@ const Header = () => {
                 >
                   Request Event
                 </NavDropdown.Item>
+                <NavDropdown.Item
+                  as={NavLink}
+                  to="/admin-notifications/request-trust"
+                >
+                  Request Trust Customer
+                </NavDropdown.Item>
               </NavDropdown>
             </>
           )}
@@ -182,6 +188,15 @@ const Header = () => {
                 <NavDropdown.Item as={NavLink} to={`/profile/${accountID}`}>
                   Profile
                 </NavDropdown.Item>
+                {roleID === 3
+                 && (
+                  <NavDropdown.Item
+                    as={NavLink}
+                    to={`/verifyuser/${accountID}`}
+                  >
+                    Verify Profile
+                  </NavDropdown.Item>
+                )}
                 {roleID === 3 && (
                   <NavDropdown.Item as={NavLink} to="/historyadoption">
                     History Adoption

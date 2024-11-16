@@ -45,7 +45,7 @@ const Login = () => {
     } catch (error) {
       console.error("Login error:", error.response || error);
       toast.error(
-        error.response?.data?.message || "Login failed. Please try again."
+        error.response?.data?.message || "Invalid username or password"
       );
     } finally {
       setIsLoading(false);

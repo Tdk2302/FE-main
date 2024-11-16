@@ -49,6 +49,9 @@ const Donate = () => {
         ]);
         setDonators(donatorsResponse.data.data);
         setAnonymousDonators(anonymousResponse.data.data);
+        anonymousResponse.data.data.sort(
+          (a, b) => new Date(b.date_time) - new Date(a.date_time)
+        );
       } catch (error) {
         toast.error(error.response.data.message);
       }
@@ -95,28 +98,23 @@ const Donate = () => {
   };
 
   const [page, setPage] = useState(0);
+  const [page1, setPage1] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [rowsPerPage1, setRowsPerPage1] = useState(5);
   const [searchTerm, setSearchTerm] = useState(""); // State for search term
 
-  // Filtered donators based on search term
-  const filteredDonators = useMemo(() => {
-    return donators.filter(
-      (donator) =>
-        donator.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        donator.accountID.toString().includes(searchTerm)
-    );
-  }, [donators, searchTerm]);
-
-  // Sort function for donators
-  const sortedDonators = useMemo(() => {
-    return [...filteredDonators].sort(
-      (a, b) => b.total_donation - a.total_donation
-    );
-  }, [filteredDonators]);
+  const filteredDonators = donators.filter(
+    (donator) =>
+      donator.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      donator.accountID.toString().includes(searchTerm)
+  );
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
+  };
+
+  const handleChangePage1 = (event, newPage) => {
+    setPage1(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
@@ -212,7 +210,7 @@ const Donate = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {sortedDonators // Use sorted and filtered list
+                  {filteredDonators // Use sorted and filtered list
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((donator) => (
                       <TableRow
@@ -224,7 +222,7 @@ const Donate = () => {
                         <TableCell>{donator.accountID}</TableCell>
                         <TableCell>{donator.name}</TableCell>
                         <TableCell align="right">
-                          ${donator.total_donation}
+                          {donator.total_donation.toLocaleString()} VNĐ
                         </TableCell>
                       </TableRow>
                     ))}
@@ -235,7 +233,7 @@ const Donate = () => {
               className="root-table"
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
-              count={sortedDonators.length} // Update count for pagination
+              count={filteredDonators.length} // Update count for pagination
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}
@@ -244,7 +242,7 @@ const Donate = () => {
           </Paper>
         </div>
 
-        <div className="col-sm-5 col-md-5 col-lg-5 res-margin donate-image-">
+        <div className="col-sm-5 col-md-5 col-lg-5 res-margin donate-image-anym">
           <img
             src={imageURL}
             alt="Sample"
@@ -278,8 +276,8 @@ const Donate = () => {
                 <TableBody>
                   {anonymousDonators
                     .slice(
-                      page * rowsPerPage1,
-                      page * rowsPerPage1 + rowsPerPage1
+                      page1 * rowsPerPage1,
+                      page1 * rowsPerPage1 + rowsPerPage1
                     )
                     .map((donator) => (
                       <TableRow
@@ -293,7 +291,9 @@ const Donate = () => {
                             "vi-VN"
                           )}
                         </TableCell>
-                        <TableCell align="right">${donator.amount}</TableCell>
+                        <TableCell align="right">
+                          {donator.amount.toLocaleString()} VNĐ
+                        </TableCell>
                       </TableRow>
                     ))}
                 </TableBody>
@@ -305,8 +305,8 @@ const Donate = () => {
               component="div"
               count={anonymousDonators.length}
               rowsPerPage={rowsPerPage1}
-              page={page}
-              onPageChange={handleChangePage}
+              page={page1}
+              onPageChange={handleChangePage1}
               onRowsPerPageChange={handleChangeRowsPerPage1}
             />
           </Paper>

@@ -29,12 +29,14 @@ import UpdateEvent from "./Events/UpdateEvent";
 import Profile from "./Account/ProfileUser";
 import HistoryAdoption from "./Account/HistoryAdoption";
 import Report from "./Report/Report";
+import ReportDetail from "./Report/ReportDetail";
 import UserManagement from "./Admin/UserManagement";
 import RequestEventNotifications from "./Notifications/RequestEventNotifications";
 import EventDetail from "./Events/EventDetail";
 import DonateEvent from "./Donation/DonateEvent";
 import Dashboard from "./Dashboard/Dashboard";
-
+import VerifyUser from "./Account/VerifyUser";
+import RequesTrustNotification from "./Notifications/RequesTrustNotification";
 function App() {
   const roleID = localStorage.getItem("roleID")
     ? Number(localStorage.getItem("roleID"))
@@ -58,6 +60,7 @@ function App() {
               <Route path="/adoptprocess/:petID" element={<AdoptProcess />} />
               <Route path="/report/:petID" element={<Report />} />
               <Route path="/donatevent" element={<DonateEvent />} />
+              <Route path="/reportdetail/:petID" element={<ReportDetail />} />
 
               <Route
                 path="/admin"
@@ -142,6 +145,14 @@ function App() {
                 }
               />
               <Route
+                path="/admin-notifications/request-trust"
+                element={
+                  <ProtectedRoute roleID={1}>
+                    <RequesTrustNotification />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path="/events/add"
                 element={
                   <ProtectedRoute roleID={2}>
@@ -158,6 +169,7 @@ function App() {
                 }
               />
               <Route path="/profile/:accountID" element={<Profile />} />
+              <Route path="/verifyuser/:accountID" element={<VerifyUser />} />
               <Route
                 path="/admin/user-management"
                 element={

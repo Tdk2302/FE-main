@@ -9,6 +9,7 @@ import Spinner from "../components/Spinner";
 import api from "../services/axios";
 import PetHealthRecord from "../PetHealthRecord/PethealthRecord";
 import ContactBanner from "../components/ContactBanner";
+import PetStatus from "../components/PetStatus";
 
 const PetDetail = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -161,14 +162,6 @@ const PetDetail = () => {
     return <div>Pet not found</div>;
   }
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const year = date.getFullYear();
-    return `${month}/${day}/${year}`;
-  };
-
   return (
     <div className="petdetail-container">
       <div className="row">
@@ -179,7 +172,13 @@ const PetDetail = () => {
         </div>
         <div class="col-sm-6 col-md-6 col-lg-6 caption-adoption float-right">
           <div className="pet-info">
-            <h1>{pet.name}</h1>
+            <div className="name-status">
+              <h1>{pet.name}</h1>
+              <h4>
+                Status: <PetStatus status={pet.status} />
+              </h4>
+            </div>
+
             <p>
               <strong>Breed: </strong> {pet.breed}
             </p>
@@ -352,26 +351,6 @@ const PetDetail = () => {
           </div>
         </div>
         <PetHealthRecord petID={petID} pet={pet} />
-
-        {pet.status.toLowerCase() === "unavailable" && pet.accountID && (
-          <div className="pet-video">
-            {videoSrc ? (
-              <div>
-                <h2>
-                  Video report of {pet.name} at{" "}
-                  {formatDate(pet.date_time_report)}
-                </h2>
-                <video
-                  src={videoSrc}
-                  controls
-                  style={{ width: "600px", height: "400px" }}
-                />
-              </div>
-            ) : (
-              <p>No video report available for this pet.</p>
-            )}
-          </div>
-        )}
       </div>
 
       <>

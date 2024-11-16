@@ -14,7 +14,6 @@ const HistoryAdoption = () => {
   const accountID = localStorage.getItem("accountID");
 
   const getImageUrl = useCallback((img_url) => {
-    if (!img_url) return "/path/to/default/image.jpg";
     if (img_url.startsWith("http")) return img_url;
     // Chỉnh sửa ở đây để tạo URL đúng định dạng
     return `http://localhost:8081/${img_url.replace(/\\/g, "/")}`;
@@ -29,7 +28,6 @@ const HistoryAdoption = () => {
         console.log(response.data.data);
         setImagePreview(getImageUrl(response.data.data.img_url));
       } catch (error) {
-        toast.error("Error fetching adopted pets");
         console.error(error);
       } finally {
         setIsLoading(false);
@@ -52,7 +50,7 @@ const HistoryAdoption = () => {
 
   const handleViewReportHistory = (pet) => {
     if (pet.petID) {
-      navigate(`/report-detail`, { state: { petID: pet.petID } });
+      navigate(`/reportdetail/${pet.petID}`, { state: { petID: pet.petID } });
     } else {
       console.error("Pet ID is undefined");
     }

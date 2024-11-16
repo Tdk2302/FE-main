@@ -2,13 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api, { BASE_URL } from "../services/axios";
 import { toast } from "react-toastify";
-import { jwtDecode } from "jwt-decode";
-import { 
-  TextField, 
-  Button, 
-  Box, 
-  Typography, 
-  Container, 
+import {
+  TextField,
+  Button,
+  Box,
+  Typography,
+  Container,
   Grid,
   Paper,
   Dialog,
@@ -23,33 +22,33 @@ import {
   IconButton,
   Avatar,
   Chip,
-  FormHelperText
+  FormHelperText,
 } from "@mui/material";
-import { styled } from '@mui/material/styles';
-import EditIcon from '@mui/icons-material/Edit';
-import PersonIcon from '@mui/icons-material/Person';
-import CakeIcon from '@mui/icons-material/Cake';
-import PhoneIcon from '@mui/icons-material/Phone';
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import { styled } from "@mui/material/styles";
+import EditIcon from "@mui/icons-material/Edit";
+import PersonIcon from "@mui/icons-material/Person";
+import CakeIcon from "@mui/icons-material/Cake";
+import PhoneIcon from "@mui/icons-material/Phone";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import Spinner from "../components/Spinner"; // Import Spinner component
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import HomeIcon from '@mui/icons-material/Home';
-import { format } from 'date-fns';
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import HomeIcon from "@mui/icons-material/Home";
+import { format } from "date-fns";
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),
-  background: '#ffffff',
-  borderRadius: '15px',
-  boxShadow: '0 3px 10px rgba(0, 0, 0, 0.2)',
+  background: "#ffffff",
+  borderRadius: "15px",
+  boxShadow: "0 3px 10px rgba(0, 0, 0, 0.2)",
 }));
 
 const ProfileAvatar = styled(Avatar)(({ theme }) => ({
   width: theme.spacing(15),
   height: theme.spacing(15),
-  margin: 'auto',
-  backgroundColor: '#f0f0f0',
-  color: '#333333',
+  margin: "auto",
+  backgroundColor: "#f0f0f0",
+  color: "#333333",
 }));
 
 const ProfileUser = () => {
@@ -79,8 +78,6 @@ const ProfileUser = () => {
     return `${BASE_URL}${imgUrl}`;
   };
 
-
-  
   useEffect(() => {
     fetchUserInfo();
   }, [navigate]);
@@ -98,11 +95,11 @@ const ProfileUser = () => {
         address: "",
         total_donation: 0,
       };
-      
+
       if (userData.birthdate) {
         userData.birthdate = new Date(userData.birthdate);
       }
-      
+
       setUserInfo(userData);
     } catch (error) {
       toast.error("Failed to fetch user information");
@@ -117,9 +114,9 @@ const ProfileUser = () => {
       setNewPassword(value);
     } else if (name === "birthdate") {
       const dateValue = new Date(value);
-      setUserInfo(prevState => ({ ...prevState, [name]: dateValue }));
+      setUserInfo((prevState) => ({ ...prevState, [name]: dateValue }));
     } else {
-      setUserInfo(prevState => ({ ...prevState, [name]: value }));
+      setUserInfo((prevState) => ({ ...prevState, [name]: value }));
     }
   };
 
@@ -127,7 +124,7 @@ const ProfileUser = () => {
     e.preventDefault();
     if (validateForm()) {
       setOpenDialog(true);
-    } 
+    }
   };
 
   const handleCloseDialog = () => {
@@ -140,7 +137,7 @@ const ProfileUser = () => {
     const currentDate = new Date();
     const tenYearsAgo = new Date();
     tenYearsAgo.setFullYear(currentDate.getFullYear() - 10);
-    
+
     if (!userInfo.name.trim()) newErrors.name = "Full name is required";
     if (!userInfo.birthdate) {
       newErrors.birthdate = "Birthday is required";
@@ -151,10 +148,11 @@ const ProfileUser = () => {
     if (!userInfo.address.trim()) newErrors.address = "Address is required";
     if (!userInfo.phone) newErrors.phone = "Phone number is required";
     else if (!/^0\d{9,10}$/.test(userInfo.phone))
-      newErrors.phone = "Invalid phone number! Must start with 0 and be 9-10 digits.";
+      newErrors.phone =
+        "Invalid phone number! Must start with 0 and be 9-10 digits.";
 
-    if (newPassword && newPassword.length < 6) {
-      newErrors.newPassword = "Password must be at least 6 characters long";
+    if (newPassword && newPassword.length < 4) {
+      newErrors.newPassword = "Password must be at least 4 characters long";
     }
 
     setErrors(newErrors);
@@ -172,19 +170,28 @@ const ProfileUser = () => {
     try {
       const userInfoToUpdate = { ...userInfo };
       if (userInfoToUpdate.birthdate) {
-        userInfoToUpdate.birthdate = format(new Date(userInfoToUpdate.birthdate), 'MM/dd/yyyy');
+        userInfoToUpdate.birthdate = format(
+          new Date(userInfoToUpdate.birthdate),
+          "MM/dd/yyyy"
+        );
       }
-      
+
       userInfoToUpdate.password = newPassword.trim();
 
-      const response = await api.put(`accounts/update/${currentPassword}`, userInfoToUpdate);
+      const response = await api.put(
+        `accounts/update/${currentPassword}`,
+        userInfoToUpdate
+      );
       toast.success("User information updated successfully!");
       handleCloseDialog();
       setIsEditing(false);
       setNewPassword("");
       fetchUserInfo();
     } catch (error) {
-      console.error("Error updating user info:", error.response?.data || error.message);
+      console.error(
+        "Error updating user info:",
+        error.response?.data || error.message
+      );
       if (error.response?.status === 400) {
         toast.error("Wrong current password. Please try again.");
       } else if (error.response?.status === 403) {
@@ -193,7 +200,9 @@ const ProfileUser = () => {
         toast.error("Account not found. Please log in again.");
         navigate("/login");
       } else {
-        toast.error("Failed to update user information. Please try again later.");
+        toast.error(
+          "Failed to update user information. Please try again later."
+        );
       }
     }
   };
@@ -211,12 +220,14 @@ const ProfileUser = () => {
   };
 
   const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND',
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
       maximumFractionDigits: 0,
-      minimumFractionDigits: 0
-    }).format(amount).replace('₫', 'VND');
+      minimumFractionDigits: 0,
+    })
+      .format(amount)
+      .replace("₫", "VND");
   };
 
   const toggleNewPasswordVisibility = () => {
@@ -228,28 +239,43 @@ const ProfileUser = () => {
   };
 
   if (isLoading) {
-    return <Spinner />; 
+    return <Spinner />;
   }
 
   return (
     <Container component="main" maxWidth="sm" sx={{ my: 5 }}>
       <StyledPaper elevation={3}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 4 }}>
-        <ProfileAvatar src={getImageUrl(userInfo.avatarUrl)}>
-            {!userInfo.avatarUrl && (userInfo.name ? userInfo.name[0].toUpperCase() : 'U')}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            mb: 4,
+          }}
+        >
+          <ProfileAvatar src={getImageUrl(userInfo.avatarUrl)}>
+            {!userInfo.avatarUrl &&
+              (userInfo.name ? userInfo.name[0].toUpperCase() : "U")}
           </ProfileAvatar>
-          <Typography component="h1" variant="h4" sx={{ mt: 2, fontWeight: 'bold', color: '#333333' }}>
+          <Typography
+            component="h1"
+            variant="h4"
+            sx={{ mt: 2, fontWeight: "bold", color: "#333333" }}
+          >
             {userInfo.name || "User Profile"}
           </Typography>
-          { currentUserID === urlAccountID && (
-          <Chip 
-
-            icon={<EditIcon />} 
-            label={isEditing ? "Editing" : "Edit Profile"} 
-            onClick={toggleEdit}
-            color="default"
-            sx={{ mt: 2, backgroundColor: '#f0f0f0', '&:hover': { backgroundColor: '#e0e0e0' } }}
-          />
+          {currentUserID === urlAccountID && (
+            <Chip
+              icon={<EditIcon />}
+              label={isEditing ? "Editing" : "Edit Profile"}
+              onClick={toggleEdit}
+              color="default"
+              sx={{
+                mt: 2,
+                backgroundColor: "#f0f0f0",
+                "&:hover": { backgroundColor: "#e0e0e0" },
+              }}
+            />
           )}
         </Box>
         <Box component="form" onSubmit={handleOpenDialog} sx={{ mt: 3 }}>
@@ -261,11 +287,12 @@ const ProfileUser = () => {
                 name="name"
                 value={userInfo.name || ""}
                 onChange={handleChange}
-                InputProps={{ 
+                InputProps={{
                   readOnly: !isEditing,
-                  startAdornment: <PersonIcon sx={{ mr: 1, color: '#757575' }} />
+                  startAdornment: (
+                    <PersonIcon sx={{ mr: 1, color: "#757575" }} />
+                  ),
                 }}
-             
                 variant="outlined"
                 error={!!errors.name}
                 helperText={errors.name}
@@ -295,12 +322,16 @@ const ProfileUser = () => {
                 label="Birthdate"
                 name="birthdate"
                 type="date"
-                value={userInfo.birthdate ? format(new Date(userInfo.birthdate), 'yyyy-MM-dd') : ''}
+                value={
+                  userInfo.birthdate
+                    ? format(new Date(userInfo.birthdate), "yyyy-MM-dd")
+                    : ""
+                }
                 onChange={handleChange}
                 InputLabelProps={{ shrink: true }}
-                InputProps={{ 
+                InputProps={{
                   readOnly: !isEditing,
-                  startAdornment: <CakeIcon sx={{ mr: 1, color: '#757575' }} />
+                  startAdornment: <CakeIcon sx={{ mr: 1, color: "#757575" }} />,
                 }}
                 variant="outlined"
                 error={!!errors.birthdate}
@@ -314,9 +345,11 @@ const ProfileUser = () => {
                 name="phone"
                 value={userInfo.phone || ""}
                 onChange={handleChange}
-                InputProps={{ 
+                InputProps={{
                   readOnly: !isEditing,
-                  startAdornment: <PhoneIcon sx={{ mr: 1, color: '#757575' }} />
+                  startAdornment: (
+                    <PhoneIcon sx={{ mr: 1, color: "#757575" }} />
+                  ),
                 }}
                 variant="outlined"
                 error={!!errors.phone}
@@ -329,9 +362,11 @@ const ProfileUser = () => {
                 label="Total Donation"
                 name="total_donation"
                 value={formatCurrency(userInfo.total_donation || 0)}
-                InputProps={{ 
+                InputProps={{
                   readOnly: true,
-                  startAdornment: <MonetizationOnIcon sx={{ mr: 1, color: '#757575' }} />
+                  startAdornment: (
+                    <MonetizationOnIcon sx={{ mr: 1, color: "#757575" }} />
+                  ),
                 }}
                 variant="outlined"
               />
@@ -343,9 +378,9 @@ const ProfileUser = () => {
                 name="address"
                 value={userInfo.address || ""}
                 onChange={handleChange}
-                InputProps={{ 
+                InputProps={{
                   readOnly: !isEditing,
-                  startAdornment: <HomeIcon sx={{ mr: 1, color: '#757575' }} />
+                  startAdornment: <HomeIcon sx={{ mr: 1, color: "#757575" }} />,
                 }}
                 variant="outlined"
               />
@@ -368,7 +403,11 @@ const ProfileUser = () => {
                         onClick={toggleNewPasswordVisibility}
                         edge="end"
                       >
-                        {showNewPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                        {showNewPassword ? (
+                          <VisibilityOffIcon />
+                        ) : (
+                          <VisibilityIcon />
+                        )}
                       </IconButton>
                     ),
                   }}
@@ -381,14 +420,14 @@ const ProfileUser = () => {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ 
-                mt: 3, 
-                mb: 2, 
-                height: 56, 
-                fontSize: '1.2rem',
-                backgroundColor: '#333333',
-                '&:hover': {
-                  backgroundColor: '#555555',
+              sx={{
+                mt: 3,
+                mb: 2,
+                height: 56,
+                fontSize: "1.2rem",
+                backgroundColor: "#333333",
+                "&:hover": {
+                  backgroundColor: "#555555",
                 },
               }}
             >
@@ -405,7 +444,12 @@ const ProfileUser = () => {
             Please enter your current password to update your profile.
             {newPassword && " Your password will be updated."}
           </DialogContentText>
-          <form onSubmit={(e) => { e.preventDefault(); handleUpdate(); }}>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleUpdate();
+            }}
+          >
             <TextField
               autoFocus
               margin="dense"
@@ -421,7 +465,11 @@ const ProfileUser = () => {
                     onClick={toggleCurrentPasswordVisibility}
                     edge="end"
                   >
-                    {showCurrentPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                    {showCurrentPassword ? (
+                      <VisibilityOffIcon />
+                    ) : (
+                      <VisibilityIcon />
+                    )}
                   </IconButton>
                 ),
               }}
@@ -429,8 +477,17 @@ const ProfileUser = () => {
           </form>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog} sx={{ color: '#333333' }}>Cancel</Button>
-          <Button onClick={handleUpdate} variant="contained" sx={{ backgroundColor: '#333333', '&:hover': { backgroundColor: '#555555' } }}>
+          <Button onClick={handleCloseDialog} sx={{ color: "#333333" }}>
+            Cancel
+          </Button>
+          <Button
+            onClick={handleUpdate}
+            variant="contained"
+            sx={{
+              backgroundColor: "#333333",
+              "&:hover": { backgroundColor: "#555555" },
+            }}
+          >
             Confirm Update
           </Button>
         </DialogActions>

@@ -55,7 +55,7 @@ const AdoptionProcess = () => {
     const min = new Date(today.setDate(today.getDate() + 2)) // Lấy ngày hiện tại cộng thêm 4 ngày
       .toISOString()
       .split("T")[0]; // Định dạng thành YYYY-MM-DD
-    const max = new Date(today.setDate(today.getDate() + 11)) // Giới hạn tối đa thêm 8 ngày từ ngày hiện tại
+    const max = new Date(today.setDate(today.getDate() + 15)) // Giới hạn tối đa thêm 8 ngày từ ngày hiện tại
       .toISOString()
       .split("T")[0]; // Định dạng thành YYYY-MM-DD
     setMinDate(min);

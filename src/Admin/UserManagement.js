@@ -1,24 +1,24 @@
-import React, { useState, useEffect, useContext } from 'react';
-import axios from '../services/axios';
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableContainer, 
-  TableHead, 
-  TableRow, 
+import React, { useState, useEffect, useContext } from "react";
+import axios from "../services/axios";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   TablePagination,
-  Paper, 
-  Button, 
+  Paper,
+  Button,
   Typography,
   Box,
-  TextField
-} from '@mui/material';
-import Spinner from '../components/Spinner';
-import { toast } from 'react-toastify';
-import ConfirmDialog from '../components/ConfirmDialog';
+  TextField,
+} from "@mui/material";
+import Spinner from "../components/Spinner";
+import { toast } from "react-toastify";
+import ConfirmDialog from "../components/ConfirmDialog";
 const UserManagement = () => {
-  const currentUserID = localStorage.getItem('accountID');
+  const currentUserID = localStorage.getItem("accountID");
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState({});
@@ -27,8 +27,7 @@ const UserManagement = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedAction, setSelectedAction] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
-  const [searchAccount, SetSearchAccount] = useState('');
-  
+  const [searchAccount, SetSearchAccount] = useState("");
 
   useEffect(() => {
     fetchUsers();
@@ -37,11 +36,11 @@ const UserManagement = () => {
   const fetchUsers = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get('/accounts/getAllAccounts');
+      const response = await axios.get("/accounts/getAllAccounts");
       setUsers(response.data.data);
     } catch (error) {
-      console.error('Error fetching users:', error);
-      toast.error('Failed to fetch users. Please try again.');
+      console.error("Error fetching users:", error);
+      toast.error("Failed to fetch users. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -54,7 +53,7 @@ const UserManagement = () => {
   };
 
   const handleAction = async (accountID, action) => {
-    setActionLoading(prev => ({ ...prev, [accountID]: action }));
+    setActionLoading((prev) => ({ ...prev, [accountID]: action }));
     try {
       const response = await axios.put(`/accounts/${accountID}/${action}`);
       toast.success(response.data.message);
@@ -64,7 +63,7 @@ const UserManagement = () => {
       console.error(`Error ${action} user:`, error);
       toast.error(`Failed to ${action} user. Please try again.`);
     } finally {
-      setActionLoading(prev => ({ ...prev, [accountID]: null }));
+      setActionLoading((prev) => ({ ...prev, [accountID]: null }));
       setDialogOpen(false);
       setSelectedUser(null);
       setSelectedAction(null);
@@ -80,9 +79,11 @@ const UserManagement = () => {
     setPage(0);
   };
 
-  const filteredAccount = users.filter(user => 
-    user.name.toLowerCase().includes(searchAccount.toLocaleLowerCase()) || user.accountID.toString().includes(searchAccount)
-  )
+  const filteredAccount = users.filter(
+    (user) =>
+      user.name.toLowerCase().includes(searchAccount.toLocaleLowerCase()) ||
+      user.accountID.toString().includes(searchAccount)
+  );
 
   if (isLoading) {
     return <Spinner />;
@@ -116,51 +117,57 @@ const UserManagement = () => {
             {filteredAccount
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((user) => (
-              <TableRow key={user.accountID}>
-                <TableCell>{user.accountID}</TableCell>
-                <TableCell>{user.name}</TableCell>
-                <TableCell>{user.roleID}</TableCell>
-                <TableCell>{user.note}</TableCell>
-                <TableCell>
-                  <Box sx={{ display: 'flex', gap: 1 }}>
-                    {['Upgrade', 'Enable', 'Disable'].map((action) => (
-                      <Button 
-                        key={action}
-                        variant="contained" 
-                        color={action === 'Disable' ? 'error' : action === 'Enable' ? 'success' : 'primary'}
-                        onClick={() => {
-                          if (action === 'Disable') {
-                            handleActionClick(user, action);
-                          } else {
-                            handleAction(user.accountID, action);
+                <TableRow key={user.accountID}>
+                  <TableCell>{user.accountID}</TableCell>
+                  <TableCell>{user.name}</TableCell>
+                  <TableCell>{user.roleID}</TableCell>
+                  <TableCell>{user.note}</TableCell>
+                  <TableCell>
+                    <Box sx={{ display: "flex", gap: 1 }}>
+                      {["Upgrade", "Enable", "Disable"].map((action) => (
+                        <Button
+                          key={action}
+                          variant="contained"
+                          color={
+                            action === "Disable"
+                              ? "error"
+                              : action === "Enable"
+                              ? "success"
+                              : "primary"
                           }
-                        }}
-                        sx={{ 
-                          minWidth: '80px', 
-                          height: '30px',
-                          fontSize: '0.75rem',
-                          color: 'white',
-                          '&:disabled': {
-                            backgroundColor: '#ccc',
-                            color: '#666'
+                          onClick={() => {
+                            if (action === "Disable") {
+                              handleActionClick(user, action);
+                            } else {
+                              handleAction(user.accountID, action);
+                            }
+                          }}
+                          sx={{
+                            minWidth: "80px",
+                            height: "30px",
+                            fontSize: "0.75rem",
+                            color: "white",
+                            "&:disabled": {
+                              backgroundColor: "#ccc",
+                              color: "#666",
+                            },
+                          }}
+                          disabled={
+                            actionLoading[user.accountID] !== undefined ||
+                            user.accountID === currentUserID
                           }
-                        }}
-                        disabled={
-                          actionLoading[user.accountID] !== undefined || 
-                          user.accountID === currentUserID
-                        }
-                      >
-                        {actionLoading[user.accountID] === action ? (
-                          <Spinner size={20} />
-                        ) : (
-                          action
-                        )}
-                      </Button>
-                    ))}
-                  </Box>
-                </TableCell>
-              </TableRow>
-            ))}
+                        >
+                          {actionLoading[user.accountID] === action ? (
+                            <Spinner size={20} />
+                          ) : (
+                            action
+                          )}
+                        </Button>
+                      ))}
+                    </Box>
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>

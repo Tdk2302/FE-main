@@ -52,7 +52,7 @@ const AdoptionProcess = () => {
 
   useEffect(() => {
     const today = new Date();
-    const min = new Date(today.setDate(today.getDate() + 4)) // Lấy ngày hiện tại cộng thêm 4 ngày
+    const min = new Date(today.setDate(today.getDate() + 2)) // Lấy ngày hiện tại cộng thêm 4 ngày
       .toISOString()
       .split("T")[0]; // Định dạng thành YYYY-MM-DD
     const max = new Date(today.setDate(today.getDate() + 11)) // Giới hạn tối đa thêm 8 ngày từ ngày hiện tại

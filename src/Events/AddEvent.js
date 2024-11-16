@@ -16,6 +16,7 @@ const AddEvent = () => {
     start_date: "",
     end_date: "",
     img_url: null,
+    location: "",
   });
   const [imagePreview, setImagePreview] = useState(null);
   const [minDate, setMinDate] = useState("");
@@ -193,6 +194,16 @@ const AddEvent = () => {
                 {errors.description}
               </Form.Control.Feedback>
             </Form.Group>
+            <Form.Group className="mb-3" controlId="formLocation">
+              <Form.Label>Location</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter event location"
+                name="location"
+                value={eventData.location}
+                onChange={handleChange}
+              />
+            </Form.Group>
             <Form.Group className="mb-3" controlId="formStartDate">
               <Form.Label>Start Date</Form.Label>
               <Form.Control
@@ -221,6 +232,7 @@ const AddEvent = () => {
                 {errors.end_date}
               </Form.Control.Feedback>
             </Form.Group>
+
             <Button variant="primary" type="submit" className="create-button">
               Create Event
             </Button>

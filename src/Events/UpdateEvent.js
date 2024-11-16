@@ -16,6 +16,7 @@ const UpdateEvent = () => {
     start_date: "",
     end_date: "",
     img_url: "",
+    location: "",
   });
   const [imagePreview, setImagePreview] = useState(null);
   const [minDate, setMinDate] = useState("");
@@ -254,6 +255,20 @@ const UpdateEvent = () => {
               />
               <Form.Control.Feedback type="invalid">
                 {errors.end_date}
+              </Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="formLocation">
+              <Form.Label>Location</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter event location"
+                name="location"
+                value={eventData.location}
+                onChange={handleChange}
+                isInvalid={!!errors.location}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.location}
               </Form.Control.Feedback>
             </Form.Group>
             <Button

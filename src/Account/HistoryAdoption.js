@@ -50,6 +50,14 @@ const HistoryAdoption = () => {
     navigate(`/petdetail/${pet.petID}`, { state: { pet } });
   };
 
+  const handleViewReportHistory = (pet) => {
+    if (pet.petID) {
+      navigate(`/report-detail`, { state: { petID: pet.petID } });
+    } else {
+      console.error("Pet ID is undefined");
+    }
+  };
+
   if (isLoading) {
     return <Spinner />;
   }
@@ -90,6 +98,12 @@ const HistoryAdoption = () => {
                     onClick={() => handleViewDetail(pet)}
                   >
                     View Detail
+                  </button>
+                  <button
+                    className="report-button"
+                    onClick={() => handleViewReportHistory(pet)}
+                  >
+                    View History Report
                   </button>
                 </div>
               </li>

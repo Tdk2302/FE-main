@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"; // Added useEffect for fetching donators
+import React, { useState, useEffect, useMemo } from "react"; // Added useEffect for fetching donators
 import axios from "axios";
 import { BASE_URL } from "../services/axios";
 import { Button } from "react-bootstrap";
@@ -66,7 +66,6 @@ const Donate = () => {
     };
   }, []);
 
-
   const handleDonations = async () => {
     try {
       // Lấy dữ liệu quyên góp
@@ -78,17 +77,17 @@ const Donate = () => {
       );
       // Thêm tất cả các khoản quyên góp
       for (let donation of donates) {
-        try{
-        const response = await axios.post(`${BASE_URL}donation/add`, {
-          donateID: donation.id,
-          date_time: donation.date_time.replace(" ", "T") + "Z",
-          note: donation.content,
-          amount: donation.amount,
-        });
-        console.log(response.data.message);
-      }catch (error){
-        console.log(error.response.data);
-      }
+        try {
+          const response = await axios.post(`${BASE_URL}donation/add`, {
+            donateID: donation.id,
+            date_time: donation.date_time.replace(" ", "T") + "Z",
+            note: donation.content,
+            amount: donation.amount,
+          });
+          console.log(response.data.message);
+        } catch (error) {
+          console.log(error.response.data);
+        }
       }
     } catch (error) {
       console.log(error.response.data);
@@ -98,6 +97,23 @@ const Donate = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [rowsPerPage1, setRowsPerPage1] = useState(5);
+  const [searchTerm, setSearchTerm] = useState(""); // State for search term
+
+  // Filtered donators based on search term
+  const filteredDonators = useMemo(() => {
+    return donators.filter(
+      (donator) =>
+        donator.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        donator.accountID.toString().includes(searchTerm)
+    );
+  }, [donators, searchTerm]);
+
+  // Sort function for donators
+  const sortedDonators = useMemo(() => {
+    return [...filteredDonators].sort(
+      (a, b) => b.total_donation - a.total_donation
+    );
+  }, [filteredDonators]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -160,6 +176,16 @@ const Donate = () => {
             to check the transaction history and save your donation.
           </p>
 
+          <div className="search-container">
+            <input
+              type="text"
+              placeholder="Search by name or ID"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="search-input"
+            />
+            <i className="fa-solid fa-magnifying-glass search-button"></i>
+          </div>
           <Paper sx={{ width: "100%", overflow: "hidden" }}>
             <TableContainer sx={{ maxHeight: 440 }}>
               <Table stickyHeader aria-label="sticky table">
@@ -186,7 +212,7 @@ const Donate = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {donators
+                  {sortedDonators // Use sorted and filtered list
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((donator) => (
                       <TableRow
@@ -197,7 +223,6 @@ const Donate = () => {
                       >
                         <TableCell>{donator.accountID}</TableCell>
                         <TableCell>{donator.name}</TableCell>
-
                         <TableCell align="right">
                           ${donator.total_donation}
                         </TableCell>
@@ -210,7 +235,7 @@ const Donate = () => {
               className="root-table"
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
-              count={donators.length}
+              count={sortedDonators.length} // Update count for pagination
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}

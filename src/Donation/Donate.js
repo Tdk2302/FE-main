@@ -16,32 +16,48 @@ import TablePagination from "@mui/material/TablePagination";
 import OtherSupportMethods from "../components/OtherSupportMethods";
 
 const Donate = () => {
+  const [donations, setDonation] = useState([]);
   const [donators, setDonators] = useState([]); // State for donators
   const [anonymousDonators, setAnonymousDonators] = useState([]); // State for anonymous donators
+  const [totalDonation, setTotalDonation] = useState(0); // Thêm state cho tổng số tiền quyên góp
   const api_donate =
     "https://script.google.com/macros/s/AKfycbyQxSQp5kQd_tzarGa2l61fY2BKAVqC3jIhEhaqGOHOhraucs1P3c87XX4dsAqKRNjUvg/exec";
   const accountID = localStorage.getItem("accountID");
   let content = ``;
 
   if (accountID != null) {
-    content = `Acc ${accountID} donate FFF`;
+    content = `Account ${accountID} donate FurryFriendFund`;
   } else {
-    content = `Donate FFF`;
+    content = `Donate FurryFriendFund`;
   }
-  const imageURL = `https://api.vietqr.io/image/970422-1319102004913-wjc5eta.jpg?accountName=TRUONG%20PHUC%20LOC&addInfo=${content.replaceAll(" ","%20")}&amount=0`;
+
+  const imageURL = `https://api.vietqr.io/image/970422-1319102004913-wjc5eta.jpg?accountName=TRUONG%20PHUC%20LOC&amount=0&addInfo=${content.replaceAll(
+    " ",
+    "%20"
+  )}`;
+
   // Combine the useEffect hooks
   useEffect(() => {
-    // Fetch donators
     const fetchDonators = async () => {
       try {
         const [donatorsResponse, anonymousResponse] = await Promise.all([
           axios.get(`${BASE_URL}accounts/showDonators`),
           axios.get(`${BASE_URL}donation/getAnonymousDonator`),
         ]);
+
+        // Kiểm tra xem phản hồi có dữ liệu không
+        const total = donatorsResponse.data.data.reduce(
+          (acc, donation) => acc + donation.amount,
+          0
+        );
+        setTotalDonation(total);
         setDonators(donatorsResponse.data.data);
         setAnonymousDonators(anonymousResponse.data.data);
+        anonymousResponse.data.data.sort(
+          (a, b) => new Date(b.date_time) - new Date(a.date_time)
+        );
       } catch (error) {
-        toast.error(error.response.data.message);
+        toast.error(error.message || "An error occurred while fetching data");
       }
     };
     fetchDonators();
@@ -49,16 +65,15 @@ const Donate = () => {
 
   const handleDonations = async () => {
     try {
-      // Lấy dữ liệu quyên góp
       const donateData = await axios.get(api_donate);
       let donates = donateData.data.data;
+      setDonation(donates);
       console.log(donateData.data.data);
       toast.success(
         `We will check transaction history. Please check your total donation after a few seconds`
       );
       // Thêm tất cả các khoản quyên góp
       for (let donation of donates) {
-        try{
         const response = await axios.post(`${BASE_URL}donation/add`, {
           donateID: donation.id,
           date_time: donation.date_time.replace(" ", "T") + "Z",
@@ -66,9 +81,6 @@ const Donate = () => {
           amount: donation.amount,
         });
         console.log(response.data.message);
-      }catch (error){
-        console.log(error.response.data);
-      }
       }
     } catch (error) {
       console.log(error.response.data);
@@ -79,6 +91,7 @@ const Donate = () => {
   const [page1, setPage1] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [rowsPerPage1, setRowsPerPage1] = useState(5);
+  const [searchTerm, setSearchTerm] = useState(""); // Thêm state cho ô tìm kiếm
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -97,6 +110,12 @@ const Donate = () => {
     setRowsPerPage1(+event.target.value);
     setPage(0);
   };
+
+  const filteredDonators = donators.filter(
+    (donator) =>
+      donator.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      donator.accountID.toString().includes(searchTerm)
+  );
 
   return (
     <div className="donate-container">
@@ -144,7 +163,16 @@ const Donate = () => {
             </Button>{" "}
             to check the transaction history and save your donation.
           </p>
-
+          <div className="search-container">
+            <input
+              type="text"
+              placeholder="Search by name or ID"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="search-input"
+            />
+            <i class="fa-solid fa-magnifying-glass search-button"></i>
+          </div>
           <Paper sx={{ width: "100%", overflow: "hidden" }}>
             <TableContainer sx={{ maxHeight: 440 }}>
               <Table stickyHeader aria-label="sticky table">
@@ -166,12 +194,12 @@ const Donate = () => {
                       <h4>Name</h4>
                     </TableCell>
                     <TableCell align="right">
-                      <h4>Total Donation</h4>
+                      <h4>Donation</h4>
                     </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {donators
+                  {filteredDonators // Sử dụng danh sách đã lọc
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((donator) => (
                       <TableRow
@@ -182,12 +210,19 @@ const Donate = () => {
                       >
                         <TableCell>{donator.accountID}</TableCell>
                         <TableCell>{donator.name}</TableCell>
-
                         <TableCell align="right">
                           {donator.total_donation.toLocaleString()} VNĐ
                         </TableCell>
                       </TableRow>
                     ))}
+                  <TableRow>
+                    <TableCell colSpan={2} align="right">
+                      <strong>Total:</strong>
+                    </TableCell>
+                    <TableCell align="right">
+                      {totalDonation.toLocaleString()} VNĐ
+                    </TableCell>
+                  </TableRow>
                 </TableBody>
               </Table>
             </TableContainer>
@@ -195,7 +230,7 @@ const Donate = () => {
               className="root-table"
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
-              count={donators.length}
+              count={filteredDonators.length} // Cập nhật số lượng cho phân trang
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}

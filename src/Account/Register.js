@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import api from "../services/axios";
 import Spinner from "../components/Spinner";
 import { format } from 'date-fns';
+import VerifyOTP from "./VerifyOTP";
 
 const Register = () => {
   const [fullName, setFullName] = useState("");
@@ -14,12 +15,13 @@ const Register = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("");
+  const [email, setEmail] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [showVerifyOTP, setShowVerifyOTP] = useState(false);
 
   const navigate = useNavigate();
 
@@ -27,10 +29,6 @@ const Register = () => {
     navigate("/login");
   };
 
-  const isPhoneNumberValid = (phoneNumber) => {
-    const regex = /^0\d{9,10}$/;
-    return regex.test(phoneNumber);
-  };
 
   const validateForm = () => {
     const newErrors = {};
@@ -59,7 +57,11 @@ const Register = () => {
       newErrors.confirmPassword = "Confirm password is required";
     else if (password !== confirmPassword)
       newErrors.confirmPassword = "Passwords do not match";
-    if (!role) newErrors.role = "Role is required";
+    if (!email) {
+      newErrors.email = "Email is required";
+    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(email)) {
+      newErrors.email = "Invalid email address";
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -80,31 +82,17 @@ const Register = () => {
         phone: phoneNumber,
         accountID: username,
         password,
-        roleID: role === "Staff" ? 2 : 3,
+        email: email,
       };
 
-      const checkUsername = await api.get(`accounts/search/${username}`);
-      if (checkUsername.data && checkUsername) {
-        toast.error("Username already exists!");
-        return;
+      const response = await api.post("/accounts/register", userData);
+      if (response.status === 201) {
+        toast.success("Please verify your email to activate your account!");
+        setShowVerifyOTP(true);
       }
-
-      await api.post("/accounts/register", userData);
-      if (role === "Staff") {
-        toast.success(
-          "Registration successful! Please wait for admin approval."
-        );
-      } else {
-        toast.success("Registered successfully!");
-      }
-      navigate("/login");
     } catch (error) {
       console.error("Registration error:", error);
-      if (error.response && error.response.data) {
-        toast.error(`Registration failed: ${error.response.data.message || 'Please try again.'}`);
-      } else {
-        toast.error("Registration failed. Please try again.");
-      }
+      toast.error("Registration failed. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -117,7 +105,6 @@ const Register = () => {
   return (
     <div className="register-container col-12 col-sm-6 mx-auto">
       <div className="title">Register</div>
-
       <div className="form-group">
         {errors.fullName && (
           <div className="invalid-feedback">{errors.fullName}</div>
@@ -182,7 +169,18 @@ const Register = () => {
           className={`form-control ${errors.phoneNumber ? "is-invalid" : ""}`}
         />
       </div>
-
+      <div className="form-group">
+        {errors.email && (
+          <div className="invalid-feedback">{errors.email}</div>
+        )}
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
+          className={`form-control ${errors.email ? "is-invalid" : ""}`}
+        />
+      </div>
       <div className="form-group">
         {errors.username && (
           <div className="invalid-feedback">{errors.username}</div>
@@ -195,7 +193,6 @@ const Register = () => {
           className={`form-control ${errors.username ? "is-invalid" : ""}`}
         />
       </div>
-
       <div className="form-group">
         {errors.password && (
           <div className="invalid-feedback">{errors.password}</div>
@@ -256,18 +253,6 @@ const Register = () => {
         </div>
       </div>
 
-      <div className="form-group">
-        {errors.role && <div className="invalid-feedback">{errors.role}</div>}
-        <select
-          value={role}
-          onChange={(event) => setRole(event.target.value)}
-          className={`form-control ${errors.role ? "is-invalid" : ""}`}
-        >
-          <option value="">Select Role</option>
-          <option value="Staff">Staff</option>
-          <option value="Member">Member</option>
-        </select>
-      </div>
 
       <div className="button-containerR">
         <div className="backRegister" onClick={handleGoBack}>
@@ -278,6 +263,13 @@ const Register = () => {
           Register
         </button>
       </div>
+
+      <VerifyOTP 
+        open={showVerifyOTP}
+        onClose={() => setShowVerifyOTP(false)}
+        accountID={username}
+        email={email}
+      />
     </div>
   );
 };

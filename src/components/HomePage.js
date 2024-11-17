@@ -8,7 +8,7 @@ import Spinner from "./Spinner";
 import axios from "../services/axios";
 import BackToTop from "./BackToTop"; // Import component
 import BannerDonate from "./BannerDonate";
-import api, { BASE_URL } from "../services/axios";
+import { BASE_URL } from "../services/axios";
 import Card from "react-bootstrap/Card";
 import moment from "moment";
 import "../styles/events.scss";
@@ -21,14 +21,13 @@ const HomePage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch pets
         const petsResponse = await axios.get("/pets/showListOfPets");
         setOtherPets(petsResponse.data);
 
-        // Fetch events
-        const eventsResponse = await api.get("/events/showEvents");
+        const eventsResponse = await axios.get("/events/showEvents");
         if (eventsResponse.data.status === 200) {
-          setEvents(eventsResponse.data.data);
+          const eventPublished = eventsResponse.data.data.filter(event => event.status === "Published") 
+          setEvents(eventPublished);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -76,11 +75,23 @@ const HomePage = () => {
     navigate(`/events/${eventID}`);
   };
 
+  const getEventStatus = (event) => {
+    const now = moment();
+    const endDate = moment(event.end_date);
+    if (now.isAfter(endDate)) {
+      return "Ending";
+    }
+    return event.status;
+  };
+  
   const getEventTimeInfo = (event) => {
     const now = moment();
     const startDate = moment(event.start_date);
     const endDate = moment(event.end_date);
 
+    if(getEventStatus(event) === "Ending"){
+      return null;
+    }
     if (now.isBefore(startDate)) {
       const daysUntilStart = startDate.diff(now, "days");
       if (daysUntilStart === 0) {

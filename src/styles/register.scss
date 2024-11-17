@@ -108,3 +108,48 @@
     transform: translateY(-2px);
   }
 }
+
+.verify-otp-container {
+  text-align: center;
+  padding: 20px;
+
+  h3 {
+    margin-bottom: 15px;
+  }
+
+  p {
+    color: #666;
+    margin-bottom: 20px;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .verify-button {
+    background-color: #f1cf7e;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-right: 10px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #e6be6a;
+    }
+  }
+
+  .resend-button {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #5a6268;
+    }
+  }
+}

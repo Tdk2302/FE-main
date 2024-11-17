@@ -39,11 +39,13 @@ const Donate = () => {
   useEffect(() => {
     const fetchDonators = async () => {
       try {
-        const [donatorsResponse, anonymousResponse] = await Promise.all([
-          axios.get(`${BASE_URL}accounts/showDonators`),
-          axios.get(`${BASE_URL}donation/getAnonymousDonator`),
-        ]);
-
+        const [donatorsResponse, anonymousResponse, totalDonation] =
+          await Promise.all([
+            axios.get(`${BASE_URL}accounts/showDonators`),
+            axios.get(`${BASE_URL}donation/getAnonymousDonator`),
+            axios.get(`${BASE_URL}donation/calculateTotalDonation`),
+          ]);
+        setTotalDonation(totalDonation.data.data);
         setDonators(donatorsResponse.data.data);
         setAnonymousDonators(anonymousResponse.data.data);
         anonymousResponse.data.data.sort(
@@ -226,6 +228,12 @@ const Donate = () => {
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
           </Paper>
+          <div className="donation-summary">
+            <h3>
+              <strong>Total Donations:</strong> {totalDonation.toLocaleString()}{" "}
+              VNĐ
+            </h3>
+          </div>
         </div>
 
         <div className="col-sm-5 col-md-5 col-lg-5 res-margin donate-image-anym">

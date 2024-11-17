@@ -50,7 +50,7 @@ const HistoryAdoption = () => {
 
   const handleViewReportHistory = (pet) => {
     if (pet.petID) {
-      navigate(`/reportdetail/${pet.petID}`, { state: { petID: pet.petID } });
+      navigate(`/reportdetail/${pet.petID}`, { state: { pet } });
     } else {
       console.error("Pet ID is undefined");
     }
@@ -85,23 +85,28 @@ const HistoryAdoption = () => {
                   <p>Weight: {pet.weight} kg</p>
                 </div>
                 <div className="button-report">
-                  <button
-                    className="report-button"
-                    onClick={() => handleReportVideo(pet)}
-                  >
-                    Report
-                  </button>
+                  {pet.status !== "Trusted" && (
+                    <>
+                      <button
+                        className="report-button"
+                        onClick={() => handleReportVideo(pet)}
+                      >
+                        Report
+                      </button>
+                      <button
+                        className="report-button"
+                        onClick={() => handleViewReportHistory(pet)}
+                      >
+                        View History Report
+                      </button>
+                    </>
+                  )}
+
                   <button
                     className="report-button"
                     onClick={() => handleViewDetail(pet)}
                   >
                     View Detail
-                  </button>
-                  <button
-                    className="report-button"
-                    onClick={() => handleViewReportHistory(pet)}
-                  >
-                    View History Report
                   </button>
                 </div>
               </li>

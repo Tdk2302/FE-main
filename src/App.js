@@ -27,7 +27,7 @@ import EventList from "./Events/EventList";
 import AddEvent from "./Events/AddEvent";
 import UpdateEvent from "./Events/UpdateEvent";
 import Profile from "./Account/ProfileUser";
-import HistoryAdoption from "./Account/HistoryAdoption";
+import HistoryAdoption from "./Adoption/HistoryAdoption";
 import Report from "./Report/Report";
 import ReportDetail from "./Report/ReportDetail";
 import UserManagement from "./Admin/UserManagement";

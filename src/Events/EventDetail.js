@@ -110,25 +110,20 @@ const EventDetail = () => {
     <div className="event-detail-container">
       <div className="row">
         <div className="col-sm-8 col-md-8 col-lg-8 event">
-          <h1>{event.event_name}</h1>
+          <h1>{event.event_name}</h1>{" "}
           <h4>
-            Status: <EventStatus status={event.status} />
+            <EventStatus status={event.status} />
           </h4>
           <p>
-            <strong>Start time:</strong>{" "}
-            {new Date(event.start_date).toLocaleDateString()}
-          </p>
-          <p>
-            <strong>End time:</strong>{" "}
+            <strong>Start time: </strong>
+            {new Date(event.start_date).toLocaleDateString()} to{" "}
             {new Date(event.end_date).toLocaleDateString()}
           </p>
           <p>
             <strong>Location:</strong>{" "}
             {new Date(event.location).toLocaleDateString()}
           </p>
-
           {/* Hiển thị tổng tiền quyên góp */}
-
           <img
             src={getImageUrl(event.img_url)}
             alt={event.event_name}

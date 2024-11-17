@@ -17,6 +17,7 @@ const AddEvent = () => {
     end_date: "",
     img_url: null,
     location: "",
+    total_donation: 0,
   });
   const [imagePreview, setImagePreview] = useState(null);
   const [minDate, setMinDate] = useState("");

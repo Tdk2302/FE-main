@@ -29,13 +29,6 @@ const PetDetail = () => {
     }
   };
 
-  const handleReport = (pet) => {
-    if (pet.petID) {
-      navigate(`/report/${pet.petID}`, { state: { pet } });
-    } else {
-      console.error("Pet ID is undefined");
-    }
-  };
   const handleRemind = async () => {
     try {
       const response = await api.post(`notification/remindReport`, {
@@ -220,15 +213,6 @@ const PetDetail = () => {
                 <Button onClick={() => handleAdopt(pet)}>Adopt</Button>
               </div>
             )}
-            {roleID === "3" &&
-              pet.status.toLowerCase() === "unavailable" &&
-              pet.accountID && (
-                <div>
-                  <div className="adopt-button">
-                    <Button onClick={() => handleReport(pet)}>Report</Button>
-                  </div>
-                </div>
-              )}
           </div>
 
           {roleID === "2" && !pet.accountID && pet.status === "Available" && (

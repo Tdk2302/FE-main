@@ -94,7 +94,9 @@ const AdoptionProcess = () => {
       const startTime = new Date(`1970-01-01T08:00:00`);
       const endTime = new Date(`1970-01-01T17:00:00`);
       if (selectedTime < startTime || selectedTime > endTime) {
-        toast.error("Please choose a time from 8:00 to 17:00.");
+        toast.error(
+          `You selected: ${value} is invalid. Please choose a time from 8:00 to 17:00.`
+        ); // Thông báo kèm thời gian đã chọn
         return; // Ngăn không cho cập nhật nếu thời gian không hợp lệ
       }
     }

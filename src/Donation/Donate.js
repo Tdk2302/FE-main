@@ -45,12 +45,6 @@ const Donate = () => {
           axios.get(`${BASE_URL}donation/getAnonymousDonator`),
         ]);
 
-        // Kiểm tra xem phản hồi có dữ liệu không
-        const total = donatorsResponse.data.data.reduce(
-          (acc, donation) => acc + donation.amount,
-          0
-        );
-        setTotalDonation(total);
         setDonators(donatorsResponse.data.data);
         setAnonymousDonators(anonymousResponse.data.data);
         anonymousResponse.data.data.sort(
@@ -194,7 +188,7 @@ const Donate = () => {
                       <h4>Name</h4>
                     </TableCell>
                     <TableCell align="right">
-                      <h4>Donation</h4>
+                      <h4>Amount</h4>
                     </TableCell>
                   </TableRow>
                 </TableHead>
@@ -215,14 +209,6 @@ const Donate = () => {
                         </TableCell>
                       </TableRow>
                     ))}
-                  <TableRow>
-                    <TableCell colSpan={2} align="right">
-                      <strong>Total:</strong>
-                    </TableCell>
-                    <TableCell align="right">
-                      {totalDonation.toLocaleString()} VNĐ
-                    </TableCell>
-                  </TableRow>
                 </TableBody>
               </Table>
             </TableContainer>
@@ -239,7 +225,7 @@ const Donate = () => {
           </Paper>
         </div>
 
-        <div className="col-sm-5 col-md-5 col-lg-5 res-margin donate-image-">
+        <div className="col-sm-5 col-md-5 col-lg-5 res-margin donate-image-anym">
           <img
             src={imageURL}
             alt="Sample"

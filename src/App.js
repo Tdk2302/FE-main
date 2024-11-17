@@ -34,6 +34,8 @@ import UserManagement from "./Admin/UserManagement";
 import RequestEventNotifications from "./Notifications/RequestEventNotifications";
 import EventDetail from "./Events/EventDetail";
 import DonateEvent from "./Donation/DonateEvent";
+import HistoryDonation from "./Donation/TrackingHistoryPage";
+
 import Dashboard from "./Dashboard/Dashboard";
 import VerifyUser from "./Account/VerifyUser";
 import RequesTrustNotification from "./Notifications/RequesTrustNotification";
@@ -83,6 +85,14 @@ function App() {
                 element={
                   <ProtectedRoute roleID={3}>
                     <HistoryAdoption />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/historydonation"
+                element={
+                  <ProtectedRoute roleID={3}>
+                    <HistoryDonation />
                   </ProtectedRoute>
                 }
               />

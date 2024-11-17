@@ -3,13 +3,17 @@
   margin-top: 30px;
 }
 
+.event-detail-container {
+  margin-top: 40px;
+}
+
 .donate-button {
   background-color: #e74c3c; // màu đỏ cam
   color: white;
-  padding: 12px 24px;
+  padding: 14px 90px;
   border: none;
-  border-radius: 25px;
-  font-size: 16px;
+  border-radius: 15px;
+  font-size: 18px;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -32,4 +36,32 @@
 
 .event {
   margin-bottom: 100px;
+}
+
+.donation-summary {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.donation-summary h2 {
+  font-size: 2rem;
+  color: #333;
+}
+
+.donation-summary p {
+  margin: 5px 0;
+}
+
+.progress-bar {
+  background-color: #e0e0e0;
+  border-radius: 5px;
+  height: 20px;
+  margin: 10px 0;
+  overflow: hidden;
+}
+
+.progress {
+  background-color: #3f51b5; /* Màu của thanh tiến trình */
+  height: 100%;
+  transition: width 0.5s;
 }

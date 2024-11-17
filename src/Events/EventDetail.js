@@ -25,6 +25,8 @@ const EventDetail = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [isLoading, setIsLoading] = useState(true);
+  const [totalDonation, setTotalDonation] = useState(0);
+  const goalAmount = 150000; // Mục tiêu quyên góp
 
   useEffect(() => {
     const fetchEventDetail = async () => {
@@ -34,6 +36,7 @@ const EventDetail = () => {
         });
         if (response.data.status === 200) {
           setEvent(response.data.data);
+          setTotalDonation(response.data.data.total_donation);
         } else {
           toast.error("Failed to load event details");
         }
@@ -112,20 +115,26 @@ const EventDetail = () => {
             Status: <EventStatus status={event.status} />
           </h4>
           <p>
-            <strong>Event time:</strong>{" "}
+            <strong>Start time:</strong>{" "}
             {new Date(event.start_date).toLocaleDateString()}
           </p>
+          <p>
+            <strong>End time:</strong>{" "}
+            {new Date(event.end_date).toLocaleDateString()}
+          </p>
+          <p>
+            <strong>Location:</strong>{" "}
+            {new Date(event.location).toLocaleDateString()}
+          </p>
+
+          {/* Hiển thị tổng tiền quyên góp */}
+
           <img
             src={getImageUrl(event.img_url)}
             alt={event.event_name}
             style={{ width: "40%", height: "40%" }}
           />
           <p className="description">{event.description}</p>
-          {(!isLoggedIn || (isLoggedIn && roleID === "3")) && (
-            <button className="donate-button" onClick={handleDonate}>
-              Donate now
-            </button>
-          )}
         </div>
         <div className="col-sm-4 col-md-4 col-lg-4 history-donation-table">
           <div className="donation-history" style={{ marginTop: "2rem" }}>
@@ -190,6 +199,17 @@ const EventDetail = () => {
                 />
               </Paper>
             )}
+            <div className="donation-summary">
+              <h3>
+                <strong>Total Donations:</strong>{" "}
+                {totalDonation.toLocaleString()} VNĐ
+              </h3>
+
+              <p>Number of donations: {donations.length}</p>
+              <button className="donate-button" onClick={handleDonate}>
+                Donate Now
+              </button>
+            </div>
           </div>
         </div>
       </div>

@@ -188,8 +188,7 @@ const Header = () => {
                 <NavDropdown.Item as={NavLink} to={`/profile/${accountID}`}>
                   Profile
                 </NavDropdown.Item>
-                {roleID === 3
-                 && (
+                {roleID === 3 && (
                   <NavDropdown.Item
                     as={NavLink}
                     to={`/verifyuser/${accountID}`}
@@ -200,6 +199,11 @@ const Header = () => {
                 {roleID === 3 && (
                   <NavDropdown.Item as={NavLink} to="/historyadoption">
                     History Adoption
+                  </NavDropdown.Item>
+                )}
+                {roleID === 3 && (
+                  <NavDropdown.Item as={NavLink} to="/historydonation">
+                    History Donation
                   </NavDropdown.Item>
                 )}
                 <NavDropdown.Item onClick={handleLogout}>

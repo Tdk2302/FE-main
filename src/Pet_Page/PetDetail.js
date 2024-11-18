@@ -168,7 +168,7 @@ const PetDetail = () => {
             <div className="name-status">
               <h1>{pet.name}</h1>
               <h4>
-                Status: <PetStatus status={pet.status} />
+                <PetStatus status={pet.status} />
               </h4>
             </div>
 
@@ -197,7 +197,7 @@ const PetDetail = () => {
             </p>
             {roleID === "2" && (
               <p>
-                <strong>Account ID: </strong>
+                <strong>Adopted by: </strong>
                 {pet.accountID ? pet.accountID : "Not yet"}
               </p>
             )}
@@ -208,7 +208,7 @@ const PetDetail = () => {
                 </NavLink>
               </div>
             )}
-            {roleID === "3" && pet.status.toLowerCase() !== "unavailable" && (
+            {roleID === "3" && pet.status.toLowerCase() === "available" && (
               <div className="adopt-button">
                 <Button onClick={() => handleAdopt(pet)}>Adopt</Button>
               </div>

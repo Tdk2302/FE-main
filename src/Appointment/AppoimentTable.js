@@ -7,7 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import moment from "moment";
 import UserInfoModal from "../components/UserInfoModal";
 import EditUserInfoModal from "../components/EditUserInfoModal";
-import ReasonModal from '../components/ReasonModal';
+import ReasonModal from "../components/ReasonModal";
 
 const AppointmentPage = () => {
   const [unprocessedAppointments, setUnprocessedAppointments] = useState([]);
@@ -161,12 +161,9 @@ const AppointmentPage = () => {
     setIsLoading(true);
     setProcessingAppointments((prev) => [...prev, appointmentToRefuse]);
     try {
-      const response = await api.delete(
-        `/appointment/refuse/${reason}`,
-        {
-          data: { appointID: appointmentToRefuse },
-        }
-      );
+      const response = await api.delete(`/appointment/refuse/${reason}`, {
+        data: { appointID: appointmentToRefuse },
+      });
       toast.success(response.data.message);
     } catch (error) {
       toast.error(error.response.data.message);
@@ -187,7 +184,7 @@ const AppointmentPage = () => {
     try {
       const staffId = userID;
       const response = await api.put(
-        `/appointment/acceptAdopt/${staffId}/${accountId}`, 
+        `/appointment/acceptAdopt/${staffId}/${accountId}`,
         {
           appointID: appointmentId,
         }
@@ -204,7 +201,9 @@ const AppointmentPage = () => {
       }
     } finally {
       refreshAppointments();
-      setProcessingAppointments((prev) => prev.filter(id => id !== appointmentId));
+      setProcessingAppointments((prev) =>
+        prev.filter((id) => id !== appointmentId)
+      );
       setIsLoading(false);
     }
   };
@@ -222,7 +221,9 @@ const AppointmentPage = () => {
       toast.error(error.response.data.message);
     } finally {
       refreshAppointments();
-      setProcessingAppointments((prev) => prev.filter(id => id !== appointmentId));
+      setProcessingAppointments((prev) =>
+        prev.filter((id) => id !== appointmentId)
+      );
       setIsLoading(false);
     }
   };
@@ -262,8 +263,8 @@ const AppointmentPage = () => {
   };
   // Click vào link để lấy thông tin người dùng
   const handleLinkClick = async (accountID) => {
-    await fetchUserInfo(accountID); 
-    setShowUserInfoModal(true); 
+    await fetchUserInfo(accountID);
+    setShowUserInfoModal(true);
   };
 
   const [showEditUserInfoModal, setShowEditUserInfoModal] = useState(false);
@@ -290,8 +291,10 @@ const AppointmentPage = () => {
   const handleAcceptClick = async (accountID, appointID) => {
     setIsLoading(true);
     try {
-      const appointment = notHappenAppointments.find(app => app.appointID === appointID);
-      
+      const appointment = notHappenAppointments.find(
+        (app) => app.appointID === appointID
+      );
+
       if (!checkStaffPermission(appointment)) {
         toast.error("You don't have permission to handle this appointment");
         return;
@@ -301,7 +304,7 @@ const AppointmentPage = () => {
       const userData = response.data.data;
       setSelectedUserInfo({
         ...userData,
-        appointID: appointID
+        appointID: appointID,
       });
       setShowEditUserInfoModal(true);
     } catch (error) {
@@ -313,18 +316,22 @@ const AppointmentPage = () => {
   // Request trust ở bảng reliable
   const handleTrustClick = async (appointID) => {
     setIsLoading(true);
-    setProcessingAppointments(prev => [...prev, appointID]);
-    
+    setProcessingAppointments((prev) => [...prev, appointID]);
+
     try {
-      const appointment = reliableAppointments.find(app => app.appointID === appointID);
-      
+      const appointment = reliableAppointments.find(
+        (app) => app.appointID === appointID
+      );
+
       if (!checkStaffPermission(appointment)) {
         toast.error("You don't have permission to handle this appointment");
         return;
       }
 
       const staffId = userID;
-      const response = await api.post(`notification/requestTrust/${appointID}/${staffId}`);
+      const response = await api.post(
+        `notification/requestTrust/${appointID}/${staffId}`
+      );
 
       if (response.status === 200) {
         toast.success(response.data.message);
@@ -342,13 +349,13 @@ const AppointmentPage = () => {
         toast.error(error.response?.data?.message || "Failed to request trust");
       }
     } finally {
-      setProcessingAppointments(prev => 
-        prev.filter(id => id !== appointID)
+      setProcessingAppointments((prev) =>
+        prev.filter((id) => id !== appointID)
       );
       setIsLoading(false);
     }
   };
-  
+
   const [showNotTrustModal, setShowNotTrustModal] = useState(false);
   const [appointmentToNotTrust, setAppointmentToNotTrust] = useState(null);
   // Kiểm tra có phải đúng staff xử lý không
@@ -364,9 +371,11 @@ const AppointmentPage = () => {
       toast.error("This appointment is already being processed.");
       return;
     }
-    
-    const appointment = reliableAppointments.find(app => app.appointID === appointmentId);
-    
+
+    const appointment = reliableAppointments.find(
+      (app) => app.appointID === appointmentId
+    );
+
     if (!checkStaffPermission(appointment)) {
       toast.error("You don't have permission to handle this appointment");
       return;
@@ -380,12 +389,16 @@ const AppointmentPage = () => {
     setIsLoading(true);
     setProcessingAppointments((prev) => [...prev, appointmentToNotTrust]);
     try {
-      const response = await api.put(`appointment/notTrust/${appointmentToNotTrust}`, null, {
-        params: {
-          reason: reason
+      const response = await api.put(
+        `appointment/notTrust/${appointmentToNotTrust}`,
+        null,
+        {
+          params: {
+            reason: reason,
+          },
         }
-      });
-      
+      );
+
       if (response.status === 200) {
         toast.success(response.data.message);
       }
@@ -401,9 +414,6 @@ const AppointmentPage = () => {
     }
   };
 
-
-
-
   const navigate = useNavigate();
 
   const handleReportClick = async (petID) => {
@@ -412,7 +422,6 @@ const AppointmentPage = () => {
       const response = await api.get(`/pets/getByID/${petID}`);
       const pet = response.data.data;
       if (pet) {
-        
         navigate(`/reportdetail/${petID}`, { state: { pet } });
       }
     } catch (error) {
@@ -432,7 +441,6 @@ const AppointmentPage = () => {
             className={activeTab === "unprocessed" ? "active" : ""}
             onClick={() => {
               setActiveTab("unprocessed");
-              
             }}
           >
             Unprocessed
@@ -441,7 +449,6 @@ const AppointmentPage = () => {
             className={activeTab === "notHappenYet" ? "active" : ""}
             onClick={() => {
               setActiveTab("notHappenYet");
-              
             }}
           >
             Not Happened Yet
@@ -491,22 +498,28 @@ const AppointmentPage = () => {
                           <td>
                             <Link
                               to="#"
-                              onClick={() => handleLinkClick(appointment.accountID)}
-                              style={{ color: '#f1ba3a', textDecoration: 'underline', cursor: 'pointer' }}
+                              onClick={() =>
+                                handleLinkClick(appointment.accountID)
+                              }
+                              style={{
+                                color: "#f1ba3a",
+                                textDecoration: "underline",
+                                cursor: "pointer",
+                              }}
                             >
                               {appointment.accountID}
                             </Link>
                           </td>
                           <td>
-                            <Link 
-                                to={`/petdetail/${appointment.petID}`}
-                                style={{
-                                    color: '#f1ba3a',
-                                    textDecoration: 'underline',
-                                    cursor: 'pointer'
-                                }}
+                            <Link
+                              to={`/petdetail/${appointment.petID}`}
+                              style={{
+                                color: "#f1ba3a",
+                                textDecoration: "underline",
+                                cursor: "pointer",
+                              }}
                             >
-                                {appointment.petID}
+                              {appointment.petID}
                             </Link>
                           </td>
                           <td>{renderStatus(appointment.status)}</td>
@@ -568,27 +581,29 @@ const AppointmentPage = () => {
                           <td>{formatDateTime(appointment.date_time)}</td>
                           <td>
                             <Link
-                             to="#"
-                             onClick={() => handleLinkClick(appointment.accountID)}
-                             style={{
-                                color: '#f1ba3a',
-                                textDecoration: 'underline',
-                                cursor: 'pointer'
-                             }}
+                              to="#"
+                              onClick={() =>
+                                handleLinkClick(appointment.accountID)
+                              }
+                              style={{
+                                color: "#f1ba3a",
+                                textDecoration: "underline",
+                                cursor: "pointer",
+                              }}
                             >
-                            {appointment.accountID}
+                              {appointment.accountID}
                             </Link>
                           </td>
                           <td>
-                            <Link 
-                                to={`/petdetail/${appointment.petID}`}
-                                style={{
-                                    color: '#f1ba3a',
-                                    textDecoration: 'underline',
-                                    cursor: 'pointer'
-                                }}
+                            <Link
+                              to={`/petdetail/${appointment.petID}`}
+                              style={{
+                                color: "#f1ba3a",
+                                textDecoration: "underline",
+                                cursor: "pointer",
+                              }}
                             >
-                                {appointment.petID}
+                              {appointment.petID}
                             </Link>
                           </td>
                           <td>{appointment.staffID}</td>
@@ -597,7 +612,12 @@ const AppointmentPage = () => {
                           <td>
                             <button
                               className="btn btn-success"
-                              onClick={() => handleAcceptClick(appointment.accountID, appointment.appointID)}
+                              onClick={() =>
+                                handleAcceptClick(
+                                  appointment.accountID,
+                                  appointment.appointID
+                                )
+                              }
                               disabled={processingAppointments.includes(
                                 appointment.appointID
                               )}
@@ -648,65 +668,77 @@ const AppointmentPage = () => {
                         <tr key={appointment.appointID}>
                           <td>{formatDateTime(appointment.date_time)}</td>
                           <td>
-                          <Link
-                            to="#"
-                            onClick={() => handleLinkClick(appointment.accountID)}
-                            style={{
-                              color: '#f1ba3a',
-                              textDecoration: 'underline',
-                              cursor: 'pointer'
-                            }}
+                            <Link
+                              to="#"
+                              onClick={() =>
+                                handleLinkClick(appointment.accountID)
+                              }
+                              style={{
+                                color: "#f1ba3a",
+                                textDecoration: "underline",
+                                cursor: "pointer",
+                              }}
                             >
-                            {appointment.accountID}
+                              {appointment.accountID}
                             </Link>
                           </td>
                           <td>
-                            <Link 
-                                to={`/petdetail/${appointment.petID}`}
-                                style={{
-                                    color: '#f1ba3a',
-                                    textDecoration: 'underline',
-                                    cursor: 'pointer'
-                                }}
+                            <Link
+                              to={`/petdetail/${appointment.petID}`}
+                              style={{
+                                color: "#f1ba3a",
+                                textDecoration: "underline",
+                                cursor: "pointer",
+                              }}
                             >
-                                {appointment.petID}
+                              {appointment.petID}
                             </Link>
                           </td>
                           <td>{appointment.staffID}</td>
                           <td>{renderStatus(appointment.status)}</td>
                           <td>{renderAdoptStatus(appointment.adopt_status)}</td>
-                          
-                          <td> 
-                          <button
-                            onClick={() => handleReportClick(appointment.petID)}
-                            style={{
-                              background: 'none',
-                              border: 'none',
-                              color: '#f1ba3a',
-                              textDecoration: 'underline',
-                              cursor: 'pointer'
-                            }}
-                          >
-                            Video Report
-                          </button>
+
+                          <td>
+                            <button
+                              onClick={() =>
+                                handleReportClick(appointment.petID)
+                              }
+                              style={{
+                                background: "none",
+                                border: "none",
+                                color: "#f1ba3a",
+                                textDecoration: "underline",
+                                cursor: "pointer",
+                              }}
+                            >
+                              Video Report
+                            </button>
                           </td>
                           <td>
-                            <button 
+                            <button
                               className="btn btn-success"
-                              onClick={() => handleTrustClick(appointment.appointID)}
-                              disabled={processingAppointments.includes(appointment.appointID)}
+                              onClick={() =>
+                                handleTrustClick(appointment.appointID)
+                              }
+                              disabled={processingAppointments.includes(
+                                appointment.appointID
+                              )}
                             >
                               Trust
                             </button>
-                            <button 
+                            <button
                               className="btn btn-danger"
-                              onClick={() => handleNotTrust(appointment.appointID)}
-                              disabled={processingAppointments.includes(appointment.appointID)}
+                              onClick={() =>
+                                handleNotTrust(appointment.appointID)
+                              }
+                              disabled={processingAppointments.includes(
+                                appointment.appointID
+                              )}
                             >
                               Recall Pet
                             </button>
                           </td>
-                        </tr> 
+                        </tr>
                       ))}
                     </tbody>
                   </table>
@@ -722,7 +754,7 @@ const AppointmentPage = () => {
               <>
                 {approvedAppointments.length > 0 ? (
                   <table className="appointments-table">
-                      <thead>
+                    <thead>
                       <tr>
                         <th>Date Time</th>
                         <th>Account ID</th>
@@ -738,34 +770,38 @@ const AppointmentPage = () => {
                         <tr key={appointment.appointID}>
                           <td>{formatDateTime(appointment.date_time)}</td>
                           <td>
-                          <Link
-                            to="#"
-                            onClick={() => handleLinkClick(appointment.accountID)}
-                            style={{
-                              color: '#f1ba3a',
-                              textDecoration: 'underline',
-                              cursor: 'pointer'
-                            }}
+                            <Link
+                              to="#"
+                              onClick={() =>
+                                handleLinkClick(appointment.accountID)
+                              }
+                              style={{
+                                color: "#f1ba3a",
+                                textDecoration: "underline",
+                                cursor: "pointer",
+                              }}
                             >
-                            {appointment.accountID}
+                              {appointment.accountID}
                             </Link>
                           </td>
                           <td>
-                            <Link 
-                                to={`/petdetail/${appointment.petID}`}
-                                style={{
-                                    color: '#f1ba3a',
-                                    textDecoration: 'underline',
-                                    cursor: 'pointer'
-                                }}
+                            <Link
+                              to={`/petdetail/${appointment.petID}`}
+                              style={{
+                                color: "#f1ba3a",
+                                textDecoration: "underline",
+                                cursor: "pointer",
+                              }}
                             >
-                                {appointment.petID}
+                              {appointment.petID}
                             </Link>
                           </td>
                           <td>{appointment.staffID}</td>
                           <td>{renderStatus(appointment.status)}</td>
                           <td>{renderAdoptStatus(appointment.adopt_status)}</td>
-                          <td>{renderApproveStatus(appointment.approve_status)}</td>
+                          <td>
+                            {renderApproveStatus(appointment.approve_status)}
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -781,19 +817,17 @@ const AppointmentPage = () => {
         )}
       </div>
       {isModalLoading && <Spinner />}
-      <UserInfoModal 
-        open={showUserInfoModal} 
-        onClose={() => setShowUserInfoModal(false)} 
-        userInfo={userInfo} 
+      <UserInfoModal
+        open={showUserInfoModal}
+        onClose={() => setShowUserInfoModal(false)}
+        userInfo={userInfo}
       />
-      
 
-
-      <EditUserInfoModal 
-        open={showEditUserInfoModal} 
-        onClose={() => setShowEditUserInfoModal(false)} 
-        userInfo={selectedUserInfo} 
-        onUpdate={handleUpdateUserInfo} 
+      <EditUserInfoModal
+        open={showEditUserInfoModal}
+        onClose={() => setShowEditUserInfoModal(false)}
+        userInfo={selectedUserInfo}
+        onUpdate={handleUpdateUserInfo}
         onAccept={handleFinalAccept}
       />
 

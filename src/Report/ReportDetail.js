@@ -10,6 +10,7 @@ const ReportDetail = () => {
   const [reports, setReports] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [video, setVideo] = useState([]);
+  const [selectedMonth, setSelectedMonth] = useState(null);
 
   useEffect(() => {
     const fetchReports = async () => {
@@ -56,13 +57,17 @@ const ReportDetail = () => {
     return acc;
   }, {});
 
+  const handleMonthChange = (event) => {
+    setSelectedMonth(event.target.value);
+  };
+
   if (isLoading) {
     return <Spinner />;
   }
 
   return (
-    <div style={{ display: "flex" }}>
-      <div style={{ flex: 5, padding: "20px" }}>
+    <div className="report-detail-container" style={{ display: "flex" }}>
+      <div className="pet-info" style={{ flex: 5, padding: "20px" }}>
         <h2>Pet Information</h2>
         <div className="pet-info-report">
           <div className="pet-image-report">
@@ -91,28 +96,32 @@ const ReportDetail = () => {
           </div>
         </div>
       </div>
-      <div style={{ flex: 7, padding: "60px" }}>
-        {Object.keys(groupedReports).length === 0 ? (
-          <p>No reports found.</p>
-        ) : (
-          Object.entries(groupedReports).map(([month, reports]) => (
-            <div key={month}>
-              <h3>{month}</h3>
-              <ul>
-                {reports.map((report) => (
-                  <li key={report.id}>
-                    <h4>Date of report: {formatDate(report.date_report)}</h4>
-                    <video
-                      src={videoSrc}
-                      controls
-                      style={{ width: "300px", height: "200px" }}
-                    />
-                  </li>
-                ))}
-              </ul>
+      <div className="report-info" style={{ flex: 7, padding: "60px" }}>
+        <select
+          className="month-dropdown"
+          onChange={handleMonthChange}
+          value={selectedMonth}
+        >
+          <option value="">Choose Month</option>
+          {Object.keys(groupedReports).map((month) => (
+            <option key={month} value={month}>
+              {month}
+            </option>
+          ))}
+        </select>
+        {selectedMonth &&
+          groupedReports[selectedMonth].map((report) => (
+            <div key={report.id} className="report-item">
+              <h4 className="report-date">
+                Date of report: {formatDate(report.date_report)}
+              </h4>
+              <video
+                className="report-video"
+                src={`data:video/webm;base64,${report.video}`}
+                controls
+              />
             </div>
-          ))
-        )}
+          ))}
       </div>
     </div>
   );

@@ -38,6 +38,8 @@ import HistoryDonation from "./Donation/TrackingHistoryPage";
 
 import Dashboard from "./Dashboard/Dashboard";
 import RequesTrustNotification from "./Notifications/RequesTrustNotification";
+import ReturnPetNotifications from "./Notifications/ReturnPetNotifications";
+
 function App() {
   const roleID = localStorage.getItem("roleID")
     ? Number(localStorage.getItem("roleID"))
@@ -195,6 +197,14 @@ function App() {
                 }
               />
               <Route path="/events/:eventId" element={<EventDetail />} />
+              <Route
+                path="/admin-notifications/return-pet"
+                element={
+                  <ProtectedRoute roleID={2}>
+                    <ReturnPetNotifications />
+                  </ProtectedRoute>
+                }
+              />
             </Routes>
           </Container>
         </div>

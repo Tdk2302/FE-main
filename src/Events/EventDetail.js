@@ -127,7 +127,7 @@ const EventDetail = () => {
           <img
             src={getImageUrl(event.img_url)}
             alt={event.event_name}
-            style={{ width: "40%", height: "40%" }}
+            style={{ width: "80%", height: "70%" }}
           />
           <p className="description">{event.description}</p>
         </div>

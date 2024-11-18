@@ -84,6 +84,9 @@ const Header = () => {
             <NavLink to="/appointment" className="nav-link">
               <h3>Appointment</h3>
             </NavLink>
+            <NavLink to="/admin-notifications/return-pet" className="nav-link">
+              <h3>Return Pet</h3>
+            </NavLink>
           </>
         )}
 

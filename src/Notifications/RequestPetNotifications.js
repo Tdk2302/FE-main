@@ -140,15 +140,15 @@ const AddPetNotifications = () => {
   const getNotificationStyle = (message) => {
     if (message.toLowerCase().includes("deleted")) {
       return {
-        backgroundColor: "#ffebee", // Màu đỏ nhạt
-        borderLeft: "4px solid #d32f2f", // Màu đỏ đậm
+        backgroundColor: "#ffebee", 
+        borderLeft: "4px solid #d32f2f",
         padding: "15px",
         marginBottom: "10px",
       };
     }
     return {
-      backgroundColor: "#e3f2fd", // Màu xanh dương nhạt
-      borderLeft: "4px solid #1976d2", // Màu xanh dương đậm
+      backgroundColor: "#e3f2fd", 
+      borderLeft: "4px solid #1976d2", 
       padding: "15px",
       marginBottom: "10px",
     };

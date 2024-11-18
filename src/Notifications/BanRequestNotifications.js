@@ -114,6 +114,21 @@ const BanRequestNotifications = () => {
         }
     };
 
+    const formatMessage = (message) => {
+        const parts = message.split('.');
+        
+        const mainInfo = parts[0].trim();
+        const reason = parts[1].trim();
+        const action = parts[2].trim();
+
+        return (
+            <div>
+                <p>{mainInfo}.</p>
+                <p><strong>{reason}.</strong></p>
+                <p><em>{action}.</em></p>
+            </div>
+        );
+    };
 
     if (isLoading || isUpdating) {
         return <Spinner />;
@@ -131,7 +146,9 @@ const BanRequestNotifications = () => {
                     <ul className="notification-list">
                         {notifications.map((noti) => (
                             <li key={noti.notiID} className={`notification-item ${noti.button_status ? 'new' : ''}`}>
-                                {(noti.message)}
+                                <div className="notification-message">
+                                    {formatMessage(noti.message)}
+                                </div>
                                 <p className="notification-date">
                                     {formatRelativeTime(noti.createdAt)}
                                 </p>

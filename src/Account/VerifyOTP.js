@@ -46,7 +46,7 @@ const VerifyOTP = ({ open, onClose, accountID, email }) => {
   const handleResendOTP = async () => {
     try {
       const response = await api.get(`/accounts/resendOTP/${accountID}`);
-      if (response.data.status === 0) {
+      if (response.data.status === 200) {
         toast.success(response.data.message);
       }
     } catch (error) {
@@ -70,7 +70,9 @@ const VerifyOTP = ({ open, onClose, accountID, email }) => {
       <DialogContent>
         <Box sx={{ textAlign: 'center', mb: 2 }}>
           <Typography variant="body1" color="text.secondary">
-            We've sent a verification code to
+            Check your email for the verification code
+            <br />
+            It may take a few minutes
           </Typography>
           <Typography variant="body1" fontWeight="medium">
             {email}
@@ -120,4 +122,4 @@ const VerifyOTP = ({ open, onClose, accountID, email }) => {
   );
 };
 
-export default VerifyOTP; 
+export default VerifyOTP;

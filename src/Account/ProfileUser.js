@@ -60,6 +60,11 @@ const ProfileUser = () => {
     phone: "",
     address: "",
     total_donation: 0,
+    job: "",
+    income: 0,
+    citizen_serial: "",
+    experience_caring: false,
+    confirm_address: "",
   });
   const [currentPassword, setCurrentPassword] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
@@ -72,6 +77,7 @@ const ProfileUser = () => {
   const [errors, setErrors] = useState({});
   const { accountID: urlAccountID } = useParams();
   const currentUserID = localStorage.getItem("accountID");
+  const roleID = localStorage.getItem("roleID");
   const getImageUrl = (imgUrl) => {
     if (!imgUrl) return "/path/to/default/image.jpg";
     if (imgUrl.startsWith("http")) return imgUrl;
@@ -85,8 +91,8 @@ const ProfileUser = () => {
   const fetchUserInfo = async () => {
     setIsLoading(true);
     try {
-      const response = await api.get(`accounts/search/${urlAccountID}`);
-      const userData = response.data || {
+      const response = await api.get(`accounts/getConfirm/${urlAccountID}`);
+      const userData = response.data.data || {
         accountID: "",
         name: "",
         sex: "",
@@ -94,6 +100,11 @@ const ProfileUser = () => {
         phone: "",
         address: "",
         total_donation: 0,
+        job: "",
+        income: 0,
+        citizen_serial: "",
+        experience_caring: false,
+        confirm_address: "",
       };
 
       if (userData.birthdate) {
@@ -385,6 +396,81 @@ const ProfileUser = () => {
                 variant="outlined"
               />
             </Grid>
+            {roleID === "3" && (
+              <Grid item xs={12}>
+                <Box
+                sx={{
+                  border: "1px solid #ccc",
+                  borderRadius: "8px",
+                  padding: 2,
+                  mb: 3,
+                  backgroundColor: "#f9f9f9",
+                  boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+                  marginBottom: "0px",
+                }}
+              >
+                <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold" }}>
+                  Verify Information
+                  <Typography variant="body2" sx={{ color: "#888888", fontSize: "12px" }}>
+                  You can only view this information; you cannot edit it as it will be handled by the staff during the in-person meeting.
+                  </Typography>
+                </Typography>
+                <Grid container spacing={3}>
+                  <Grid item xs={12}>
+                    <TextField
+                      label="Job"
+                      value={userInfo.job || "N/A"}
+                      fullWidth
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      label="Income"
+                      value={formatCurrency(userInfo.income || 0)}
+                      fullWidth
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      label="Citizen Serial"
+                      value={userInfo.citizen_serial || "N/A"}
+                      fullWidth
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      label="Experience Caring"
+                      value={userInfo.experience_caring ? "Yes" : "No"}
+                      fullWidth
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      label="Confirm Address"
+                      value={userInfo.confirm_address || "N/A"}
+                      fullWidth
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                  </Grid>
+                </Grid>
+              </Box>
+              </Grid>
+            )}
+
             {isEditing && (
               <Grid item xs={12}>
                 <TextField

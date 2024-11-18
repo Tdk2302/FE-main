@@ -49,7 +49,7 @@ const Register = () => {
       newErrors.phoneNumber = "Invalid phone number! Must start with 0 and be 9-10 digits.";
 
     if (!username.trim()) newErrors.username = "Username is required";
-    else if (username.length < 3) newErrors.username = "Username must be at least 3 characters";
+    else if (username.length > 13) newErrors.username = "Username just be at most 13 characters";
     else if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{3,}$/.test(username))
       newErrors.username = "Username must contain both letters and numbers";
     if (!password) newErrors.password = "Password is required";
@@ -71,8 +71,8 @@ const Register = () => {
     if (!validateForm()) {
       return;
     }
-    setIsLoading(true);
     try {
+      setShowVerifyOTP(true);
       const formattedBirthday = format(new Date(birthday), 'MM/dd/yyyy');
       const userData = {
         name: fullName,
@@ -87,14 +87,13 @@ const Register = () => {
 
       const response = await api.post("/accounts/register", userData);
       if (response.status === 201) {
+        console.log("Registration successful");
         toast.success("Please verify your email to activate your account!");
-        setShowVerifyOTP(true);
       }
     } catch (error) {
       console.error("Registration error:", error);
       toast.error("Registration failed. Please try again.");
-    } finally {
-      setIsLoading(false);
+      setShowVerifyOTP(false);
     }
   };
 

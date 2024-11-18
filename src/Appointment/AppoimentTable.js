@@ -3,7 +3,7 @@ import "../styles/appoitment.scss";
 import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
 import api from "../services/axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import moment from "moment";
 import UserInfoModal from "../components/UserInfoModal";
 import EditUserInfoModal from "../components/EditUserInfoModal";
@@ -72,6 +72,7 @@ const AppointmentPage = () => {
     setIsLoading(true);
     try {
       const response = await api.get("appointment/showReliableProcess");
+      console.log(response.data.data);
       setReliableAppointments(response.data.data);
     } catch (error) {
       console.error("Error fetching reliable appointments:", error);
@@ -232,7 +233,7 @@ const AppointmentPage = () => {
   // In trạng thái
   const renderStatus = (status) =>
     status === true ? "Processed" : "Unprocessed";
-  // In trạng thái đã nhận
+  // In trạng thi đã nhận
   const renderAdoptStatus = (adoptStatus) => {
     if (adoptStatus === undefined) return "Not set";
     return adoptStatus === true ? "Adopted" : "Not yet";
@@ -396,6 +397,28 @@ const AppointmentPage = () => {
       );
       setShowNotTrustModal(false);
       setAppointmentToNotTrust(null);
+      setIsLoading(false);
+    }
+  };
+
+
+
+
+  const navigate = useNavigate();
+
+  const handleReportClick = async (petID) => {
+    setIsLoading(true);
+    try {
+      const response = await api.get(`/pets/getByID/${petID}`);
+      const pet = response.data.data;
+      if (pet) {
+        
+        navigate(`/reportdetail/${petID}`, { state: { pet } });
+      }
+    } catch (error) {
+      console.error("Error fetching pet info:", error);
+      toast.error("Failed to fetch pet information");
+    } finally {
       setIsLoading(false);
     }
   };
@@ -653,7 +676,20 @@ const AppointmentPage = () => {
                           <td>{renderStatus(appointment.status)}</td>
                           <td>{renderAdoptStatus(appointment.adopt_status)}</td>
                           
-                          <td> <a href={appointment.video_report} target="_blank" rel="noopener noreferrer">Video Report</a> </td>
+                          <td> 
+                          <button
+                            onClick={() => handleReportClick(appointment.petID)}
+                            style={{
+                              background: 'none',
+                              border: 'none',
+                              color: '#f1ba3a',
+                              textDecoration: 'underline',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            Video Report
+                          </button>
+                          </td>
                           <td>
                             <button 
                               className="btn btn-success"

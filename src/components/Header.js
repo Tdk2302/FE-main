@@ -189,14 +189,6 @@ const Header = () => {
                   Profile
                 </NavDropdown.Item>
                 {roleID === 3 && (
-                  <NavDropdown.Item
-                    as={NavLink}
-                    to={`/verifyuser/${accountID}`}
-                  >
-                    Verify Profile
-                  </NavDropdown.Item>
-                )}
-                {roleID === 3 && (
                   <NavDropdown.Item as={NavLink} to="/historyadoption">
                     History Adoption
                   </NavDropdown.Item>

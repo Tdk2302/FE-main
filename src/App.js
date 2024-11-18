@@ -37,7 +37,6 @@ import DonateEvent from "./Donation/DonateEvent";
 import HistoryDonation from "./Donation/TrackingHistoryPage";
 
 import Dashboard from "./Dashboard/Dashboard";
-import VerifyUser from "./Account/VerifyUser";
 import RequesTrustNotification from "./Notifications/RequesTrustNotification";
 function App() {
   const roleID = localStorage.getItem("roleID")
@@ -179,7 +178,6 @@ function App() {
                 }
               />
               <Route path="/profile/:accountID" element={<Profile />} />
-              <Route path="/verifyuser/:accountID" element={<VerifyUser />} />
               <Route
                 path="/admin/user-management"
                 element={

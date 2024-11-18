@@ -7,7 +7,6 @@ import "../styles/ReportDetail.scss";
 const ReportDetail = () => {
   const location = useLocation();
   const [pet, setPet] = useState(location.state?.pet);
-
   const [reports, setReports] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [video, setVideo] = useState([]);
@@ -21,7 +20,6 @@ const ReportDetail = () => {
         setVideo(response.data.data[0]?.video);
         console.log(response.data.data);
       } catch (error) {
-        toast.error("Error fetching report history");
         console.error(error);
       } finally {
         setIsLoading(false);

@@ -4,6 +4,7 @@ import "../styles/adminpage.scss";
 import { toast } from 'react-toastify';
 import moment from 'moment';
 import Spinner from "../components/Spinner";
+import { useNavigate } from 'react-router-dom';
 
 const RequesTrustNotification = () => {
     const [notifications, setNotifications] = useState([]);
@@ -11,14 +12,13 @@ const RequesTrustNotification = () => {
     const [error, setError] = useState(null);
     const [newNotificationsCount, setNewNotificationsCount] = useState(0);
     const [isUpdating, setIsUpdating] = useState(false);
-
+    const navigate = useNavigate();
 
     const apiRequestTrustNotifications = useCallback(async () => {
         setIsLoading(true);
         setError(null);
         try {
             const response = await axios.get("/notification/showTrustRequest");
-            console.log(response.data);
             if (response.data && response.data.data) {
                 const notifications = response.data.data;
                 const pendingCount = notifications.filter(noti => noti.button_status).length;
@@ -96,11 +96,25 @@ const RequesTrustNotification = () => {
         }
       };
     
+      const handleReportClick = async (petID) => {
+        setIsLoading(true);
+        try {
+            const response = await axios.get(`/pets/getByID/${petID}`);
+            const pet = response.data.data;
+            if (pet) {
+                navigate(`/reportdetail/${petID}`, { state: { pet } });
+            }
+        } catch (error) {
+            console.error("Error fetching pet info:", error);
+            toast.error("Failed to fetch pet information");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+    
       if (isLoading || isUpdating) {
         return <Spinner />;
     }
-
-    
     return (
         <div className="admin-notifications">
       <div className="notifications-content">
@@ -112,9 +126,7 @@ const RequesTrustNotification = () => {
             </span>
           )}
         </h2>
-        {isLoading ? (
-          <p>Loading...</p>
-        ) : error ? (
+        {error ? (
           <p className="error-message">{error}</p>
         ) : notifications.length > 0 ? (
           <ul className="notification-list">
@@ -124,6 +136,18 @@ const RequesTrustNotification = () => {
                 className={`notification-item ${noti.button_status ? "new" : ""}`}
               >
                 <div className="notification-message">{noti.message}</div>
+                <button
+                    onClick={() => handleReportClick(noti.petID)}
+                    style={{
+                        background: 'none',
+                        border: 'none',
+                        color: '#534ee1',
+                        textDecoration: 'underline',
+                        cursor: 'pointer'
+                    }}
+                >
+                    Video Report
+                </button>
                 <p className="notification-date">
                   {formatRelativeTime(noti.createdAt)}
                 </p>

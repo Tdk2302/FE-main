@@ -46,6 +46,9 @@ const AddEvent = () => {
     if (!eventData.end_date) {
       newErrors.end_date = "End date is required";
     }
+    if (!eventData.location.trim()) {
+      newErrors.location = "Location is required";
+    }
     if (eventData.start_date && eventData.end_date) {
       const start = new Date(eventData.start_date);
       const end = new Date(eventData.end_date);
@@ -106,6 +109,7 @@ const AddEvent = () => {
     formData.append("description", eventData.description);
     formData.append("start_date", eventData.start_date);
     formData.append("end_date", eventData.end_date);
+    formData.append("location", eventData.location);
     formData.append("status", eventData.status);
 
     // Chỉ thêm hình ảnh nếu có
@@ -203,7 +207,11 @@ const AddEvent = () => {
                 name="location"
                 value={eventData.location}
                 onChange={handleChange}
+                isInvalid={!!errors.location}
               />
+              <Form.Control.Feedback type="invalid">
+                {errors.location}
+              </Form.Control.Feedback>
             </Form.Group>
             <Form.Group className="mb-3" controlId="formStartDate">
               <Form.Label>Start Date</Form.Label>

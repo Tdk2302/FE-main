@@ -70,6 +70,9 @@ const EditUserInfoModal = ({ open, onClose, userInfo, onUpdate, onAccept }) => {
     } else if (isNaN(formData.income) || Number(formData.income) < 0) {
       tempErrors.income = 'Income must be a positive number';
       isValid = false;
+    } else if (formData.income.length < 1000000) {
+      tempErrors.income = 'Income must be at least 1,000,000';
+      isValid = false;
     }
 
     if (!formData.citizen_serial.trim()) {

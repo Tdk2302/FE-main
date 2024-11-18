@@ -82,7 +82,9 @@ const UpdateEvent = () => {
     if (!eventData.end_date) newErrors.end_date = "End date is required";
     if (eventData.end_date < eventData.start_date)
       newErrors.end_date = "End date must be after start date";
-
+    if (!eventData.location.trim()) {
+      newErrors.location = "Location is required";
+    }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -130,7 +132,7 @@ const UpdateEvent = () => {
     formData.append("start_date", eventData.start_date);
     formData.append("end_date", eventData.end_date);
     formData.append("status", eventData.status);
-
+    formData.append("location", eventData.location);
     // Chỉ gửi hình ảnh nếu người dùng đã chọn một hình ảnh mới
     if (eventData.img_url instanceof File) {
       formData.append("image", eventData.img_url);

@@ -88,9 +88,15 @@ const HistoryAdoption = () => {
     });
 
     try {
-      const response = await api.put(`/pets/returnPets/${selectedPet.petID}`, {
-        reason: reason,
-      });
+      const response = await api.put(
+        `/pets/returnPets/${selectedPet.petID}`,
+        null,
+        {
+          params: {
+            reason: reason,
+          },
+        }
+      );
       toast.success(response.data.message);
       console.log("Refreshing pet list...");
       const updatedResponse = await api.get(`/pets/historyAdopt/${accountID}`);

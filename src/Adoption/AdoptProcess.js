@@ -6,6 +6,7 @@ import "../styles/adoptprocess.scss";
 import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import api from "../services/axios";
+import Spinner from "../components/Spinner"; // Import the Spinner component
 
 const AdoptionProcess = () => {
   const navigate = useNavigate();
@@ -24,6 +25,8 @@ const AdoptionProcess = () => {
   const [maxDate, setMaxDate] = useState("");
   const [showThankYou, setShowThankYou] = useState(false); // Trạng thái hiển thị bảng cảm ơn
   const accountID = localStorage.getItem("accountID"); // Lấy accountID
+  const [loading, setLoading] = useState(false); // Add loading state
+
   // Xử lý khi người dùng nhấn nút "Đặt lịch hẹn"
   const handleSubmit = async () => {
     if (!appointment.date || !appointment.time) {
@@ -31,22 +34,28 @@ const AdoptionProcess = () => {
       return;
     }
 
+    setLoading(true); // Set loading to true when starting the request
     try {
-      const response = await api.post(`appointment/adopt`, {
-        date_time,
-        accountID,
-        petID,
+      const response = await api.post(`/appointment/adopt`, {
+        date_time, // LocalDateTime
+        accountID, // String
+        petID, // String
+        status: false, // boolean - mặc định true khi tạo mới
+        staffID: null, // String - có thể null khi tạo mới
+        adopt_status: false, // boolean - mặc định false khi tạo mới
+        approve_status: false, // boolean - mặc định false khi tạo mới
       });
+
       if (response.status === 200) {
         setShowModal(false);
         setShowThankYou(true);
       }
     } catch (error) {
       toast.error(error.response.data.message);
-      if (error.response && error.response.status === 409) {
-        console.error("Conflict error:", error.response.data);
-      }
+
       console.error("Lỗi khi gửi dữ liệu:", error);
+    } finally {
+      setLoading(false); // Set loading to false after the request completes
     }
   };
 
@@ -112,6 +121,7 @@ const AdoptionProcess = () => {
 
   return (
     <div className="adoption-process-container">
+      {loading && <Spinner />} {/* Conditionally render the Spinner */}
       {/*Quy trình nhận nuôi */}
       <div className="adoption-process-content">
         <h1 className="adoption-title">Adoption Process</h1>
@@ -166,7 +176,6 @@ const AdoptionProcess = () => {
           Accept
         </button>
       </div>
-
       {/*Đặt lịch hẹn */}
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton className="modal-header">
@@ -207,7 +216,6 @@ const AdoptionProcess = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-
       {/* Hiển thị bảng cảm ơn*/}
       <Modal show={showThankYou} onHide={() => setShowThankYou(false)}>
         <Modal.Header closeButton>

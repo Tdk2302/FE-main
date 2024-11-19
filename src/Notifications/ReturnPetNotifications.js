@@ -24,6 +24,7 @@ const ReturnPetNotifications = () => {
         ).length;
         setNewNotificationsCount(pendingCount);
         setNotifications(notifications);
+        console.log(notifications);
       } else {
         setNotifications([]);
       }
@@ -54,10 +55,47 @@ const ReturnPetNotifications = () => {
     }
   };
 
-  const handleDone = async (notiID) => {
+  const formatMessage = (message) => {
+    const parts = message.split(".");
+    const mainInfo = parts[0].trim();
+    const reason = parts[1]?.trim();
+    const action = parts[2]?.trim();
+
+    const appointmentIDMatch = message.match(/appointment:\s*([a-zA-Z0-9]+)/);
+    const appointmentID = appointmentIDMatch ? appointmentIDMatch[1] : null;
+
+    return (
+      <div>
+        <p>{mainInfo}.</p>
+        {reason && (
+          <p>
+            <strong>{reason}.</strong>
+          </p>
+        )}
+        {action && (
+          <p>
+            <em>{action}.</em>
+          </p>
+        )}
+        {appointmentID && (
+          <span className="appointment-id">{appointmentID}</span>
+        )}
+      </div>
+    );
+  };
+
+  const handleDone = async (appointmentID) => {
     setIsUpdating(true);
     try {
-      const response = await api.put(`/appointment/notTrust/${notiID}`);
+      const response = await api.put(
+        `/appointment/notTrust/${appointmentID}`,
+        null,
+        {
+          params: {
+            reason: "",
+          },
+        }
+      );
       if (response.status === 200) {
         toast.success("Return pet request marked as done");
         apiReturnPetNotifications(); // Refresh the notifications
@@ -90,26 +128,32 @@ const ReturnPetNotifications = () => {
           <p className="error-message">{error}</p>
         ) : notifications.length > 0 ? (
           <ul className="notification-list">
-            {notifications.map((noti) => (
-              <li
-                key={noti.notiID}
-                className={`notification-item ${
-                  noti.button_status ? "new" : ""
-                }`}
-              >
-                <div className="notification-message">{noti.message}</div>
-                <p className="notification-date">
-                  {formatRelativeTime(noti.createdAt)}
-                </p>
-                {noti.button_status && (
-                  <div className="notification-actions">
-                    <button onClick={() => handleDone(noti.notiID)}>
-                      Done
-                    </button>
+            {notifications.map((noti) => {
+              const appointmentID = formatMessage(noti.message).props
+                .children[3]?.props.children;
+              return (
+                <li
+                  key={noti.notiID}
+                  className={`notification-item ${
+                    noti.button_status ? "new" : ""
+                  }`}
+                >
+                  <div className="notification-message">
+                    {formatMessage(noti.message)}
                   </div>
-                )}
-              </li>
-            ))}
+                  <p className="notification-date">
+                    {formatRelativeTime(noti.createdAt)}
+                  </p>
+                  {noti.button_status && (
+                    <div className="notification-done">
+                      <button onClick={() => handleDone(appointmentID)}>
+                        Done
+                      </button>
+                    </div>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         ) : (
           <p>No return pet notifications found</p>

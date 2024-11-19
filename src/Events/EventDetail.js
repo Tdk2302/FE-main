@@ -120,8 +120,7 @@ const EventDetail = () => {
             {new Date(event.end_date).toLocaleDateString()}
           </p>
           <p>
-            <strong>Location:</strong>{" "}
-            {new Date(event.location).toLocaleDateString()}
+            <strong>Location:</strong> {event.location}
           </p>
           {/* Hiển thị tổng tiền quyên góp */}
           <img
@@ -201,9 +200,11 @@ const EventDetail = () => {
               </h3>
 
               <p>Number of donations: {donations.length}</p>
-              <button className="donate-button" onClick={handleDonate}>
-                Donate Now
-              </button>
+              {roleID === "3" && (
+                <button className="donate-button" onClick={handleDonate}>
+                  Donate Now
+                </button>
+              )}
             </div>
           </div>
         </div>

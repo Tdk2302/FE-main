@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useLocation } from "react-router-dom";
+import { Button } from "react-bootstrap";
 import api from "../services/axios";
 import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
@@ -11,6 +12,7 @@ const ReportDetail = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [video, setVideo] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState(null);
+  const roleID = localStorage.getItem("roleID");
 
   useEffect(() => {
     const fetchReports = async () => {
@@ -61,6 +63,18 @@ const ReportDetail = () => {
     setSelectedMonth(event.target.value);
   };
 
+  const handleRemind = async () => {
+    try {
+      const response = await api.post(`notification/remindReport`, {
+        petID: pet.petID,
+      });
+      toast.success(response.data.message);
+    } catch (error) {
+      toast.error(error.response.data.message);
+      console.log(error);
+    }
+  };
+
   if (isLoading) {
     return <Spinner />;
   }
@@ -95,6 +109,13 @@ const ReportDetail = () => {
             </p>
           </div>
         </div>
+        {roleID === "2" && (
+          <div className="remind-button">
+            <Button className="remind-button1" onClick={handleRemind}>
+              Remind
+            </Button>
+          </div>
+        )}
       </div>
       <div className="report-info" style={{ flex: 7, padding: "60px" }}>
         <select

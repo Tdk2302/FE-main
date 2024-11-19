@@ -217,12 +217,27 @@
   margin: 5px;
   border: none;
   border-radius: 4px;
-  background-color: #ff6b6b;
+  background-color: #f1cf7e;
   color: white;
   cursor: pointer;
   transition: background-color 0.3s;
 
   &:hover {
-    background-color: #ff5252;
+    background-color: #eec157;
+  }
+}
+
+.notification-done {
+  margin-left: 10px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  background-color: #52c41a;
+  color: white;
+
+  &:hover {
+    background-color: #389e0d;
   }
 }

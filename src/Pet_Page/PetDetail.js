@@ -19,38 +19,13 @@ const PetDetail = () => {
   const [pet, setPet] = useState(location.state?.pet);
   const roleID = localStorage.getItem("roleID");
   const isLoggedIn = localStorage.getItem("isLoggedIn");
-  const { petID } = useParams(); // Lấy petID từ URL
+  const { petID } = useParams();
 
   const handleAdopt = (pet) => {
     if (pet.petID) {
       navigate(`/adoptprocess/${pet.petID}`, { state: { pet } });
     } else {
       console.error("Pet ID is undefined");
-    }
-  };
-
-  const handleRemind = async () => {
-    try {
-      const response = await api.post(`notification/remindReport`, {
-        petID: pet.petID,
-      });
-      toast.success(response.data.message);
-    } catch (error) {
-      toast.error(error.response.data.message);
-      console.log(error);
-    }
-  };
-  const handleBanRequest = async () => {
-    try {
-      const response = await api.post(
-        `notification/banRequest/${localStorage.getItem("accountID")}`,
-        {
-          petID: pet.petID,
-        }
-      );
-      toast.success(response.data.message);
-    } catch (error) {
-      toast.error(error.response.data.message);
     }
   };
 
@@ -222,17 +197,6 @@ const PetDetail = () => {
               </Button>
               <Button className="edit-button1" onClick={handleUpdatePet}>
                 Edit
-              </Button>
-            </div>
-          )}
-
-          {roleID === "2" && pet.status === "Unavailable" && pet.accountID && (
-            <div className="remind-button">
-              <Button className="remind-button1" onClick={handleRemind}>
-                Remind
-              </Button>
-              <Button className="request-ban-button" onClick={handleBanRequest}>
-                Request Ban
               </Button>
             </div>
           )}

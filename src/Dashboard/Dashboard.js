@@ -45,6 +45,7 @@ const Dashboard = () => {
     try {
       const response = await api.get("/dashboard/getPetTotal");
       setPetStats(response.data.data);
+      console.log(response.data.data);
     } catch (error) {
       console.error("Error fetching pet stats:", error);
     } finally {
@@ -325,8 +326,18 @@ const Dashboard = () => {
                           },
                           {
                             id: 2,
-                            value: petStats.adopted || 0,
+                            value: petStats.Adopted || 0,
                             label: "Adopted",
+                          },
+                          {
+                            id: 3,
+                            value: petStats.trusted || 0,
+                            label: "Trusted",
+                          },
+                          {
+                            id: 4,
+                            value: petStats.processing || 0,
+                            label: "Processing",
                           },
                         ],
                         highlightScope: {
@@ -354,11 +365,19 @@ const Dashboard = () => {
                     </tr>
                     <tr>
                       <td>Unavailable</td>
-                      <td>{petStats.unavailable}</td>
+                      <td>{petStats.unavailaable}</td>
                     </tr>
                     <tr>
                       <td>Adopted</td>
                       <td>{petStats.adopted}</td>
+                    </tr>
+                    <tr>
+                      <td>Trusted</td>
+                      <td>{petStats.trusted}</td>
+                    </tr>
+                    <tr>
+                      <td>Processing</td>
+                      <td>{petStats.processing}</td>
                     </tr>
                     <tr>
                       <td>Total</td>

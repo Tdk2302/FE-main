@@ -40,7 +40,7 @@ const UserManagement = () => {
       setUsers(response.data.data);
     } catch (error) {
       console.error("Error fetching users:", error);
-      toast.error("Failed to fetch users. Please try again.");
+      toast.error(error.response.data.message);
     } finally {
       setIsLoading(false);
     }
@@ -61,7 +61,7 @@ const UserManagement = () => {
       window.location.reload();
     } catch (error) {
       console.error(`Error ${action} user:`, error);
-      toast.error(`Failed to ${action} user. Please try again.`);
+      toast.error(error.response.data.message);
     } finally {
       setActionLoading((prev) => ({ ...prev, [accountID]: null }));
       setDialogOpen(false);

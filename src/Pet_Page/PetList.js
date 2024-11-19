@@ -32,10 +32,13 @@ const PetsList = () => {
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const [appointmentToCancel, setAppointmentToCancel] = useState(null);
   const [isSearch, setIsSearch] = useState(false);
+  const [reliableProcess, setReliableProcess] = useState([]);
+  const [reliablePet, setReliablePet] = useState(null);
 
   useEffect(() => {
     apiListPets();
     apiShowAppointmentforMember(accountID);
+    apiShowReliableProcessForMember(accountID);
   }, []);
 
   const apiListPets = async () => {
@@ -99,7 +102,24 @@ const PetsList = () => {
       setIsLoading(false);
     }
   };
-
+  const apiShowReliableProcessForMember = async (accountID) => {
+    setIsLoading(true);
+    try {
+      const response = await api.get(
+        `/appointment/checkReliableProcessForMember/${accountID}`
+      );
+      if (response.data.status === 200) {
+        setReliablePet(response.data.data);
+      } else {
+        setReliablePet(null);
+      }
+    } catch (error) {
+      console.error("Error Api Show Reliable Process For Member:", error);
+      setReliablePet(null);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   const handleSearch = async (e) => {
     e.preventDefault();
     setIsSearch(true);
@@ -252,7 +272,24 @@ const PetsList = () => {
           onCancelAppointment={handleOpenCancelDialog}
         />
       )}
-
+      {reliablePet && (
+        <div className="reliable-process-section">
+          <h2>Your Current Reliable Process</h2>
+          <div className="reliable-pet-card">
+            <img src={getImageUrl(reliablePet.img_url)} alt={reliablePet.name} />
+            <div className="reliable-pet-info">
+              <h3>{reliablePet.name}</h3>
+              <p>Age: {reliablePet.age} month</p>
+              <p>Sex: {reliablePet.sex}</p>
+              <p>Breed: {reliablePet.breed}</p>
+              <p>Size: {reliablePet.size}</p>
+              <button onClick={() => handlePetClick(reliablePet)}>
+                View Details
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <ConfirmDialog
         open={openConfirmDialog}
         onClose={handleCloseConfirmDialog}

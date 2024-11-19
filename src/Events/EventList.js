@@ -49,10 +49,7 @@ const EventList = () => {
         response = await api.get("/events/showEventAdmin");
       }
       if (response.data.status === 200) {
-        const sortedEvents = response.data.data.sort((a, b) => {
-          return new Date(b.start_date) - new Date(a.start_date);
-        });
-        setEvents(sortedEvents);
+        setEvents(response.data.data);
       } else {
         toast.error(response.data.message);
       }
@@ -234,6 +231,13 @@ const EventList = () => {
     return false;
   };
 
+  const isWaitingEvent = (event) => {
+    if (event.status === "Waiting") {
+      return true;
+    }
+    return false;
+  };
+
   if (isLoading) {
     return <Spinner />;
   }
@@ -270,7 +274,8 @@ const EventList = () => {
                   <Menu>
                     {roleID === "2" &&
                       !isEventEnded(event) &&
-                      !isEventPushlished(event) && (
+                      !isEventPushlished(event) &&
+                      !isWaitingEvent(event) && (
                         <MenuItem
                           onClick={(e) => {
                             e.stopPropagation();

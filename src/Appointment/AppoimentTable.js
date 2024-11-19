@@ -53,34 +53,46 @@ const AppointmentPage = () => {
     }
   }, []);
 
+  // sort theo staffID : nếu là của staff hiện tại thì đưa lên đầu, nếu không phải thì giữ nguyên
+  const sortAppointmentsByStaffId = (appointments, currentStaffId) => {
+    if (!appointments || !currentStaffId) return appointments;
+
+    return [...appointments].sort((a, b) => {
+      if (a.staffID === currentStaffId && b.staffID !== currentStaffId) return -1;
+      if (a.staffID !== currentStaffId && b.staffID === currentStaffId) return 1;
+      return 0;
+    });
+  };
+
   // Lấy danh sách cuộc hẹn đang chờ gặp mặt
   const apiNotHappenAppointments = useCallback(async () => {
     setIsLoading(true);
     try {
       const response = await api.get("appointment/showNotHappenedYet");
-      setNotHappenAppointments(response.data.data);
+      const sortedAppointments = sortAppointmentsByStaffId(response.data.data, userID);
+      setNotHappenAppointments(sortedAppointments);
     } catch (error) {
       console.error("Error fetching not happen appointments:", error);
       setNotHappenAppointments([]);
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [userID]);
 
   // Lấy danh sách cuộc hẹn đang trong quá trình xây dựng niềm tin
   const apiReliableAppointments = useCallback(async () => {
     setIsLoading(true);
     try {
       const response = await api.get("appointment/showReliableProcess");
-      console.log(response.data.data);
-      setReliableAppointments(response.data.data);
+      const sortedAppointments = sortAppointmentsByStaffId(response.data.data, userID);
+      setReliableAppointments(sortedAppointments);
     } catch (error) {
       console.error("Error fetching reliable appointments:", error);
       setReliableAppointments([]);
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [userID]);
 
   const apiApprovedAppointments = useCallback(async () => {
     setIsLoading(true);
@@ -577,7 +589,9 @@ const AppointmentPage = () => {
                     </thead>
                     <tbody>
                       {notHappenAppointments.map((appointment) => (
-                        <tr key={appointment.appointID}>
+                        <tr 
+                          key={appointment.appointID}
+                        >
                           <td>{formatDateTime(appointment.date_time)}</td>
                           <td>
                             <Link
@@ -665,7 +679,9 @@ const AppointmentPage = () => {
                     </thead>
                     <tbody>
                       {reliableAppointments.map((appointment) => (
-                        <tr key={appointment.appointID}>
+                        <tr
+                          key={appointment.appointID}
+                        >
                           <td>{formatDateTime(appointment.date_time)}</td>
                           <td>
                             <Link

@@ -44,7 +44,7 @@ const ForgotPassword = ({ open, onClose }) => {
   };
 
   const handleChangePassword = async () => {
-    if (newPassword == null && confirmPassword == null) {
+    if (!newPassword || !confirmPassword) {
       toast.error("Please enter password");
       return;
     }
@@ -54,8 +54,11 @@ const ForgotPassword = ({ open, onClose }) => {
     }
     try {
       console.log(username, newPassword);
-      const response = await api.put(`/accounts/changePass`, {
-        params: { accountID: username, password: newPassword },
+      const response = await api.put(`/accounts/changePass`, null, {
+        params: {
+          accountID: username,
+          password: newPassword
+        }
       });
       toast.success(response.data.message);
       onClose(); // Close the dialog

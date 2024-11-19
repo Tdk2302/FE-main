@@ -77,9 +77,6 @@ const ReturnPetNotifications = () => {
             <em>{action}.</em>
           </p>
         )}
-        {appointmentID && (
-          <span className="appointment-id">{appointmentID}</span>
-        )}
       </div>
     );
   };
@@ -145,8 +142,11 @@ const ReturnPetNotifications = () => {
                     {formatRelativeTime(noti.createdAt)}
                   </p>
                   {noti.button_status && (
-                    <div className="notification-done">
-                      <button onClick={() => handleDone(appointmentID)}>
+                    <div>
+                      <button
+                        className="notification-done1"
+                        onClick={() => handleDone(appointmentID)}
+                      >
                         Done
                       </button>
                     </div>

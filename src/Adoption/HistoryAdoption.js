@@ -114,15 +114,20 @@ const HistoryAdoption = () => {
     setSelectedPet(null);
   };
 
-  const handleCancelRequest = async (pet) => {
+  const handleCancelRequest = async (petID) => {
+    console.log("Canceling return request for petID:", petID);
+    const url = `pets/notReturnPets/${petID}`;
+    console.log("Sending request to URL:", url);
+
     try {
-      // Assuming you have an API endpoint for canceling the return request
-      await api.put(`/cancelReturnRequest/${pet.petID}`);
+      await api.put(url);
       // Refresh the pet list after successful cancellation
       const response = await api.get(`/pets/historyAdopt/${accountID}`);
+      toast.success(response.data.message);
       setAdoptedPets(response.data.data);
     } catch (error) {
       console.error("Error canceling return request:", error);
+      toast.error(error.response.data.message);
     }
   };
 
@@ -155,7 +160,7 @@ const HistoryAdoption = () => {
                   className="pet-info-history"
                   onClick={() => handleViewDetail(pet)}
                 >
-                  <h2>{pet.name}</h2>
+                  <h1>{pet.name}</h1>
                   <p>
                     <PetStatus status={pet.status} />
                   </p>
@@ -180,8 +185,8 @@ const HistoryAdoption = () => {
                       </button>
                       {pet.status === "Processing" ? (
                         <button
-                          className="return-button"
-                          onClick={() => handleCancelRequest(pet)}
+                          className="cancel-return-button"
+                          onClick={() => handleCancelRequest(pet.petID)}
                         >
                           Cancel Return Request
                         </button>

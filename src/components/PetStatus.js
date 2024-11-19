@@ -10,8 +10,11 @@ const PetStatus = ({ status }) => {
     case "waiting":
       statusStyle = { color: "#f1ba3a" }; // Màu vàng
       break;
-    case "Trusted":
-      statusStyle = { color: "73a7cf" }; // Màu vàng
+    case "trusted":
+      statusStyle = { color: "#358acb" }; // Màu vàng
+      break;
+    case "processing":
+      statusStyle = { color: "#f1ba3a" }; // Màu vàng
       break;
     case "unavailable":
       statusStyle = { color: "red" }; // Màu đỏ

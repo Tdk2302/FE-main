@@ -57,6 +57,9 @@ const EventDetail = () => {
         const response = await api.get(`/donation/getDonateByEvent/${eventId}`);
         if (response.data.status === 200) {
           setDonations(response.data.data);
+          response.data.data.sort(
+            (a, b) => new Date(b.date_time) - new Date(a.date_time)
+          );
         } else {
           setDonations([]);
         }
@@ -200,7 +203,7 @@ const EventDetail = () => {
               </h3>
 
               <p>Number of donations: {donations.length}</p>
-              {roleID === "3" && (
+              {roleID === "3" && event.status === "Published" && (
                 <button className="donate-button" onClick={handleDonate}>
                   Donate Now
                 </button>

@@ -6,12 +6,14 @@ import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
 import api from "../services/axios";
 import "../styles/login.scss";
+import ForgotPassword from "./ForgotPassword"; // Import the new component
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [openForgotPassword, setOpenForgotPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (event) => {
@@ -88,7 +90,12 @@ const Login = () => {
             onClick={() => setIsShowPassword(!isShowPassword)}
           ></i>
         </div>
-
+        <div
+          className="forgot-password"
+          onClick={() => setOpenForgotPassword(true)}
+        >
+          Forgot Password?
+        </div>
         <button
           className={`button ${username && password ? "active" : ""}`}
           disabled={!username || !password}
@@ -109,6 +116,10 @@ const Login = () => {
           </div>
         </div>
       </form>
+      <ForgotPassword
+        open={openForgotPassword}
+        onClose={() => setOpenForgotPassword(false)}
+      />
     </div>
   );
 };

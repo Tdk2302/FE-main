@@ -326,7 +326,7 @@ const Dashboard = () => {
                           },
                           {
                             id: 2,
-                            value: petStats.Adopted || 0,
+                            value: petStats.adopted || 0,
                             label: "Adopted",
                           },
                           {
@@ -365,7 +365,7 @@ const Dashboard = () => {
                     </tr>
                     <tr>
                       <td>Unavailable</td>
-                      <td>{petStats.unavailaable}</td>
+                      <td>{petStats.unavailable}</td>
                     </tr>
                     <tr>
                       <td>Adopted</td>

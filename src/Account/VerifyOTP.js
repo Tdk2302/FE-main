@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import api from '../services/axios';
-import Spinner from '../components/Spinner';
-import { 
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import api from "../services/axios";
+import Spinner from "../components/Spinner";
+import {
   Dialog,
   DialogTitle,
   DialogContent,
@@ -11,33 +11,38 @@ import {
   TextField,
   Button,
   Typography,
-  Box
-} from '@mui/material';
+  Box,
+} from "@mui/material";
 
-const VerifyOTP = ({ open, onClose, accountID, email }) => {
-  const [otp, setOtp] = useState('');
+const VerifyOTP = ({ open, onClose, accountID, email, onSuccess }) => {
+  const [otp, setOtp] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleVerifyOTP = async () => {
     if (!otp) {
-      toast.error('Please enter OTP');
+      toast.error("Please enter OTP");
       return;
     }
-    
+
     setIsLoading(true);
     try {
-      const response = await api.post(`/accounts/${accountID}/verifyOTP`, null, {
-        params: { otp }
-      });
-      
+      const response = await api.post(
+        `/accounts/${accountID}/verifyOTP`,
+        null,
+        {
+          params: { otp },
+        }
+      );
+
       if (response.data.status === 200) {
         toast.success(response.data.message);
+        onSuccess();
         onClose();
-        navigate('/login');
+        navigate("/login");
       }
     } catch (error) {
-      toast.error('Invalid OTP or your OTP has expired');
+      toast.error("Invalid OTP or your OTP has expired");
     } finally {
       setIsLoading(false);
     }
@@ -50,25 +55,18 @@ const VerifyOTP = ({ open, onClose, accountID, email }) => {
         toast.success(response.data.message);
       }
     } catch (error) {
-      toast.error('Failed to resend OTP');
+      toast.error("Failed to resend OTP");
     }
   };
 
   if (isLoading) return <Spinner />;
 
   return (
-    <Dialog 
-      open={open} 
-      onClose={onClose}
-      maxWidth="xs"
-      fullWidth
-    >
-      <DialogTitle sx={{ textAlign: 'center' }}>
-        Verify Your Email
-      </DialogTitle>
-      
+    <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
+      <DialogTitle sx={{ textAlign: "center" }}>Verify Your Email</DialogTitle>
+
       <DialogContent>
-        <Box sx={{ textAlign: 'center', mb: 2 }}>
+        <Box sx={{ textAlign: "center", mb: 2 }}>
           <Typography variant="body1" color="text.secondary">
             Check your email for the verification code
             <br />
@@ -89,16 +87,16 @@ const VerifyOTP = ({ open, onClose, accountID, email }) => {
         />
       </DialogContent>
 
-      <DialogActions sx={{ p: 3, justifyContent: 'center' }}>
+      <DialogActions sx={{ p: 3, justifyContent: "center" }}>
         <Button
           variant="contained"
           onClick={handleVerifyOTP}
           sx={{
-            bgcolor: '#f1cf7e',
-            '&:hover': {
-              bgcolor: '#e6be6a',
+            bgcolor: "#f1cf7e",
+            "&:hover": {
+              bgcolor: "#e6be6a",
             },
-            mr: 1
+            mr: 1,
           }}
         >
           Verify OTP
@@ -107,12 +105,12 @@ const VerifyOTP = ({ open, onClose, accountID, email }) => {
           variant="outlined"
           onClick={handleResendOTP}
           sx={{
-            color: '#6c757d',
-            borderColor: '#6c757d',
-            '&:hover': {
-              bgcolor: 'rgba(108, 117, 125, 0.04)',
-              borderColor: '#6c757d'
-            }
+            color: "#6c757d",
+            borderColor: "#6c757d",
+            "&:hover": {
+              bgcolor: "rgba(108, 117, 125, 0.04)",
+              borderColor: "#6c757d",
+            },
           }}
         >
           Resend OTP

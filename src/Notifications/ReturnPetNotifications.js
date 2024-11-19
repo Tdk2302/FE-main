@@ -81,15 +81,15 @@ const ReturnPetNotifications = () => {
     );
   };
 
-  const handleDone = async (appointmentID) => {
+  const handleDone = async (appointmentID, reason) => {
     setIsUpdating(true);
     try {
       const response = await api.put(
         `/appointment/notTrust/${appointmentID}`,
-        null,
+        appointmentID,
         {
           params: {
-            reason: "",
+            reason: reason,
           },
         }
       );
@@ -122,12 +122,13 @@ const ReturnPetNotifications = () => {
           )}
         </h2>
         {error ? (
-          <p className="error-message">{error}</p>
+          <p className="error-message">No return pet notifications found</p>
         ) : notifications.length > 0 ? (
           <ul className="notification-list">
             {notifications.map((noti) => {
               const appointmentID = formatMessage(noti.message).props
                 .children[3]?.props.children;
+              const reason = noti.message.split(".")[1]?.trim();
               return (
                 <li
                   key={noti.notiID}
@@ -145,7 +146,7 @@ const ReturnPetNotifications = () => {
                     <div>
                       <button
                         className="notification-done1"
-                        onClick={() => handleDone(appointmentID)}
+                        onClick={() => handleDone(appointmentID, reason)}
                       >
                         Done
                       </button>

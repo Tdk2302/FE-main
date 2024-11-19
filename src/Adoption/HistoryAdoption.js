@@ -115,15 +115,13 @@ const HistoryAdoption = () => {
   };
 
   const handleCancelRequest = async (petID) => {
-    console.log("Canceling return request for petID:", petID);
-    const url = `pets/notReturnPets/${petID}`;
-    console.log("Sending request to URL:", url);
-
     try {
-      await api.put(url);
+      // Assuming you have an API endpoint for canceling the return request
+      const returnpet = await api.put(`/pets/notReturnPets/${petID}`);
+
       // Refresh the pet list after successful cancellation
       const response = await api.get(`/pets/historyAdopt/${accountID}`);
-      toast.success(response.data.message);
+      toast.success(returnpet.data.message);
       setAdoptedPets(response.data.data);
     } catch (error) {
       console.error("Error canceling return request:", error);
@@ -181,24 +179,24 @@ const HistoryAdoption = () => {
                         className="report-button"
                         onClick={(event) => handleViewReportHistory(pet, event)}
                       >
-                        View History Report
+                        History Report
                       </button>
-                      {pet.status === "Processing" ? (
-                        <button
-                          className="cancel-return-button"
-                          onClick={() => handleCancelRequest(pet.petID)}
-                        >
-                          Cancel Return Request
-                        </button>
-                      ) : (
-                        <button
-                          className="return-button"
-                          onClick={() => handleReturnPet(pet)}
-                        >
-                          Return Pet
-                        </button>
-                      )}
                     </>
+                  )}
+                  {pet.status === "Processing" ? (
+                    <button
+                      className="cancel-return-button"
+                      onClick={() => handleCancelRequest(pet.petID)}
+                    >
+                      Cancel Request
+                    </button>
+                  ) : (
+                    <button
+                      className="return-button"
+                      onClick={() => handleReturnPet(pet)}
+                    >
+                      Return Pet
+                    </button>
                   )}
                 </div>
               </li>

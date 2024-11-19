@@ -11,6 +11,8 @@ import BannerDonate from "./BannerDonate";
 import { BASE_URL } from "../services/axios";
 import Card from "react-bootstrap/Card";
 import moment from "moment";
+import PetStatus from "../components/PetStatus";
+
 import "../styles/events.scss";
 const HomePage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -26,7 +28,9 @@ const HomePage = () => {
 
         const eventsResponse = await axios.get("/events/showEvents");
         if (eventsResponse.data.status === 200) {
-          const eventPublished = eventsResponse.data.data.filter(event => event.status === "Published") 
+          const eventPublished = eventsResponse.data.data.filter(
+            (event) => event.status === "Published"
+          );
           setEvents(eventPublished);
         }
       } catch (error) {
@@ -83,13 +87,13 @@ const HomePage = () => {
     }
     return event.status;
   };
-  
+
   const getEventTimeInfo = (event) => {
     const now = moment();
     const startDate = moment(event.start_date);
     const endDate = moment(event.end_date);
 
-    if(getEventStatus(event) === "Ending"){
+    if (getEventStatus(event) === "Ending") {
       return null;
     }
     if (now.isBefore(startDate)) {
@@ -160,6 +164,9 @@ const HomePage = () => {
               <NavLink to={`/petdetail/${otherPet.petID}`} className="nav-link">
                 <img src={getImageUrl(otherPet.img_url)} alt={otherPet.name} />
                 <h3>{otherPet.name}</h3>
+                <p>
+                  <PetStatus status={otherPet.status} />
+                </p>
                 <p>Sex: {otherPet.sex}</p>
                 <p>Age: {otherPet.age}</p>
                 <p>Vaccinated: {otherPet.vaccinated ? "Yes" : "No"}</p>

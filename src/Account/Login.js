@@ -24,8 +24,14 @@ const Login = () => {
         accountID: username,
         password,
       });
+
+      if (response.data.jwt === "Account is not available") {
+        toast.error("Your account has been banned and cannot log in");
+        setIsLoading(false);
+        return;
+      }
+
       if (response && response.data && response.data.jwt) {
-        localStorage.setItem("token", response.data.jwt);
         const decodedToken = jwtDecode(response.data.jwt);
         const role = decodedToken.roles[0];
         localStorage.setItem("roleID", Number(role));

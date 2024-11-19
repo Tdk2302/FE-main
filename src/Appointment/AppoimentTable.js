@@ -591,7 +591,6 @@ const AppointmentPage = () => {
                       {notHappenAppointments.map((appointment) => (
                         <tr 
                           key={appointment.appointID}
-                          className={appointment.staffID === userID ? 'current-staff' : ''}
                         >
                           <td>{formatDateTime(appointment.date_time)}</td>
                           <td>
@@ -680,7 +679,9 @@ const AppointmentPage = () => {
                     </thead>
                     <tbody>
                       {reliableAppointments.map((appointment) => (
-                        <tr key={appointment.appointID}>
+                        <tr
+                          key={appointment.appointID}
+                        >
                           <td>{formatDateTime(appointment.date_time)}</td>
                           <td>
                             <Link

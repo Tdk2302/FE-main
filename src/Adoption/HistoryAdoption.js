@@ -181,22 +181,22 @@ const HistoryAdoption = () => {
                       >
                         History Report
                       </button>
+                      {pet.status === "Processing" ? (
+                        <button
+                          className="cancel-return-button"
+                          onClick={() => handleCancelRequest(pet.petID)}
+                        >
+                          Cancel Request
+                        </button>
+                      ) : (
+                        <button
+                          className="return-button"
+                          onClick={() => handleReturnPet(pet)}
+                        >
+                          Return Pet
+                        </button>
+                      )}
                     </>
-                  )}
-                  {pet.status === "Processing" ? (
-                    <button
-                      className="cancel-return-button"
-                      onClick={() => handleCancelRequest(pet.petID)}
-                    >
-                      Cancel Request
-                    </button>
-                  ) : (
-                    <button
-                      className="return-button"
-                      onClick={() => handleReturnPet(pet)}
-                    >
-                      Return Pet
-                    </button>
                   )}
                 </div>
               </li>

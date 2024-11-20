@@ -25,16 +25,11 @@ const Login = () => {
         password,
       });
 
-      if (response.data.jwt === "Account is not available") {
-        toast.error("Your account has been banned and cannot log in");
-        setIsLoading(false);
-        return;
-      }
-
-      if (response && response.data && response.data.jwt) {
-        const decodedToken = jwtDecode(response.data.jwt);
+      if (response.data && response.data.data && response.data.data.jwt) {
+        const jwt = response.data.data.jwt;
+        localStorage.setItem("token", jwt);
+        const decodedToken = jwtDecode(jwt);
         const role = decodedToken.roles[0];
-        localStorage.setItem("token", response.data.jwt);
         localStorage.setItem("roleID", Number(role));
         localStorage.setItem("username", username);
         localStorage.setItem("accountID", decodedToken.sub);
@@ -49,13 +44,19 @@ const Login = () => {
           navigate("/", { replace: true });
         }
       } else {
-        toast.error("Invalid username or password");
+        // Handle locked account or invalid credentials
+        toast.error(response.data.message || "Invalid username or password");
       }
     } catch (error) {
       console.error("Login error:", error.response || error);
-      toast.error(
-        error.response?.data?.message || "Invalid username or password"
-      );
+      // Handle specific error messages based on the API response
+      if (error.response?.status === 403) {
+        toast.error("Your account has been banned and cannot log in");
+      } else {
+        toast.error(
+          error.response?.data?.message || "Invalid username or password"
+        );
+      }
     } finally {
       setIsLoading(false);
     }

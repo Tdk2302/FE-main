@@ -83,10 +83,13 @@ const ReturnPetNotifications = () => {
 
   const handleDone = async (appointmentID, reason) => {
     setIsUpdating(true);
+    console.log(reason);
+    console.log(appointmentID);
+
     try {
       const response = await api.put(
         `/appointment/notTrust/${appointmentID}`,
-        appointmentID,
+        null,
         {
           params: {
             reason: reason,
@@ -126,8 +129,9 @@ const ReturnPetNotifications = () => {
         ) : notifications.length > 0 ? (
           <ul className="notification-list">
             {notifications.map((noti) => {
-              const appointmentID = formatMessage(noti.message).props
-                .children[3]?.props.children;
+              const appointmentID = noti.message.match(
+                /appointment:\s*([a-zA-Z0-9]+)/
+              )[1];
               const reason = noti.message.split(".")[1]?.trim();
               return (
                 <li

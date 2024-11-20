@@ -33,9 +33,12 @@ import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import Spinner from "../components/Spinner"; // Import Spinner component
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import EmailIcon from "@mui/icons-material/Email";
+
 import HomeIcon from "@mui/icons-material/Home";
 import { format } from "date-fns";
-import ForgotPassword from "./ForgotPassword";
+import ForgotPassInProfile from "./ForgotPassInProfile"; // Import the new component
+
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),
   background: "#ffffff",
@@ -79,7 +82,7 @@ const ProfileUser = () => {
   const { accountID: urlAccountID } = useParams();
   const currentUserID = localStorage.getItem("accountID");
   const roleID = localStorage.getItem("roleID");
-  const [openForgotPassword, setOpenForgotPassword] = useState(false);
+  const [openOtpDialog, setOtpDialogOpen] = useState(false);
   const getImageUrl = (imgUrl) => {
     if (!imgUrl) return "/path/to/default/image.jpg";
     if (imgUrl.startsWith("http")) return imgUrl;
@@ -251,6 +254,23 @@ const ProfileUser = () => {
   const toggleCurrentPasswordVisibility = () => {
     setShowCurrentPassword(!showCurrentPassword);
   };
+  const currentAccountID = localStorage.getItem("accountID");
+
+  const handleForgotPassword = async () => {
+    try {
+      const response = await api.get("accounts/forgetpassword", {
+        params: { accountID: currentAccountID },
+      });
+      console.log("API Response:", response); // Log API response
+      if (response.data.status === 200) {
+        toast.success(response.data.message);
+        setOtpDialogOpen(true); // Open OTP dialog
+      }
+    } catch (error) {
+      console.error("Error:", error); // Log error
+      toast.error(error.response.data.message);
+    }
+  };
 
   if (isLoading) {
     return <Spinner />;
@@ -399,6 +419,21 @@ const ProfileUser = () => {
                 variant="outlined"
               />
             </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Email"
+                name="email"
+                value={userInfo.email || ""}
+                InputProps={{
+                  readOnly: true,
+                  startAdornment: (
+                    <EmailIcon sx={{ mr: 1, color: "#757575" }} />
+                  ),
+                }}
+                variant="outlined"
+              />
+            </Grid>
             {roleID === "3" && (
               <Grid item xs={12}>
                 <Box
@@ -474,16 +509,6 @@ const ProfileUser = () => {
                         }}
                       />
                     </Grid>
-                    <Grid item xs={12}>
-                      <TextField
-                        label="Email"
-                        value={userInfo.email || "N/A"}
-                        fullWidth
-                        InputProps={{
-                          readOnly: true,
-                        }}
-                      />
-                    </Grid>
                   </Grid>
                 </Box>
               </Grid>
@@ -519,24 +544,45 @@ const ProfileUser = () => {
               </Grid>
             )}
           </Grid>
+
           {isEditing && (
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{
-                mt: 3,
-                mb: 2,
-                height: 56,
-                fontSize: "1.2rem",
-                backgroundColor: "#333333",
-                "&:hover": {
-                  backgroundColor: "#555555",
-                },
-              }}
-            >
-              Update Profile
-            </Button>
+            <>
+              <div
+                className="forgot-password"
+                style={{
+                  textAlign: "end",
+                  marginBottom: "5px",
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  handleCloseDialog(); // Đóng dialog hiện tại
+                  handleForgotPassword(); // Gọi hàm handleForgotPassword
+                }}
+              >
+                Forgot Password?
+              </div>
+              <ForgotPassInProfile
+                open={openOtpDialog}
+                onClose={() => setOtpDialogOpen(false)}
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{
+                  mt: 3,
+                  mb: 2,
+                  height: 56,
+                  fontSize: "1.2rem",
+                  backgroundColor: "#333333",
+                  "&:hover": {
+                    backgroundColor: "#555555",
+                  },
+                }}
+              >
+                Update Profile
+              </Button>
+            </>
           )}
         </Box>
       </StyledPaper>
@@ -580,20 +626,6 @@ const ProfileUser = () => {
               }}
             />
           </form>
-          <div
-            className="forgot-password"
-            style={{
-              textAlign: "end",
-              marginBottom: "5px",
-              cursor: "pointer",
-            }}
-            onClick={() => {
-              handleCloseDialog(); // Đóng dialog hiện tại
-              setOpenForgotPassword(true); // Mở dialog forgot password
-            }}
-          >
-            Forgot Password?
-          </div>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog} sx={{ color: "#333333" }}>
@@ -611,12 +643,6 @@ const ProfileUser = () => {
           </Button>
         </DialogActions>
       </Dialog>
-      <ForgotPassword
-        open={openForgotPassword}
-        onClose={() => {
-          setOpenForgotPassword(false);
-        }}
-      />
     </Container>
   );
 };

@@ -10,37 +10,17 @@ import {
   Button,
 } from "@mui/material";
 import VerifyOTP from "./VerifyOTP"; // Import VerifyOTP component
-import { Password } from "@mui/icons-material";
 
-const ForgotPassword = ({ open, onClose }) => {
-  const [username, setUsername] = useState("");
-  const [otpDialogOpen, setOtpDialogOpen] = useState(false); // State to control OTP dialog
+const ForgotInProfile = ({ open, onClose }) => {
+  const [otpDialogOpen, setOtpDialogOpen] = useState(true); // State to control OTP dialog
   const [passwordDialogOpen, setPasswordDialogOpen] = useState(false); // State to control password dialog
   const [newPassword, setNewPassword] = useState(""); // State for new password
   const [confirmPassword, setConfirmPassword] = useState(""); // State for confirm password
-
-  const handleSubmitUsername = async () => {
-    try {
-      const response = await api.get("accounts/forgetpassword", {
-        params: { accountID: username },
-      });
-      console.log("API Response:", response); // Log API response
-      if (response.data.status === 200) {
-        toast.success(response.data.message);
-        setOtpDialogOpen(true); // Open OTP dialog
-      }
-    } catch (error) {
-      console.error("Error:", error); // Log error
-      toast.error(error.response.data.message);
-    }
-  };
+  const currentAccountID = localStorage.getItem("accountID");
 
   const handleOtpSuccess = () => {
-    console.log("handleOtpSuccess called"); // Log to confirm function is called
     setOtpDialogOpen(false); // Close OTP dialog
     setPasswordDialogOpen(true); // Open password change dialog
-    console.log("OTP verified successfully, opening change password dialog."); // Debugging log
-    console.log("passwordDialogOpen state:", passwordDialogOpen); // Log the state change
   };
 
   const handleChangePassword = async () => {
@@ -53,10 +33,9 @@ const ForgotPassword = ({ open, onClose }) => {
       return;
     }
     try {
-      console.log(username, newPassword);
       const response = await api.put(`/accounts/changePass`, null, {
         params: {
-          accountID: username,
+          accountID: currentAccountID,
           password: newPassword,
         },
       });
@@ -70,27 +49,11 @@ const ForgotPassword = ({ open, onClose }) => {
 
   return (
     <>
-      <Dialog open={open} onClose={onClose}>
-        <DialogTitle>Enter Username</DialogTitle>
-        <DialogContent>
-          <TextField
-            label="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            fullWidth
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleSubmitUsername}>Continue</Button>
-          <Button onClick={onClose}>Cancel</Button>
-        </DialogActions>
-      </Dialog>
-
       {/* VerifyOTP Dialog */}
       <VerifyOTP
         open={otpDialogOpen}
         onClose={() => setOtpDialogOpen(false)}
-        accountID={username} // Pass the username as accountID
+        accountID={currentAccountID} // Pass the currentAccountID
         onSuccess={handleOtpSuccess} // Callback for successful OTP verification
       />
 
@@ -126,4 +89,4 @@ const ForgotPassword = ({ open, onClose }) => {
   );
 };
 
-export default ForgotPassword;
+export default ForgotInProfile;

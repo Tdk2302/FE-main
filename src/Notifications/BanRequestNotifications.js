@@ -123,8 +123,13 @@ const BanRequestNotifications = () => {
     const parts = message.split(".");
 
     const mainInfo = parts[0].trim();
-    const reason = parts[1].trim();
-    const action = parts[2].trim();
+    let reason = parts[1].trim();
+
+    if (reason.startsWith("Reason: Reason:")) {
+      reason = reason.replace("Reason: ", "");
+    }
+
+    const action = parts[2] ? parts[2].trim() : "";
 
     return (
       <div>

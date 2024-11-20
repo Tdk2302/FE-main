@@ -26,8 +26,6 @@ const PetListAdmin = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("Token:", localStorage.getItem("token"));
-    console.log("RoleID:", roleID);
     const checkRole = async () => {
       try {
         if (roleID === "1" || roleID === "2") {

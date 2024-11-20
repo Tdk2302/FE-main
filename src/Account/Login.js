@@ -34,6 +34,7 @@ const Login = () => {
       if (response && response.data && response.data.jwt) {
         const decodedToken = jwtDecode(response.data.jwt);
         const role = decodedToken.roles[0];
+        localStorage.setItem("token", response.data.jwt);
         localStorage.setItem("roleID", Number(role));
         localStorage.setItem("username", username);
         localStorage.setItem("accountID", decodedToken.sub);

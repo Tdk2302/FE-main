@@ -108,7 +108,6 @@ const EventList = () => {
     setSelectedEventId(null);
   };
 
-
   const handleCloseDeleteDialog = () => {
     setOpenDeleteDialog(false);
     setEventToDelete(null);
@@ -178,7 +177,7 @@ const EventList = () => {
     const startDate = moment(event.start_date);
     const endDate = moment(event.end_date);
 
-    if(getEventStatus(event) === "Ending"){
+    if (getEventStatus(event) === "Ending") {
       return null;
     }
     if (now.isBefore(startDate)) {
@@ -295,7 +294,6 @@ const EventList = () => {
                         Delete
                       </MenuItem>
                     )}
-                   
                   </Menu>
                 </Dropdown>
               </div>

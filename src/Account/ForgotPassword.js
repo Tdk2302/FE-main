@@ -12,7 +12,7 @@ import {
 import VerifyOTP from "./VerifyOTP"; // Import VerifyOTP component
 import { Password } from "@mui/icons-material";
 
-const ForgotPassword = ({ open, onClose }) => {
+const ForgotPassword = ({ open, onClose,  }) => {
   const [username, setUsername] = useState("");
   const [otpDialogOpen, setOtpDialogOpen] = useState(false); // State to control OTP dialog
   const [passwordDialogOpen, setPasswordDialogOpen] = useState(false); // State to control password dialog

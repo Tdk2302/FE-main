@@ -34,6 +34,7 @@ import Spinner from "../components/Spinner"; // Import Spinner component
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import HomeIcon from "@mui/icons-material/Home";
+import EmailIcon from "@mui/icons-material/Email";
 import { format } from "date-fns";
 import ForgotPassword from "./ForgotPassword";
 const StyledPaper = styled(Paper)(({ theme }) => ({
@@ -399,6 +400,22 @@ const ProfileUser = () => {
                 variant="outlined"
               />
             </Grid>
+
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Email"
+                name="email"
+                value={userInfo.email || ""}
+                InputProps={{
+                  readOnly: true,
+                  startAdornment: (
+                    <EmailIcon sx={{ mr: 1, color: "#757575" }} />
+                  ),
+                }}
+                variant="outlined"
+              />
+            </Grid>
             {roleID === "3" && (
               <Grid item xs={12}>
                 <Box
@@ -469,16 +486,7 @@ const ProfileUser = () => {
                       }}
                     />
                   </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      label="Email"
-                      value={userInfo.email || "N/A"}
-                      fullWidth
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                    />
-                  </Grid>
+                  
                 </Grid>
               </Box>
               </Grid>
@@ -515,6 +523,21 @@ const ProfileUser = () => {
             )}
           </Grid>
           {isEditing && (
+            <>
+            <div
+            className="forgot-password" 
+            style={{
+              textAlign: "end",
+              marginBottom: "5px",
+              cursor: "pointer",
+            }}
+            onClick={() => {
+              handleCloseDialog(); // Đóng dialog hiện tại
+              setOpenForgotPassword(true); // Mở dialog forgot password
+            }}
+          >
+              Forgot Password?
+            </div>
             <Button
               type="submit"
               fullWidth
@@ -532,6 +555,7 @@ const ProfileUser = () => {
             >
               Update Profile
             </Button>
+            </>
           )}
         </Box>
       </StyledPaper>
@@ -575,20 +599,6 @@ const ProfileUser = () => {
               }}
             />
           </form>
-          <div
-            className="forgot-password" 
-            style={{
-              textAlign: "end",
-              marginBottom: "5px",
-              cursor: "pointer",
-            }}
-            onClick={() => {
-              handleCloseDialog(); // Đóng dialog hiện tại
-              setOpenForgotPassword(true); // Mở dialog forgot password
-            }}
-          >
-            Forgot Password?
-          </div>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog} sx={{ color: "#333333" }}>

@@ -9,7 +9,7 @@ import {
   TextField,
   Button,
 } from "@mui/material";
-import VerifyOTP from "./VerifyOTP"; // Import VerifyOTP component
+import VerifyOTP from "./VerifyOTP"; // Import VerifyOTP component 
 import { Password } from "@mui/icons-material";
 
 const ForgotPassword = ({ open, onClose }) => {

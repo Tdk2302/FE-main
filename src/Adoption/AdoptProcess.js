@@ -36,6 +36,8 @@ const AdoptionProcess = () => {
 
     setLoading(true); // Set loading to true when starting the request
     try {
+      console.log(localStorage.getItem("token"));
+      console.log(localStorage.getItem("roleID"),localStorage.getItem("username"),localStorage.getItem("accountID"),localStorage.getItem("isLoggedIn"));
       const response = await api.post(`/appointment/adopt`, {
         date_time, // LocalDateTime
         accountID, // String

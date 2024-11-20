@@ -38,6 +38,7 @@ const Login = () => {
         localStorage.setItem("username", username);
         localStorage.setItem("accountID", decodedToken.sub);
         localStorage.setItem("isLoggedIn", true);
+        localStorage.setItem("token", response.data.jwt)
         toast.success("Login successfully!");
 
         if (role === "1") {

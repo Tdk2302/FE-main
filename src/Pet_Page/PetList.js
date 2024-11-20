@@ -25,14 +25,12 @@ const PetsList = () => {
   const navigate = useNavigate();
   const [ageError, setAgeError] = useState("");
   const [noResults, setNoResults] = useState(false);
-  const roleID = localStorage.getItem("roleID");
   const [isLoading, setIsLoading] = useState(true);
   const accountID = localStorage.getItem("accountID");
   const [memberAppointments, setMemberAppointments] = useState([]);
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const [appointmentToCancel, setAppointmentToCancel] = useState(null);
   const [isSearch, setIsSearch] = useState(false);
-  const [reliableProcess, setReliableProcess] = useState([]);
   const [reliablePet, setReliablePet] = useState(null);
 
   useEffect(() => {
@@ -180,6 +178,8 @@ const PetsList = () => {
     }
   };
 
+
+
   const getImageUrl = useCallback((imgUrl) => {
     if (!imgUrl) return "/path/to/default/image.jpg";
     if (imgUrl.startsWith("http")) return imgUrl;
@@ -274,7 +274,7 @@ const PetsList = () => {
       )}
       {reliablePet && (
         <div className="reliable-process-section">
-          <h2>Your Current Reliable Process</h2>
+          <h4>This is a pet that you are adopting</h4>
           <div className="reliable-pet-card">
             <img src={getImageUrl(reliablePet.img_url)} alt={reliablePet.name} />
             <div className="reliable-pet-info">
@@ -283,7 +283,8 @@ const PetsList = () => {
               <p>Sex: {reliablePet.sex}</p>
               <p>Breed: {reliablePet.breed}</p>
               <p>Size: {reliablePet.size}</p>
-              <button onClick={() => handlePetClick(reliablePet)}>
+              <p>Status: {reliablePet.status}</p>
+              <button onClick={() => navigate(`/historyadoption`)}>
                 View Details
               </button>
             </div>

@@ -35,7 +35,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import HomeIcon from "@mui/icons-material/Home";
 import { format } from "date-fns";
-
+import ForgotPassword from "./ForgotPassword";
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),
   background: "#ffffff",
@@ -65,6 +65,7 @@ const ProfileUser = () => {
     citizen_serial: "",
     experience_caring: false,
     confirm_address: "",
+    email: "",  
   });
   const [currentPassword, setCurrentPassword] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
@@ -78,6 +79,7 @@ const ProfileUser = () => {
   const { accountID: urlAccountID } = useParams();
   const currentUserID = localStorage.getItem("accountID");
   const roleID = localStorage.getItem("roleID");
+  const [openForgotPassword, setOpenForgotPassword] = useState(false);
   const getImageUrl = (imgUrl) => {
     if (!imgUrl) return "/path/to/default/image.jpg";
     if (imgUrl.startsWith("http")) return imgUrl;
@@ -105,6 +107,7 @@ const ProfileUser = () => {
         citizen_serial: "",
         experience_caring: false,
         confirm_address: "",
+        email: "",
       };
 
       if (userData.birthdate) {
@@ -466,6 +469,16 @@ const ProfileUser = () => {
                       }}
                     />
                   </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      label="Email"
+                      value={userInfo.email || "N/A"}
+                      fullWidth
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                  </Grid>
                 </Grid>
               </Box>
               </Grid>
@@ -539,6 +552,7 @@ const ProfileUser = () => {
             <TextField
               autoFocus
               margin="dense"
+              marginBottom="5px"
               label="Current Password"
               type={showCurrentPassword ? "text" : "password"}
               fullWidth
@@ -561,6 +575,20 @@ const ProfileUser = () => {
               }}
             />
           </form>
+          <div
+            className="forgot-password" 
+            style={{
+              textAlign: "end",
+              marginBottom: "5px",
+              cursor: "pointer",
+            }}
+            onClick={() => {
+              handleCloseDialog(); // Đóng dialog hiện tại
+              setOpenForgotPassword(true); // Mở dialog forgot password
+            }}
+          >
+            Forgot Password?
+          </div>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog} sx={{ color: "#333333" }}>
@@ -575,9 +603,15 @@ const ProfileUser = () => {
             }}
           >
             Confirm Update
-          </Button>
+          </Button> 
         </DialogActions>
       </Dialog>
+      <ForgotPassword
+        open={openForgotPassword}
+        onClose={() => {
+          setOpenForgotPassword(false);
+        }}
+      />
     </Container>
   );
 };

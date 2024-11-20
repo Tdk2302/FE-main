@@ -14,7 +14,7 @@ import {
   Box,
 } from "@mui/material";
 
-const VerifyOTP = ({ open, onClose, accountID, email, onSuccess }) => {
+const VerifyOTP = ({ open, onClose, email, accountID, onSuccess, isRegister = false }) => {
   const [otp, setOtp] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -37,9 +37,12 @@ const VerifyOTP = ({ open, onClose, accountID, email, onSuccess }) => {
 
       if (response.data.status === 200) {
         toast.success(response.data.message);
-        onSuccess();
+        if (isRegister) {
+          navigate("/login");
+        } else {
+          onSuccess?.();
+        }
         onClose();
-        navigate("/login");
       }
     } catch (error) {
       toast.error("Invalid OTP or your OTP has expired");

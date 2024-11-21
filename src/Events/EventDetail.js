@@ -19,6 +19,8 @@ const EventDetail = () => {
   const { eventId } = useParams();
   const [event, setEvent] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const loggedIn = localStorage.getItem("isLoggedIn") === "true";
+
   const navigate = useNavigate();
   const roleID = localStorage.getItem("roleID");
   const [donations, setDonations] = useState([]);
@@ -77,8 +79,7 @@ const EventDetail = () => {
   }, [eventId]);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token);
+    setIsLoggedIn(loggedIn);
   }, []);
 
   const handleChangePage = (event, newPage) => {
@@ -203,11 +204,12 @@ const EventDetail = () => {
               </h3>
 
               <p>Number of donations: {donations.length}</p>
-              {isLoggedIn && roleID === "3" && event.status === "Published" && (
-                <button className="donate-button" onClick={handleDonate}>
-                  Donate Now
-                </button>
-              )}
+              {(!isLoggedIn || roleID === "3") &&
+                event.status === "Published" && (
+                  <button className="donate-button" onClick={handleDonate}>
+                    Donate Now
+                  </button>
+                )}
             </div>
           </div>
         </div>

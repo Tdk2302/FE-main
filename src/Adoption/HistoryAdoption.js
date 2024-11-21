@@ -74,19 +74,6 @@ const HistoryAdoption = () => {
       return;
     }
 
-    // Kiểm tra reason
-    if (!reason || reason.trim() === "") {
-      toast.error("Please provide a valid reason");
-      return;
-    }
-
-    // Log để debug
-    console.log("Submitting return request with:", {
-      petID: selectedPet.petID,
-      reason: reason,
-      selectedPet: selectedPet,
-    });
-
     try {
       const response = await api.put(
         `/pets/returnPets/${selectedPet.petID}`,
@@ -97,11 +84,17 @@ const HistoryAdoption = () => {
           },
         }
       );
-      toast.success(response.data.message);
-      console.log("Refreshing pet list...");
-      const updatedResponse = await api.get(`/pets/historyAdopt/${accountID}`);
-      console.log("Updated pets list:", updatedResponse.data);
-      setAdoptedPets(updatedResponse.data.data);
+      if (response.data.status === 409) {
+        toast.error(response.data.message);
+      } else {
+        toast.success(response.data.message);
+        console.log("Refreshing pet list...");
+        const updatedResponse = await api.get(
+          `/pets/historyAdopt/${accountID}`
+        );
+        console.log("Updated pets list:", updatedResponse.data);
+        setAdoptedPets(updatedResponse.data.data);
+      }
     } catch (error) {
       console.error("API Error:", {
         status: error.response?.status,

@@ -383,7 +383,7 @@ const PetHealthRecord = ({ petID, pet }) => {
                     row.note
                   )}
                 </td>
-                {roleID === "2" && (
+                {roleID === "2" && pet.status === "Available" && (
                   <td>
                     {editedRows[row.recordID] ? (
                       <div className="table-actions">

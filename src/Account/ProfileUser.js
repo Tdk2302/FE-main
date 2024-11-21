@@ -256,7 +256,10 @@ const ProfileUser = () => {
   };
   const currentAccountID = localStorage.getItem("accountID");
 
+  const [isLoadingForgotPassword, setIsLoadingForgotPassword] = useState(false);
+
   const handleForgotPassword = async () => {
+    setIsLoadingForgotPassword(true);
     try {
       const response = await api.get("accounts/forgetpassword", {
         params: { accountID: currentAccountID },
@@ -269,6 +272,8 @@ const ProfileUser = () => {
     } catch (error) {
       console.error("Error:", error); // Log error
       toast.error(error.response.data.message);
+    } finally {
+      setIsLoadingForgotPassword(false);
     }
   };
 
@@ -544,7 +549,6 @@ const ProfileUser = () => {
               </Grid>
             )}
           </Grid>
-
           {isEditing && (
             <>
               <div
@@ -555,16 +559,16 @@ const ProfileUser = () => {
                   cursor: "pointer",
                 }}
                 onClick={() => {
-                  handleCloseDialog(); // Đóng dialog hiện tại
                   handleForgotPassword(); // Gọi hàm handleForgotPassword
                 }}
               >
-                Forgot Password?
+                {isLoadingForgotPassword ? <Spinner /> : "Forgot Password?"}
               </div>
               <ForgotPassInProfile
                 open={openOtpDialog}
                 onClose={() => setOtpDialogOpen(false)}
               />
+
               <Button
                 type="submit"
                 fullWidth

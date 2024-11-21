@@ -12,14 +12,12 @@ import {
 import VerifyOTP from "./VerifyOTP"; // Import VerifyOTP component
 
 const ForgotInProfile = ({ open, onClose }) => {
-  const [otpDialogOpen, setOtpDialogOpen] = useState(true); // State to control OTP dialog
-  const [passwordDialogOpen, setPasswordDialogOpen] = useState(false); // State to control password dialog
+  const [passwordDialogOpen, setPasswordDialogOpen] = useState(false);
   const [newPassword, setNewPassword] = useState(""); // State for new password
   const [confirmPassword, setConfirmPassword] = useState(""); // State for confirm password
   const currentAccountID = localStorage.getItem("accountID");
 
   const handleOtpSuccess = () => {
-    setOtpDialogOpen(false); // Close OTP dialog
     setPasswordDialogOpen(true); // Open password change dialog
   };
 
@@ -51,8 +49,8 @@ const ForgotInProfile = ({ open, onClose }) => {
     <>
       {/* VerifyOTP Dialog */}
       <VerifyOTP
-        open={otpDialogOpen}
-        onClose={() => setOtpDialogOpen(false)}
+        open={open}
+        onClose={onClose}
         accountID={currentAccountID} // Pass the currentAccountID
         onSuccess={handleOtpSuccess} // Callback for successful OTP verification
       />

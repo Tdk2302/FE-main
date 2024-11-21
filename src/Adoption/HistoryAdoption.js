@@ -167,7 +167,7 @@ const HistoryAdoption = () => {
                   <p>Weight: {pet.weight} kg</p>
                 </div>
                 <div className="button-report">
-                  {pet.status !== "Trusted" && (
+                  {(pet.status !== "Trusted" || pet.status !== "Waiting") && (
                     <>
                       <button
                         className="report-button"

@@ -203,7 +203,7 @@ const EventDetail = () => {
               </h3>
 
               <p>Number of donations: {donations.length}</p>
-              {roleID === "3" && event.status === "Published" && (
+              {isLoggedIn && roleID === "3" && event.status === "Published" && (
                 <button className="donate-button" onClick={handleDonate}>
                   Donate Now
                 </button>

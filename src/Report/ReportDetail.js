@@ -75,6 +75,11 @@ const ReportDetail = () => {
     }
   };
 
+  const getFormattedDate = (dateString) => {
+    const options = { year: "numeric", month: "2-digit", day: "2-digit" };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
   if (isLoading) {
     return <Spinner />;
   }
@@ -106,6 +111,10 @@ const ReportDetail = () => {
             </p>
             <p>
               <strong>Weight: </strong> {pet.weight}kg
+            </p>
+            <p>
+              {" "}
+              <strong>Adopt date: </strong> {getFormattedDate(pet.adopt_date)}
             </p>
           </div>
         </div>

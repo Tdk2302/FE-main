@@ -119,7 +119,7 @@ const EventDetail = () => {
             <EventStatus status={event.status} />
           </h4>
           <p>
-            <strong>Start date: </strong>
+            <strong>Date: </strong>
             {new Date(event.start_date).toLocaleDateString()} to{" "}
             {new Date(event.end_date).toLocaleDateString()}
           </p>

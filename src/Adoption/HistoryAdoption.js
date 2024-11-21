@@ -84,9 +84,7 @@ const HistoryAdoption = () => {
           },
         }
       );
-      if (response.data.status === 409) {
-        toast.error(response.data.message);
-      } else {
+      {
         toast.success(response.data.message);
         console.log("Refreshing pet list...");
         const updatedResponse = await api.get(
@@ -96,12 +94,12 @@ const HistoryAdoption = () => {
         setAdoptedPets(updatedResponse.data.data);
       }
     } catch (error) {
+      toast.error(error.response.data.message);
       console.error("API Error:", {
         status: error.response?.status,
         data: error.response?.data,
         error: error,
       });
-      toast.error("Error returning pet");
     }
     setIsReasonModalOpen(false);
     setSelectedPet(null);
@@ -160,7 +158,7 @@ const HistoryAdoption = () => {
                   <p>Weight: {pet.weight} kg</p>
                 </div>
                 <div className="button-report">
-                  {(pet.status !== "Trusted" || pet.status !== "Waiting") && (
+                  {pet.status !== "Trusted" && pet.status !== "Waiting" && (
                     <>
                       <button
                         className="report-button"

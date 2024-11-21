@@ -193,7 +193,7 @@ const Donate = () => {
                       <h4>Name</h4>
                     </TableCell>
                     <TableCell align="right">
-                      <h4>Amount</h4>
+                      <h4>Total</h4>
                     </TableCell>
                   </TableRow>
                 </TableHead>
@@ -263,7 +263,7 @@ const Donate = () => {
                       <h4>Date</h4>
                     </TableCell>
                     <TableCell align="right">
-                      <h4>Total Donation</h4>
+                      <h4>Amount</h4>
                     </TableCell>
                   </TableRow>
                 </TableHead>

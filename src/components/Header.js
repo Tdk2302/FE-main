@@ -122,12 +122,6 @@ const Header = () => {
                 </NavDropdown.Item>
                 <NavDropdown.Item
                   as={NavLink}
-                  to="/admin-notifications/request-register"
-                >
-                  Request Register
-                </NavDropdown.Item>
-                <NavDropdown.Item
-                  as={NavLink}
                   to="/admin-notifications/ban-request"
                 >
                   Request Ban

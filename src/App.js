@@ -16,7 +16,6 @@ import Contact from "./Contact/Contact";
 import Donate from "./Donation/Donate";
 import RequestPetNotifications from "./Notifications/RequestPetNotifications";
 import BanRequestNotifications from "./Notifications/BanRequestNotifications";
-import RequestRegisterNotifications from "./Notifications/RequestRegisterNotifications";
 import AddPet from "./Pet_Page/AddPet";
 import PetDetail from "./Pet_Page/PetDetail";
 import PetsList from "./Pet_Page/PetList";
@@ -126,14 +125,6 @@ function App() {
                 element={
                   <ProtectedRoute roleID={1}>
                     <RequestPetNotifications />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin-notifications/request-register"
-                element={
-                  <ProtectedRoute roleID={1}>
-                    <RequestRegisterNotifications />
                   </ProtectedRoute>
                 }
               />

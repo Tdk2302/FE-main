@@ -19,16 +19,21 @@ const RequesTrustNotification = () => {
         setError(null);
         try {
             const response = await axios.get("/notification/showTrustRequest");
+            console.log("API Response:", response.data);
             if (response.data && response.data.data) {
                 const notifications = response.data.data;
                 const pendingCount = notifications.filter(noti => noti.button_status).length;
+                console.log("Pending count:", pendingCount);
                 setNewNotificationsCount(pendingCount);
                 setNotifications(notifications);
             } else {
                 setNotifications([]);
+                setNewNotificationsCount(0);
             }
         } catch (error) {
             console.error("Error fetching notifications:", error);
+            setNotifications([]);
+            setNewNotificationsCount(0);
         } finally {
             setIsLoading(false);
         }
@@ -59,7 +64,7 @@ const RequesTrustNotification = () => {
           const response = await axios.put(`appointment/trust/${notiID}`);
           if (response.status === 200 && response.data.message) {
             toast.success(response.data.message);
-            apiRequestTrustNotifications();
+            await apiRequestTrustNotifications();
           }
         } catch (error) {
           toast.error(error.response?.data?.message || "Failed to accept trust request");
@@ -74,14 +79,7 @@ const RequesTrustNotification = () => {
           const response = await axios.delete(`/notification/refuseTrustRequest/${notiID}`);
           if (response.status === 200 && response.data.message) {
             toast.success(response.data.message);
-            
-            setNotifications(prev => {
-              const updatedNotifications = prev.filter(noti => noti.notiID !== notiID);
-              const newCount = updatedNotifications.filter(noti => noti.button_status).length;
-              setNewNotificationsCount(newCount);
-              return updatedNotifications;
-            });
-            
+            await apiRequestTrustNotifications();
           }
         } catch (error) {
           if (error.response?.status === 404) {

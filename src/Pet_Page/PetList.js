@@ -43,6 +43,7 @@ const PetsList = () => {
     setIsLoading(true);
     try {
       const response = await api.get("/pets/showListOfPets");
+      console.log(response.data);
       // Lọc chỉ lấy pet có status là 'Available' hoặc 'Waiting'
       const filteredPets = response.data.filter(
         (pet) => pet.status === "Available" || pet.status === "Waiting"
@@ -107,7 +108,11 @@ const PetsList = () => {
         `/appointment/checkReliableProcessForMember/${accountID}`
       );
       if (response.data.status === 200) {
-        setReliablePet(response.data.data);
+        if (response.data.data && response.data.data.status === "Adopted") {
+          setReliablePet(response.data.data);
+        } else {
+          setReliablePet(null);
+        }
       } else {
         setReliablePet(null);
       }

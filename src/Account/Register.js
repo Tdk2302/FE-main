@@ -4,7 +4,7 @@ import "../styles/register.scss";
 import { toast } from "react-toastify";
 import api from "../services/axios";
 import Spinner from "../components/Spinner";
-import { format } from 'date-fns';
+import { format } from "date-fns";
 import VerifyOTP from "./VerifyOTP";
 
 const Register = () => {
@@ -29,13 +29,12 @@ const Register = () => {
     navigate("/login");
   };
 
-
   const validateForm = () => {
     const newErrors = {};
     const currentDate = new Date();
     const tenYearsAgo = new Date();
     tenYearsAgo.setFullYear(currentDate.getFullYear() - 10);
-    
+
     if (!fullName.trim()) newErrors.fullName = "Full name is required";
     if (!birthday) {
       newErrors.birthday = "Birthday is required";
@@ -46,10 +45,12 @@ const Register = () => {
     if (!address.trim()) newErrors.address = "Address is required";
     if (!phoneNumber) newErrors.phoneNumber = "Phone number is required";
     else if (!/^0\d{9,10}$/.test(phoneNumber))
-      newErrors.phoneNumber = "Invalid phone number! Must start with 0 and be 9-10 digits.";
+      newErrors.phoneNumber =
+        "Invalid phone number! Must start with 0 and be 9-10 digits.";
 
     if (!username.trim()) newErrors.username = "Username is required";
-    else if (username.length > 13) newErrors.username = "Username just be at most 13 characters";
+    else if (username.length > 13)
+      newErrors.username = "Username just be at most 13 characters";
     else if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{3,}$/.test(username))
       newErrors.username = "Username must contain both letters and numbers";
     if (!password) newErrors.password = "Password is required";
@@ -73,7 +74,7 @@ const Register = () => {
     }
     try {
       setShowVerifyOTP(true);
-      const formattedBirthday = format(new Date(birthday), 'MM/dd/yyyy');
+      const formattedBirthday = format(new Date(birthday), "MM/dd/yyyy");
       const userData = {
         name: fullName,
         birthdate: formattedBirthday,
@@ -169,9 +170,7 @@ const Register = () => {
         />
       </div>
       <div className="form-group">
-        {errors.email && (
-          <div className="invalid-feedback">{errors.email}</div>
-        )}
+        {errors.email && <div className="invalid-feedback">{errors.email}</div>}
         <input
           type="email"
           placeholder="Email"
@@ -252,7 +251,6 @@ const Register = () => {
         </div>
       </div>
 
-
       <div className="button-containerR">
         <div className="backRegister" onClick={handleGoBack}>
           <i className="fa-solid fa-angles-left"></i>
@@ -263,11 +261,12 @@ const Register = () => {
         </button>
       </div>
 
-      <VerifyOTP 
+      <VerifyOTP
         open={showVerifyOTP}
         onClose={() => setShowVerifyOTP(false)}
         accountID={username}
         email={email}
+        isRegister={true}
       />
     </div>
   );

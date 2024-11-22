@@ -35,7 +35,7 @@ const AppointmentPage = () => {
     experience_caring: "",
     confirm_address: "",
   });
-  // Lấy thông tin người dùng hiện tại từ localStorage
+  
 
   const userID = localStorage.getItem("accountID");
 
@@ -98,14 +98,15 @@ const AppointmentPage = () => {
     setIsLoading(true);
     try {
       const response = await api.get("appointment/showApproved");
-      setApprovedAppointments(response.data.data);
+      const sortedAppointments = sortAppointmentsByStaffId(response.data.data, userID);
+      setApprovedAppointments(sortedAppointments);
     } catch (error) {
       console.error("Error fetching approved appointments:", error);
       setApprovedAppointments([]);
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [userID]);
 
   // Làm mới danh sách cuộc hẹn theo tab hiện tại
   const refreshAppointments = useCallback(async () => {
@@ -241,7 +242,7 @@ const AppointmentPage = () => {
   };
   // Format ngày giờ
   const formatDateTime = (dateTimeString) => {
-    return moment(dateTimeString).format("YYYY-MM-DD HH:mm:ss");
+    return moment(dateTimeString).format("MM/DD/YYYY HH:mm:ss");
   };
   // In trạng thái
   const renderStatus = (status) =>
